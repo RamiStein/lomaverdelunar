@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('xlsx');
+const firebase = require('./firebase');
 
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
@@ -394,7 +395,7 @@ class Database {
       fs.writeFileSync(tmpFile, json, 'utf8');
       fs.renameSync(tmpFile, DB_FILE);
     } catch (err) {
-      console.error("Error saving database:", err);
+      console.error("Error saving local database:", err);
     }
   }
 
@@ -405,43 +406,98 @@ class Database {
     return backupFile;
   }
 
-  // --- CONFIG / LUNA ---
-  getConfig() {
+  // ==========================================
+  // 1. CONFIG / LUNA
+  // ==========================================
+  async getConfig() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const doc = await fdb.collection('config').doc('general').get();
+      if (doc.exists) return doc.data();
+      // Si no existe en Firestore, guardar default
+      await fdb.collection('config').doc('general').set(SEED_DATA.config);
+      return SEED_DATA.config;
+    }
     return this.data.config;
   }
 
-  updateConfig(newConfig) {
+  async updateConfig(newConfig) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('config').doc('general');
+      const doc = await docRef.get();
+      const current = doc.exists ? doc.data() : SEED_DATA.config;
+      const updated = { ...current, ...newConfig };
+      await docRef.set(updated, { merge: true });
+      return updated;
+    }
     this.data.config = { ...this.data.config, ...newConfig };
     this.save();
     return this.data.config;
   }
 
-  // --- NOTICIAS ---
-  getNoticias() {
+  // ==========================================
+  // 2. NOTICIAS
+  // ==========================================
+  async getNoticias() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('noticias').get();
+      const list = snap.docs.map(d => d.data());
+      return list.sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+    }
     return this.data.noticias || [];
   }
 
-  addNoticia(noticia) {
+  async addNoticia(noticia) {
+    const id = "noticia-" + Date.now();
     const newNoticia = {
-      id: "noticia-" + Date.now(),
+      id,
       titulo: noticia.titulo || "",
       texto: noticia.texto || "",
       img: noticia.img || "",
       fecha: new Date().toISOString().split('T')[0]
     };
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('noticias').doc(id).set(newNoticia);
+      return newNoticia;
+    }
     this.data.noticias.unshift(newNoticia);
     this.save();
     return newNoticia;
   }
 
-  deleteNoticia(id) {
+  async deleteNoticia(id) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('noticias').doc(id).delete();
+      return true;
+    }
     this.data.noticias = this.data.noticias.filter(n => n.id !== id);
     this.save();
     return true;
   }
 
-  // --- FERIANTES / EMPRENDEDORES ---
-  getFeriantes(filtro = {}) {
+  // ==========================================
+  // 3. FERIANTES / EMPRENDEDORES
+  // ==========================================
+  async getFeriantes(filtro = {}) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('feriantes').get();
+      let list = snap.docs.map(d => d.data());
+      if (filtro.estado) {
+        list = list.filter(f => f.estado === filtro.estado);
+      }
+      if (filtro.rubro) {
+        list = list.filter(f => (f.tipo || '').toLowerCase().includes(filtro.rubro.toLowerCase()));
+      }
+      if (filtro.lunaId) {
+        list = list.filter(f => f.lunaId === filtro.lunaId);
+      }
+      return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    }
     let list = this.data.feriantes || [];
     if (filtro.estado) {
       list = list.filter(f => f.estado === filtro.estado);
@@ -455,11 +511,12 @@ class Database {
     return list;
   }
 
-  addFeriante(f) {
+  async addFeriante(f) {
+    const config = await this.getConfig();
     const id = "fer-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
     const nuevo = {
       id,
-      lunaId: f.lunaId || this.data.config.lunaActiva || "Luna Acuario",
+      lunaId: f.lunaId || config.lunaActiva || "Luna Acuario",
       nombre: String(f.nombre || "").trim(),
       nombrePersonal: String(f.nombrePersonal || "").trim(),
       contacto: String(f.contacto || "").trim(),
@@ -474,12 +531,27 @@ class Database {
       puestoAsignado: f.puestoAsignado || "Sin asignar",
       createdAt: new Date().toISOString()
     };
+
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('feriantes').doc(id).set(nuevo);
+      return nuevo;
+    }
     this.data.feriantes.unshift(nuevo);
     this.save();
     return nuevo;
   }
 
-  updateFeriante(id, updates) {
+  async updateFeriante(id, updates) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('feriantes').doc(id);
+      const doc = await docRef.get();
+      if (!doc.exists) throw new Error("Feriante no encontrado");
+      const updated = { ...doc.data(), ...updates };
+      await docRef.set(updated, { merge: true });
+      return updated;
+    }
     const idx = this.data.feriantes.findIndex(f => f.id === id);
     if (idx === -1) throw new Error("Feriante no encontrado");
     this.data.feriantes[idx] = { ...this.data.feriantes[idx], ...updates };
@@ -487,15 +559,21 @@ class Database {
     return this.data.feriantes[idx];
   }
 
-  deleteFeriante(id) {
+  async deleteFeriante(id) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('feriantes').doc(id).delete();
+      return true;
+    }
     this.data.feriantes = this.data.feriantes.filter(f => f.id !== id);
     this.save();
     return true;
   }
 
-  getDirectorioAgrupado() {
+  async getDirectorioAgrupado() {
+    const feriantes = await this.getFeriantes();
     const directorio = {};
-    const feriantesAprobados = this.data.feriantes.filter(f => f.estado === 'aprobado' || f.estado === 'confirmado');
+    const feriantesAprobados = feriantes.filter(f => f.estado === 'aprobado' || f.estado === 'confirmado');
     
     feriantesAprobados.forEach(f => {
       let cat = this.normalizarCategoria(f.tipo);
@@ -504,7 +582,7 @@ class Database {
     });
 
     for (let c in directorio) {
-      directorio[c].sort((a, b) => a.nombre.localeCompare(b.nombre));
+      directorio[c].sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
     }
     return directorio;
   }
@@ -522,14 +600,23 @@ class Database {
     return c;
   }
 
-  // --- VOLUNTARIOS ---
-  getVoluntarios() {
+  // ==========================================
+  // 4. VOLUNTARIOS
+  // ==========================================
+  async getVoluntarios() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('voluntarios').get();
+      const list = snap.docs.map(d => d.data());
+      return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    }
     return this.data.voluntarios || [];
   }
 
-  addVoluntario(v) {
+  async addVoluntario(v) {
+    const id = "vol-" + Date.now();
     const nuevo = {
-      id: "vol-" + Date.now(),
+      id,
       nombre: String(v.nombre || "").trim(),
       telefono: String(v.telefono || "").trim(),
       areaInteres: v.areaInteres || "General",
@@ -537,12 +624,26 @@ class Database {
       notas: v.notas || "",
       createdAt: new Date().toISOString()
     };
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('voluntarios').doc(id).set(nuevo);
+      return nuevo;
+    }
     this.data.voluntarios.unshift(nuevo);
     this.save();
     return nuevo;
   }
 
-  updateVoluntario(id, updates) {
+  async updateVoluntario(id, updates) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('voluntarios').doc(id);
+      const doc = await docRef.get();
+      if (!doc.exists) throw new Error("Voluntario no encontrado");
+      const updated = { ...doc.data(), ...updates };
+      await docRef.set(updated, { merge: true });
+      return updated;
+    }
     const idx = this.data.voluntarios.findIndex(v => v.id === id);
     if (idx === -1) throw new Error("Voluntario no encontrado");
     this.data.voluntarios[idx] = { ...this.data.voluntarios[idx], ...updates };
@@ -550,16 +651,49 @@ class Database {
     return this.data.voluntarios[idx];
   }
 
-  deleteVoluntario(id) {
+  async deleteVoluntario(id) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('voluntarios').doc(id).delete();
+      return true;
+    }
     this.data.voluntarios = this.data.voluntarios.filter(v => v.id !== id);
     this.save();
     return true;
   }
 
-  // --- PRESUPUESTO & PROYECTOS ---
-  getPresupuestoData() {
+  // ==========================================
+  // 5. PRESUPUESTO & PROYECTOS
+  // ==========================================
+  async getPresupuestoData() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const presDoc = await fdb.collection('presupuesto').doc('general').get();
+      const p = presDoc.exists ? presDoc.data() : SEED_DATA.presupuesto;
+
+      const votosSnap = await fdb.collection('votos').get();
+      const votos = votosSnap.docs.map(d => d.data());
+
+      const votosPorProyecto = {};
+      votos.forEach(v => {
+        votosPorProyecto[v.proyectoId] = (votosPorProyecto[v.proyectoId] || 0) + 1;
+      });
+
+      const opcionesConVotos = (p.opciones || []).map(op => ({
+        ...op,
+        votosCount: votosPorProyecto[op.id] || 0
+      }));
+
+      return {
+        monto: p.monto,
+        texto: p.texto,
+        lunas: p.lunas,
+        opciones: opcionesConVotos,
+        totalVotos: votos.length
+      };
+    }
+
     const p = this.data.presupuesto;
-    // Calculate live votes per project
     const votosPorProyecto = {};
     (this.data.votos || []).forEach(v => {
       votosPorProyecto[v.proyectoId] = (votosPorProyecto[v.proyectoId] || 0) + 1;
@@ -579,16 +713,35 @@ class Database {
     };
   }
 
-  getProyectoById(id) {
+  async getProyectoById(id) {
     const numId = parseInt(id, 10);
-    const p = this.data.presupuesto.opciones.find(o => o.id === numId);
-    if (!p) return null;
-    const votos = (this.data.votos || []).filter(v => v.proyectoId === numId).length;
-    return { ...p, votosCount: votos };
+    const presData = await this.getPresupuestoData();
+    const p = presData.opciones.find(o => o.id === numId);
+    return p || null;
   }
 
-  updateProyecto(id, titulo, desc, presupuestoDetalle, donacion, imagen) {
+  async updateProyecto(id, titulo, desc, presupuestoDetalle, donacion, imagen) {
     const numId = parseInt(id, 10);
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const presDocRef = fdb.collection('presupuesto').doc('general');
+      const presDoc = await presDocRef.get();
+      const p = presDoc.exists ? presDoc.data() : JSON.parse(JSON.stringify(SEED_DATA.presupuesto));
+      const idx = (p.opciones || []).findIndex(o => o.id === numId);
+      if (idx === -1) throw new Error("Proyecto no encontrado");
+
+      p.opciones[idx] = {
+        ...p.opciones[idx],
+        titulo: titulo || p.opciones[idx].titulo,
+        desc: desc || p.opciones[idx].desc,
+        presupuestoDetalle: presupuestoDetalle !== undefined ? presupuestoDetalle : p.opciones[idx].presupuestoDetalle,
+        donacion: donacion !== undefined ? donacion : p.opciones[idx].donacion,
+        imagen: imagen !== undefined ? imagen : p.opciones[idx].imagen
+      };
+      await presDocRef.set(p);
+      return p.opciones[idx];
+    }
+
     const idx = this.data.presupuesto.opciones.findIndex(o => o.id === numId);
     if (idx === -1) throw new Error("Proyecto no encontrado");
     
@@ -604,9 +757,10 @@ class Database {
     return this.data.presupuesto.opciones[idx];
   }
 
-  addVoto(datos) {
+  async addVoto(datos) {
     const id = "voto-" + Date.now();
-    const proyecto = this.data.presupuesto.opciones.find(o => o.titulo === datos.opcion || o.id === datos.proyectoId);
+    const presData = await this.getPresupuestoData();
+    const proyecto = (presData.opciones || []).find(o => o.titulo === datos.opcion || o.id === datos.proyectoId);
     const proyectoId = proyecto ? proyecto.id : 0;
     const opcionTitulo = proyecto ? proyecto.titulo : datos.opcion;
 
@@ -622,17 +776,43 @@ class Database {
       justificacion: String(datos.justificacion || "").trim(),
       createdAt: new Date().toISOString()
     };
+
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('votos').doc(id).set(nuevoVoto);
+      return nuevoVoto;
+    }
+
     this.data.votos.unshift(nuevoVoto);
     this.save();
     return nuevoVoto;
   }
 
-  getVotos() {
+  async getVotos() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('votos').get();
+      const list = snap.docs.map(d => d.data());
+      return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    }
     return this.data.votos || [];
   }
 
-  // --- CONTABILIDAD ---
-  getContabilidad() {
+  // ==========================================
+  // 6. CONTABILIDAD
+  // ==========================================
+  async getContabilidad() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('gastos').get();
+      const gastos = snap.docs.map(d => d.data()).sort((a, b) => (b.id || 0) - (a.id || 0));
+      let totalGastado = 0;
+      gastos.forEach(g => {
+        totalGastado += g.montoNum || 0;
+      });
+      return { gastos, totalGastado };
+    }
+
     const gastos = this.data.contabilidad.gastos || [];
     let totalGastado = 0;
     gastos.forEach(g => {
@@ -644,7 +824,7 @@ class Database {
     };
   }
 
-  addGasto(g) {
+  async addGasto(g) {
     const id = Date.now();
     const montoNum = parseFloat(String(g.monto).replace(/[^0-9.-]+/g, "")) || 0;
     const nuevo = {
@@ -657,23 +837,62 @@ class Database {
       categoria: g.categoria || "General",
       createdAt: new Date().toISOString()
     };
+
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('gastos').doc(String(id)).set(nuevo);
+      return nuevo;
+    }
+
     this.data.contabilidad.gastos.unshift(nuevo);
     this.save();
     return nuevo;
   }
 
-  deleteGasto(id) {
+  async deleteGasto(id) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('gastos').doc(String(id)).delete();
+      return true;
+    }
     this.data.contabilidad.gastos = this.data.contabilidad.gastos.filter(g => g.id !== parseInt(id, 10));
     this.save();
     return true;
   }
 
-  // --- VIRTUDES & TROQUELES (MERCADO) ---
-  getVirtudes() {
+  // ==========================================
+  // 7. VIRTUDES & TROQUELES (MERCADO)
+  // ==========================================
+  async getVirtudes() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('virtudes').get();
+      const list = snap.docs.map(d => d.data());
+      return list.sort((a, b) => (b.id || 0) - (a.id || 0));
+    }
     return this.data.virtudes || [];
   }
 
-  addVirtud(v) {
+  async addVirtud(v) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('virtudes').get();
+      const list = snap.docs.map(d => d.data());
+      const lastId = list.reduce((max, cur) => Math.max(max, cur.id || 0), 100);
+      const nuevo = {
+        id: lastId + 1,
+        oferente: String(v.oferente || "Feriante Anónimo").trim(),
+        descripcion: String(v.descripcion || "").trim(),
+        valor: parseFloat(v.valor) || 0,
+        stock: parseInt(v.stock, 10) || 1,
+        estado: (parseInt(v.stock, 10) || 1) > 0 ? "Disponible" : "Intercambiada",
+        categoria: v.categoria || "General",
+        imagenUrl: v.imagenUrl || ""
+      };
+      await fdb.collection('virtudes').doc(String(nuevo.id)).set(nuevo);
+      return nuevo;
+    }
+
     const lastId = this.data.virtudes.reduce((max, cur) => Math.max(max, cur.id || 0), 100);
     const nuevo = {
       id: lastId + 1,
@@ -690,8 +909,23 @@ class Database {
     return nuevo;
   }
 
-  updateVirtud(id, updates) {
+  async updateVirtud(id, updates) {
     const numId = parseInt(id, 10);
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('virtudes').doc(String(numId));
+      const doc = await docRef.get();
+      if (!doc.exists) throw new Error("Virtud no encontrada");
+      const updated = { ...doc.data(), ...updates };
+      if (updated.stock <= 0) {
+        updated.estado = "Intercambiada";
+      } else if (updated.estado === "Intercambiada" && updated.stock > 0) {
+        updated.estado = "Disponible";
+      }
+      await docRef.set(updated, { merge: true });
+      return updated;
+    }
+
     const idx = this.data.virtudes.findIndex(v => v.id === numId);
     if (idx === -1) throw new Error("Virtud no encontrada");
     this.data.virtudes[idx] = { ...this.data.virtudes[idx], ...updates };
@@ -704,25 +938,64 @@ class Database {
     return this.data.virtudes[idx];
   }
 
-  deleteVirtud(id) {
+  async deleteVirtud(id) {
     const numId = parseInt(id, 10);
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('virtudes').doc(String(numId)).delete();
+      return true;
+    }
     this.data.virtudes = this.data.virtudes.filter(v => v.id !== numId);
     this.save();
     return true;
   }
 
-  getVouchers() {
+  async getVouchers() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('vouchers').get();
+      const list = snap.docs.map(d => d.data());
+      return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    }
     return this.data.vouchers || [];
   }
 
-  getVoucherByTroquel(idTroquel) {
+  async getVoucherByTroquel(idTroquel) {
     const buscado = String(idTroquel).trim();
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('vouchers').where('idTroquel', '==', buscado).limit(1).get();
+      if (snap.empty) return null;
+      return snap.docs[0].data();
+    }
     return (this.data.vouchers || []).find(v => String(v.idTroquel).trim() === buscado);
   }
 
-  addVoucher(nombre, telefono, monto, tipoAporte) {
+  async addVoucher(nombre, telefono, monto, tipoAporte) {
     const montoNum = parseFloat(monto) || 10000;
-    const lastVoucher = this.data.vouchers[0];
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('vouchers').get();
+      const list = snap.docs.map(d => d.data());
+      let nextIdTroquel = 136901;
+      if (list.length > 0) {
+        const maxTroquel = list.reduce((max, v) => Math.max(max, parseInt(v.idTroquel, 10) || 0), 136900);
+        nextIdTroquel = maxTroquel + Math.floor(Math.random() * 4) + 1;
+      }
+      const nuevo = {
+        id: "vouch-" + Date.now(),
+        idTroquel: String(nextIdTroquel),
+        compradorNombre: String(nombre || "Aportante Vecinal").trim(),
+        telefono: String(telefono || "").trim(),
+        montoInicial: montoNum,
+        saldoActual: montoNum,
+        tipoAporte: tipoAporte || "Aporte Fraterno",
+        createdAt: new Date().toISOString()
+      };
+      await fdb.collection('vouchers').doc(nuevo.id).set(nuevo);
+      return nuevo;
+    }
+
     let nextIdTroquel = 136901;
     if (this.data.vouchers.length > 0) {
       const maxTroquel = this.data.vouchers.reduce((max, v) => Math.max(max, parseInt(v.idTroquel, 10) || 0), 136900);
@@ -744,10 +1017,68 @@ class Database {
     return nuevo;
   }
 
-  procesarIntercambio(idTroquel, idVirtud) {
+  async procesarIntercambio(idTroquel, idVirtud) {
     const buscadoTroquel = String(idTroquel).trim();
     const numVirtudId = parseInt(idVirtud, 10);
 
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      return await fdb.runTransaction(async (t) => {
+        const virtudRef = fdb.collection('virtudes').doc(String(numVirtudId));
+        const virtudDoc = await t.get(virtudRef);
+        if (!virtudDoc.exists) {
+          throw new Error("Esa virtud ya no existe o fue eliminada.");
+        }
+        const virtudData = virtudDoc.data();
+        if (virtudData.stock <= 0 || virtudData.estado !== "Disponible") {
+          throw new Error("Esa virtud ya fue intercambiada en su totalidad o no está disponible.");
+        }
+
+        const vouchersSnap = await fdb.collection('vouchers').where('idTroquel', '==', buscadoTroquel).limit(1).get();
+        if (vouchersSnap.empty) {
+          throw new Error(`No encontramos el número de troquel ${buscadoTroquel}. Por favor revisa el código o genera uno nuevo.`);
+        }
+        const voucherDoc = vouchersSnap.docs[0];
+        const voucherData = voucherDoc.data();
+
+        if (voucherData.saldoActual < virtudData.valor) {
+          throw new Error(`Tu troquel no tiene saldo suficiente. Saldo actual: $${voucherData.saldoActual.toLocaleString('es-AR')}, Valor requerido: $${virtudData.valor.toLocaleString('es-AR')}`);
+        }
+
+        const nuevoSaldo = voucherData.saldoActual - virtudData.valor;
+        const nuevoStock = virtudData.stock - 1;
+        const nuevoEstado = nuevoStock <= 0 ? "Intercambiada" : "Disponible";
+
+        t.update(voucherDoc.ref, { saldoActual: nuevoSaldo });
+        t.update(virtudRef, { stock: nuevoStock, estado: nuevoEstado });
+
+        const nuevoIntercambio = {
+          id: "int-" + Date.now(),
+          idTroquel: buscadoTroquel,
+          idVirtud: virtudData.id,
+          virtudDescripcion: virtudData.descripcion,
+          oferente: virtudData.oferente,
+          compradorNombre: voucherData.compradorNombre,
+          valor: virtudData.valor,
+          saldoRestante: nuevoSaldo,
+          createdAt: new Date().toISOString()
+        };
+
+        const intRef = fdb.collection('intercambios').doc(nuevoIntercambio.id);
+        t.set(intRef, nuevoIntercambio);
+
+        return {
+          exito: true,
+          mensaje: `¡Éxito! Has apoyado la economía fraterna. Te quedan $${nuevoSaldo.toLocaleString('es-AR')} de saldo.`,
+          saldoRestante: nuevoSaldo,
+          virtud: { ...virtudData, stock: nuevoStock, estado: nuevoEstado },
+          voucher: { ...voucherData, saldoActual: nuevoSaldo },
+          intercambio: nuevoIntercambio
+        };
+      });
+    }
+
+    // Local JSON Fallback
     const virtud = this.data.virtudes.find(v => v.id === numVirtudId);
     if (!virtud || virtud.stock <= 0 || virtud.estado !== "Disponible") {
       throw new Error("Esa virtud ya fue intercambiada en su totalidad o no está disponible.");
@@ -762,7 +1093,6 @@ class Database {
       throw new Error(`Tu troquel no tiene saldo suficiente. Saldo actual: $${voucher.saldoActual.toLocaleString('es-AR')}, Valor requerido: $${virtud.valor.toLocaleString('es-AR')}`);
     }
 
-    // Process exchange atomically
     voucher.saldoActual -= virtud.valor;
     virtud.stock -= 1;
     if (virtud.stock <= 0) {
@@ -793,16 +1123,34 @@ class Database {
     };
   }
 
-  getIntercambios() {
+  async getIntercambios() {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('intercambios').get();
+      const list = snap.docs.map(d => d.data());
+      return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    }
     return this.data.intercambios || [];
   }
 
-  // --- EXPORT TO EXCEL ---
-  exportToExcel() {
+  // ==========================================
+  // 8. EXPORT TO EXCEL (.XLSX)
+  // ==========================================
+  async exportToExcel() {
     const wb = xlsx.utils.book_new();
 
+    const [feriantes, virtudes, vouchers, intercambios, votos, voluntarios, contabilidad] = await Promise.all([
+      this.getFeriantes(),
+      this.getVirtudes(),
+      this.getVouchers(),
+      this.getIntercambios(),
+      this.getVotos(),
+      this.getVoluntarios(),
+      this.getContabilidad()
+    ]);
+
     // Sheet: Feriantes
-    const feriantesData = (this.data.feriantes || []).map(f => ({
+    const feriantesData = (feriantes || []).map(f => ({
       Fecha: f.createdAt,
       Emprendimiento: f.nombre,
       Responsable: f.nombrePersonal,
@@ -818,7 +1166,7 @@ class Database {
     xlsx.utils.book_append_sheet(wb, wsFeriantes, "Feriantes");
 
     // Sheet: Virtudes
-    const virtudesData = (this.data.virtudes || []).map(v => ({
+    const virtudesData = (virtudes || []).map(v => ({
       ID: v.id,
       Oferente: v.oferente,
       Descripcion: v.descripcion,
@@ -831,7 +1179,7 @@ class Database {
     xlsx.utils.book_append_sheet(wb, wsVirtudes, "Virtudes");
 
     // Sheet: Vouchers / Troqueles
-    const vouchersData = (this.data.vouchers || []).map(v => ({
+    const vouchersData = (vouchers || []).map(v => ({
       ID_Troquel: v.idTroquel,
       Comprador: v.compradorNombre,
       Telefono: v.telefono,
@@ -844,7 +1192,7 @@ class Database {
     xlsx.utils.book_append_sheet(wb, wsVouchers, "Troqueles");
 
     // Sheet: Intercambios
-    const intercambiosData = (this.data.intercambios || []).map(i => ({
+    const intercambiosData = (intercambios || []).map(i => ({
       Fecha: i.createdAt,
       ID_Troquel: i.idTroquel,
       Comprador: i.compradorNombre,
@@ -858,7 +1206,7 @@ class Database {
     xlsx.utils.book_append_sheet(wb, wsIntercambios, "Intercambios");
 
     // Sheet: Votos
-    const votosData = (this.data.votos || []).map(v => ({
+    const votosData = (votos || []).map(v => ({
       Fecha: v.createdAt,
       Nombre: v.nombre,
       Telefono: v.telefono,
@@ -872,7 +1220,7 @@ class Database {
     xlsx.utils.book_append_sheet(wb, wsVotos, "Votos Presupuesto");
 
     // Sheet: Voluntarios
-    const voluntariosData = (this.data.voluntarios || []).map(v => ({
+    const voluntariosData = (voluntarios || []).map(v => ({
       Fecha: v.createdAt,
       Nombre: v.nombre,
       Telefono: v.telefono,
@@ -884,7 +1232,7 @@ class Database {
     xlsx.utils.book_append_sheet(wb, wsVoluntarios, "Voluntarios");
 
     // Sheet: Contabilidad
-    const contabilidadData = (this.data.contabilidad.gastos || []).map(g => ({
+    const contabilidadData = (contabilidad.gastos || []).map(g => ({
       Fecha: g.fecha,
       Detalle: g.detalle,
       Monto: g.montoNum,
