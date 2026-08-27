@@ -104,7 +104,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-loma-bg text-loma-green selection:bg-loma-accent selection:text-white">
+    <div className="min-h-screen flex flex-col justify-between bg-transparent text-loma-green selection:bg-loma-accent selection:text-white">
       
       {/* 1. Barra de Navegación Sticky */}
       <Navbar
