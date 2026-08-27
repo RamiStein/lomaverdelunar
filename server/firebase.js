@@ -1,4 +1,5 @@
-const admin = require('firebase-admin');
+const { initializeApp, cert, getApps } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
@@ -10,9 +11,9 @@ function initFirebase() {
   if (isInitialized && db) return db;
 
   try {
-    const existingApps = typeof admin.getApps === 'function' ? admin.getApps() : (admin.apps || []);
+    const existingApps = getApps();
     if (existingApps.length > 0) {
-      db = admin.firestore();
+      db = getFirestore();
       isInitialized = true;
       return db;
     }
@@ -28,10 +29,10 @@ function initFirebase() {
       if (serviceAccount.private_key) {
         serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
       }
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
+      initializeApp({
+        credential: cert(serviceAccount)
       });
-      db = admin.firestore();
+      db = getFirestore();
       isInitialized = true;
       console.log('🔥 [Firebase] Conectado exitosamente vía FIREBASE_SERVICE_ACCOUNT_KEY.');
       return db;
@@ -40,14 +41,14 @@ function initFirebase() {
     // 2. Verificar variables individuales (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY)
     if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
       const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
-      admin.initializeApp({
-        credential: admin.credential.cert({
+      initializeApp({
+        credential: cert({
           projectId: process.env.FIREBASE_PROJECT_ID,
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
           privateKey: privateKey
         })
       });
-      db = admin.firestore();
+      db = getFirestore();
       isInitialized = true;
       console.log(`🔥 [Firebase] Conectado exitosamente al proyecto: ${process.env.FIREBASE_PROJECT_ID}`);
       return db;
@@ -64,10 +65,10 @@ function initFirebase() {
     for (const filePath of possiblePaths) {
       if (fs.existsSync(filePath)) {
         const serviceAccount = require(filePath);
-        admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount)
+        initializeApp({
+          credential: cert(serviceAccount)
         });
-        db = admin.firestore();
+        db = getFirestore();
         isInitialized = true;
         console.log(`🔥 [Firebase] Conectado exitosamente usando archivo: ${filePath}`);
         return db;
@@ -86,7 +87,6 @@ function initFirebase() {
 initFirebase();
 
 module.exports = {
-  admin,
   getDb: () => db,
   isFirebaseEnabled: () => isInitialized && db !== null,
   initFirebase
