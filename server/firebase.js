@@ -20,22 +20,33 @@ function initFirebase() {
 
     // 1. Verificar si ya hay credenciales en JSON stringificado (ideal para Vercel / variables de entorno)
     if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-      let rawKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-      // Soportar Base64 si viene codificado
-      if (!rawKey.trim().startsWith('{')) {
-        rawKey = Buffer.from(rawKey, 'base64').toString('utf8');
+      let rawKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY.trim();
+      let serviceAccount = null;
+      try {
+        serviceAccount = JSON.parse(rawKey);
+      } catch {
+        try {
+          const decoded = Buffer.from(rawKey, 'base64').toString('utf8');
+          serviceAccount = JSON.parse(decoded);
+        } catch {
+          // Si tiene comillas envolventes
+          if ((rawKey.startsWith("'") && rawKey.endsWith("'")) || (rawKey.startsWith('"') && rawKey.endsWith('"'))) {
+            rawKey = rawKey.slice(1, -1);
+            serviceAccount = JSON.parse(rawKey);
+          }
+        }
       }
-      const serviceAccount = JSON.parse(rawKey);
-      if (serviceAccount.private_key) {
+
+      if (serviceAccount && serviceAccount.private_key) {
         serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+        initializeApp({
+          credential: cert(serviceAccount)
+        });
+        db = getFirestore();
+        isInitialized = true;
+        console.log('🔥 [Firebase] Conectado exitosamente vía FIREBASE_SERVICE_ACCOUNT_KEY.');
+        return db;
       }
-      initializeApp({
-        credential: cert(serviceAccount)
-      });
-      db = getFirestore();
-      isInitialized = true;
-      console.log('🔥 [Firebase] Conectado exitosamente vía FIREBASE_SERVICE_ACCOUNT_KEY.');
-      return db;
     }
 
     // 2. Verificar variables individuales (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY)

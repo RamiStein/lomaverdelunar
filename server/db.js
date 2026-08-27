@@ -7,11 +7,15 @@ const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 const BACKUP_DIR = path.join(DATA_DIR, 'backups');
 
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-if (!fs.existsSync(BACKUP_DIR)) {
-  fs.mkdirSync(BACKUP_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(BACKUP_DIR)) {
+    fs.mkdirSync(BACKUP_DIR, { recursive: true });
+  }
+} catch (e) {
+  // Ignorado en entornos Serverless de solo lectura como Vercel
 }
 
 const SEED_DATA = {
@@ -379,12 +383,9 @@ class Database {
         this.data = JSON.parse(raw);
       } else {
         this.data = JSON.parse(JSON.stringify(SEED_DATA));
-        this.save();
       }
     } catch (err) {
-      console.error("Error reading database, restoring seed data:", err);
       this.data = JSON.parse(JSON.stringify(SEED_DATA));
-      this.save();
     }
   }
 
@@ -395,7 +396,7 @@ class Database {
       fs.writeFileSync(tmpFile, json, 'utf8');
       fs.renameSync(tmpFile, DB_FILE);
     } catch (err) {
-      console.error("Error saving local database:", err);
+      // Ignorado en Vercel cuando se utiliza Firestore en la nube
     }
   }
 
