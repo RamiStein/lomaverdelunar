@@ -574,10 +574,16 @@ class Database {
   async getDirectorioAgrupado() {
     const feriantes = await this.getFeriantes();
     const directorio = {};
-    const feriantesAprobados = feriantes.filter(f => f.estado === 'aprobado' || f.estado === 'confirmado');
+    const feriantesAprobados = feriantes.filter(f => 
+      f.estado === 'aprobado' || 
+      f.estado === 'confirmado' || 
+      f.confirmado === true || 
+      !f.estado || 
+      f.estado === 'activo'
+    );
     
     feriantesAprobados.forEach(f => {
-      let cat = this.normalizarCategoria(f.tipo);
+      let cat = this.normalizarCategoria(f.tipo || f.categoria || f.rubro);
       if (!directorio[cat]) directorio[cat] = [];
       directorio[cat].push(f);
     });
