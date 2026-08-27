@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, MapPin, Sparkles, Moon, Sun, ArrowRight, Newspaper, HeartHandshake, Download, Eye, X, Compass, Feather, BookOpen, Vote, Palette, Store } from 'lucide-react';
+import { Calendar, MapPin, Sparkles, Moon, Sun, ArrowRight, Newspaper, HeartHandshake, Download, Eye, X, Compass, Feather, BookOpen, Vote, Palette, Store, Music } from 'lucide-react';
 import { getLunarPhase } from '../utils/lunarCalc';
 
 export default function HeroSection({ config, noticias, setActiveTab, openTroquelModal, showMercado }) {
