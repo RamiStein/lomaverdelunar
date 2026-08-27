@@ -57,6 +57,30 @@ export default function App() {
     }
   }, [userVoucher]);
 
+  // Check if accessed from mercado subdomain or query param
+  const isMercadoMode = () => {
+    try {
+      const hostname = window.location.hostname;
+      const params = new URLSearchParams(window.location.search);
+      return (
+        hostname.includes('mercado') ||
+        params.get('tab') === 'virtudes' ||
+        params.get('mercado') === 'true' ||
+        params.get('troquel') !== null
+      );
+    } catch {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (isMercadoMode()) {
+      setActiveTab('virtudes');
+    }
+  }, []);
+
+  const showMercado = isMercadoMode() || activeTab === 'virtudes' || isAdmin;
+
   // Load all public initial data
   const loadGlobalData = async () => {
     try {
@@ -118,6 +142,7 @@ export default function App() {
         openLoginModal={() => setLoginModalOpen(true)}
         openTroquelModal={() => setTroquelModalOpen(true)}
         config={config}
+        showMercado={showMercado}
       />
 
       {/* 2. Contenido según pestaña activa */}
@@ -132,6 +157,7 @@ export default function App() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               openTroquelModal={() => setTroquelModalOpen(true)}
+              showMercado={showMercado}
             />
 
             {/* Muestra de la Feria en Inicio */}
