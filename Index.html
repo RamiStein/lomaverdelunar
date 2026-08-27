@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700&display=swap');
+      
+      :root { 
+        --bg-color: #f3efe6; 
+        --card-bg: #ffffff; 
+        --text-main: #2b5329; /* Verde oscuro del flyer */
+        --text-light: #496d47; 
+        --accent: #c48c26; /* Dorado/Amarillo Pachamama */
+        --wood: #65773e; /* Verde terroso */
+      }
+      body { font-family: 'Nunito', sans-serif; background-color: var(--bg-color); background-size: cover; background-attachment: fixed; background-position: center; color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
+      h1, h2, h3, .card-name { font-family: 'Lora', serif; }
+
+      nav { background: rgba(243, 239, 230, 0.95); padding: 15px; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); display: flex; justify-content: center; gap: 15px; border-bottom: 2px solid var(--text-main); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+      nav button { background: none; border: none; cursor: pointer; color: var(--text-main); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-family: inherit; }
+
+      .character-welcome { display: flex; flex-direction: column; align-items: center; margin-top: 40px; animation: float 4s ease-in-out infinite; padding: 0 20px; }
+      .character-avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--text-main); box-shadow: 0 10px 25px rgba(43, 83, 41, 0.3); background-color: var(--wood); background-size: cover; background-position: center 30%; z-index: 2; position: relative; }
+      .speech-bubble { background: white; padding: 15px 25px; border-radius: 20px; border: 2px solid var(--text-main); box-shadow: 4px 4px 0px rgba(43, 83, 41, 0.15); max-width: 450px; text-align: center; margin-top: -15px; z-index: 1; font-family: 'Lora', serif; color: var(--text-main); font-size: 1.1rem; line-height: 1.5; }
+      @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+
+      header { text-align: center; padding: 40px 20px 40px; }
+      .header-glass { background: rgba(255, 255, 255, 0.85); display: inline-block; padding: 30px; border-radius: 20px; border: 2px solid var(--text-main); box-shadow: 8px 8px 0px rgba(43, 83, 41, 0.1); }
+      header h1 { font-size: clamp(2.2rem, 7vw, 4rem); margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+      header h2 { font-size: clamp(1.1rem, 4vw, 1.8rem); color: var(--wood); margin: 10px 0; }
+      .quote { font-style: normal; font-size: 1.2rem; opacity: 0.95; max-width: 500px; margin: 20px auto 0; line-height: 1.5; color: var(--text-main); }
+      .quote strong { font-size: 1.4rem; color: var(--accent); }
+
+      .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+      .main-grid { display: grid; grid-template-columns: 1fr; gap: 30px; align-items: start; }
+      @media (min-width: 900px) { .main-grid { grid-template-columns: 1.8fr 1.2fr; } }
+
+      .glass-card { background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 20px; border: 1px solid var(--wood); }
+      .astrodiente { background: rgba(101, 119, 62, 0.1); padding: 25px; border-radius: 15px; border-left: 6px solid var(--text-main); margin: 25px 0; line-height: 1.6; font-size: 1rem; }
+
+      .form-sidebar { background: var(--card-bg); padding: 35px; border-radius: 20px; border: 2px solid var(--text-main); box-shadow: 8px 8px 0px rgba(43, 83, 41, 0.1); }
+      .input-group { margin-bottom: 18px; }
+      label { display: block; font-size: 11px; font-weight: 800; color: var(--wood); text-transform: uppercase; margin-bottom: 6px; }
+      input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 14px; box-sizing: border-box; background: #faf9f5; }
+      input[type="file"] { padding: 8px; background: white; cursor: pointer; }
+      .btn-submit { width: 100%; padding: 16px; background: var(--text-main); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 10px;}
+      .btn-submit:hover { background: var(--wood); transform: translateY(-2px);}
+      .btn-submit:disabled { background: #888; cursor: not-allowed; transform: none; }
+
+      .seccion-artistas { width: 100%; max-width: 1200px; margin: 50px auto 20px; background: rgba(43, 83, 41, 0.04); padding: 40px 20px; border-radius: 25px; border: 2px dashed var(--text-main); box-sizing: border-box; display: none; }
+      .artist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 25px; }
+      .artist-card { background: #ffffff; border: 2px solid var(--text-main); padding: 25px; border-radius: 15px; box-shadow: 5px 5px 0px var(--text-main); cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+      .artist-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0px var(--accent); border-color: var(--accent); }
+      .artist-badge { background: var(--wood); color: white; font-size: 11px; font-weight: bold; padding: 3px 10px; border-radius: 50px; display: inline-block; margin-bottom: 10px; text-transform: uppercase; width: fit-content; }
+
+      .seccion-red { background: rgba(255, 255, 255, 0.9); border-top: 4px solid var(--text-main); border-bottom: 4px solid var(--text-main); padding: 60px 0; margin-top: 40px; }
+      .carousel { display: flex; overflow-x: auto; gap: 20px; padding: 20px 40px 60px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .carousel::-webkit-scrollbar { display: none; }
+      .card { flex: 0 0 82%; background: white; padding: 30px; border-radius: 15px; border: 1px solid var(--wood); scroll-snap-align: center; box-shadow: 4px 4px 0px rgba(101, 119, 62, 0.15); transition: 0.3s; cursor: pointer; }
+      @media (min-width: 700px) { .card { flex: 0 0 320px; } }
+      .card:hover { transform: translateY(-5px); border-color: var(--text-main); box-shadow: 6px 6px 0px rgba(43, 83, 41, 0.2); }
+
+      footer { background: var(--text-main); color: white; padding: 80px 20px; text-align: center; margin-top: 60px; border-top: 5px solid var(--accent); }
+      footer h3 { font-size: 2.2rem; margin-bottom: 20px; color: #f3efe6; }
+      footer p { max-width: 700px; margin: 0 auto; opacity: 0.9; line-height: 1.8; white-space: pre-line; }
+
+      #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43, 83, 41, 0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
+      .modal-content { background: var(--bg-color); padding: 45px; border-radius: 20px; max-width: 500px; width: 100%; position: relative; border: 3px solid var(--accent); box-shadow: 10px 10px 0px rgba(0,0,0,0.3); }
+      .btn-link { padding: 12px 20px; background: white; color: var(--text-main); border: 2px solid var(--text-main); border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; margin: 5px; transition: 0.2s; }
+      .btn-link:hover { background: var(--text-main); color: white; }
+
+      #successOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--text-main); color: white; z-index: 10000; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+    </style>
+  </head>
+  <body>
+
+    <? if (errorInicial) { ?>
+      <div style="background: #ffebee; color: #c62828; padding: 20px; font-weight: bold; text-align: center; border-bottom: 3px solid #ef5350;">
+        🚨 ATENCIÓN: <?= errorInicial ?>
+      </div>
+    <? } ?>
+
+    <!-- LUNA FIJA GLOBAR -->
+    <div onclick="pedirClaveLuna()" id="btnLuna" style="position: fixed; top: 15px; right: 20px; font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; z-index: 10001; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));" title="Acceso Lunar">
+      🌙
+    </div>
+
+    <div id="successOverlay">
+      <h1 style="font-size: 5rem; margin-bottom: 10px;">♒</h1>
+      <h2 style="margin-top:0;">¡Paso firme!</h2>
+      <p>Redirigiendo a la plaza virtual...</p>
+      <button onclick="window.top.location.href = urlApp;" style="margin-top:20px; padding: 10px 20px; background: white; color: var(--text-main); border:none; border-radius:8px; cursor:pointer; font-weight:bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">VOLVER A LA CARTELERA</button>
+    </div>
+
+    <nav>
+      <button onclick="scrollToId('inicio')">Inicio</button>
+      <button onclick="scrollToId('seccionArtistas')">Escenario</button>
+      <button onclick="scrollToId('comunidad')">La Feria</button>
+      <button onclick="window.top.location.href = urlApp + '?page=virtudes'">Mercado de Virtudes</button>
+      <button onclick="scrollToId('registro')">Participar</button>
+    </nav>
+
+    <div class="character-welcome" id="inicio">
+      <div class="character-avatar" id="avatarImage"></div>
+      <div class="speech-bubble">
+        <b>¡Te doy la bienvenida! ♒🌬️</b><br>
+        Acuario nos llama a conectarnos en red y abrazar la comunidad. ¡Acompañame a la plaza!
+      </div>
+    </div>
+
+    <header>
+      <div class="header-glass">
+        <h1>Encuentro Vecinal</h1>
+        <h2>Luna Llena en Acuario ♒</h2>
+        <p class="quote">
+          <strong>Sábado 1º de Agosto de 12 a 18hs</strong><br>
+          Celebramos el Día de la Pachamama 🌿<br>
+          <small style="font-size: 1.1rem; color: var(--wood); font-weight: bold; display: block; margin-top: 8px;">Loma Verde - Escobar | Plaza La Misión y Nigromante</small>
+        </p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="main-grid">
+        <div>
+          <div class="glass-card">
+            <div class="astrodiente">
+              <b>Mística del Ciclo:</b> Acuario nos invita a la innovación, al poder de la red y a pensar en el futuro de nuestra comunidad. En este encuentro, unimos esa energía visionaria de aire con nuestras raíces en la tierra, celebrando juntos el Día de la Pachamama. Agradecemos a la tierra que nos sostiene y proyectamos colectivamente el mañana. ♒🌬️🌍
+            </div>
+            <h3 style="font-size: 1.8rem; margin-bottom: 25px; color: var(--text-main);">Novedades de la Cartelera 📝</h3>
+            <div id="noticiasContenedor"></div>
+          </div>
+
+          <div class="glass-card" style="margin-top: 30px; border: 2px dashed var(--accent);">
+            <h3 style="font-size: 1.8rem; margin-top: 0; margin-bottom: 15px; color: var(--text-main);">🗳️ Presupuesto Participativo</h3>
+            <p style="line-height: 1.6; font-size: 1.05rem; color: #444;">
+              ¡Tu voz decide el futuro de nuestro barrio! El <b>Presupuesto Participativo</b> es una herramienta democrática donde los vecinos de Loma Verde proponen y eligen en qué invertir parte de los recursos públicos. Involucrarse es fundamental para construir la comunidad que soñamos.
+            </p>
+            <button onclick="window.top.location.href = urlApp + '?page=presupuesto'" class="btn-submit" style="background: var(--accent); color: white; margin-top: 15px;">CONOCER MÁS Y PARTICIPAR</button>
+          </div>
+
+          <div class="glass-card" style="margin-top: 30px; border: 2px solid var(--wood);">
+            <h3 style="font-size: 1.8rem; margin-top: 0; margin-bottom: 15px; color: var(--text-main);">📖 Páginas Amarillas de Loma Verde</h3>
+            <p style="line-height: 1.6; font-size: 1.05rem; color: #444;">
+              Apoyemos la economía local. Explora el directorio completo con todos los emprendedores, artistas y vecinos que han participado en nuestras ferias. ¡Encuentra lo que buscas sin salir del barrio!
+            </p>
+            <button onclick="window.top.location.href = urlApp + '?page=directorio'" class="btn-submit" style="background: var(--wood); color: white; margin-top: 15px;">BUSCAR EN EL DIRECTORIO</button>
+          </div>
+
+          <div class="glass-card" style="margin-top: 30px; border: 2px solid var(--accent); background: rgba(255, 255, 255, 0.98);">
+            <h3 style="font-size: 1.8rem; margin-top: 0; margin-bottom: 15px; color: var(--text-main);">🍯 Mercado de Virtudes y Saberes</h3>
+            <p style="line-height: 1.6; font-size: 1.05rem; color: #444;">
+              Espacio de economía fraterna para los feriantes y vecinos de Loma Verde. Genera tu troquel comunitario, canjea productos orgánicos y artesanías, o publica tus propias virtudes.
+            </p>
+            <button onclick="window.top.location.href = urlApp + '?page=virtudes'" class="btn-submit" style="background: var(--text-main); color: white; margin-top: 15px;">ENTRAR AL MERCADO DE VIRTUDES</button>
+          </div>
+        </div>
+
+        <div class="form-sidebar" id="registro">
+          <h3 style="margin-top:0; text-align:center; color: var(--text-main);">Sumate a la Red</h3>
+          <form id="formFeria">
+            <div class="input-group"><label>Nombre del Emprendimiento / Proyecto</label><input type="text" id="nombre" required></div>
+            <div class="input-group"><label>Tu Nombre Personal</label><input type="text" id="nombrePersonal" placeholder="Ej: María" required></div>
+            <div class="input-group"><label>WhatsApp</label><input type="text" id="contacto" placeholder="Ej: 1122334455" required></div>
+            <div class="input-group"><label>Rubro</label><select id="tipo" required></select></div>
+            <div class="input-group"><label>¿Qué ofrecés?</label><textarea id="descripcion" rows="4" placeholder="Detallá tu propuesta..." required></textarea></div>
+            <div class="input-group"><label>Instagram</label><input type="text" id="instagram" placeholder="@usuario"></div>
+            <div class="input-group"><label>Web / Catálogo</label><input type="text" id="tienda" placeholder="www.tuweb.com"></div>
+            <div class="input-group"><label>Link Maps</label><input type="text" id="mapa"></div>
+            <div class="input-group"><label>Foto o Logo para el Flyer (Opcional)</label><input type="file" id="imagenFlyer" accept="image/png, image/jpeg, image/jpg"></div>
+            <button type="submit" class="btn-submit">PUBLICAR PROPUESTA</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="seccion-artistas" id="seccionArtistas">
+      <h2 style="text-align:center; margin:0; font-size: 2.2rem; text-transform: uppercase; color: var(--text-main);">✨ Escenario y Cultura Acuariana 🎸🎨</h2>
+      <p style="text-align:center; color: var(--wood); font-style: italic; margin: 5px 0 0 0;">Los creadores, músicos y talleristas que le dan pulso a nuestra plaza.</p>
+      <div class="artist-grid" id="artistasGrid"></div>
+    </div>
+
+    <div class="seccion-red" id="comunidad">
+      <h2 style="text-align:center; margin-bottom:40px; color: var(--text-main); text-transform: uppercase;">La Feria del Barrio 🌿</h2>
+      <div id="guiaContenedor"></div>
+    </div>
+
+    <footer id="quienes">
+      <div class="container">
+        <h3><?= quienesSomos.titulo ?></h3>
+        <p><?= quienesSomos.texto ?></p>
+      </div>
+    </footer>
+
+    <div id="modal" onclick="this.style.display='none'">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 id="m-nombre" style="margin-top:0; color: var(--text-main);"></h2>
+        <p id="m-desc" style="white-space: pre-line; line-height: 1.7; margin: 20px 0; color: #444; font-size: 1.05rem;"></p>
+        <div id="m-links" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        <div style="margin-top: 35px; text-align: right;">
+          <small style="color: var(--wood); cursor: pointer; font-weight: bold;" onclick="document.getElementById('modal').style.display='none'">[ VOLVER ]</small>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var cats = <?!= JSON.stringify(categorias) ?>;
+      var inscriptos = <?!= inscriptos ?>;
+      var noticias = <?!= noticias ?>;
+      var idImg = "<?= idImagen ?>";
+      var urlApp = "<?= urlApp ?>"; 
+      
+      var baseInscriptos = [];
+
+      function scrollToId(id) {
+        var element = document.getElementById(id);
+        if (element) { element.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }
+
+      function actualizarLuna() {
+        var btnLuna = document.getElementById('btnLuna');
+        if (localStorage.getItem("adminLunar") === "true") {
+          btnLuna.style.opacity = '1';
+          btnLuna.style.filter = 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.9))';
+          btnLuna.style.transform = 'scale(1.1)';
+        } else {
+          btnLuna.style.opacity = '0.4';
+          btnLuna.style.filter = 'drop-shadow(0 0 2px rgba(255,255,255,0.5))';
+          btnLuna.style.transform = 'scale(1)';
+        }
+      }
+
+      function pedirClaveLuna() {
+        if (localStorage.getItem("adminLunar") === "true") {
+          if (confirm("Ya estás en Modo Lunar. ¿Deseas cerrar sesión?")) {
+            localStorage.removeItem("adminLunar");
+            actualizarLuna();
+          }
+          return;
+        }
+        var clave = prompt("🌕 Ingresa la clave lunar de administración:");
+        if (clave === "lomaverde") {
+          localStorage.setItem("adminLunar", "true");
+          actualizarLuna();
+          alert("¡Modo Administrador activado!");
+        } else if (clave !== null && clave !== "") {
+          alert("Esa no es la clave de nuestra tribu.");
+        }
+      }
+
+      window.onload = function() {
+        actualizarLuna();
+        if (idImg) {
+          var url = idImg.indexOf('http') === 0 ? idImg : 'https://drive.google.com/uc?id=' + idImg;
+          document.body.style.backgroundImage = 'linear-gradient(rgba(243, 239, 230, 0.65), rgba(243, 239, 230, 0.9)), url("' + url + '")';
+          document.getElementById('avatarImage').style.backgroundImage = 'url("' + url + '")';
+        }
+        
+        var sel = document.getElementById('tipo');
+        sel.innerHTML = '<option value="" disabled selected>Elegí un rubro...</option>';
+        cats.forEach(function(c) { sel.innerHTML += '<option value="'+c+'">'+c+'</option>'; });
+
+        var nCont = document.getElementById('noticiasContenedor');
+        if(noticias.length === 0) nCont.innerHTML = "<p>Próximamente novedades de este ciclo...</p>";
+        noticias.forEach(function(n) {
+          var html = '<div style="margin-bottom:30px; background:white; padding:20px; border-radius:15px; border: 1px solid var(--wood);">';
+          if(n.img) html += '<img src="'+n.img+'" style="width:100%; border-radius:10px; margin-bottom:15px; max-height:300px; object-fit:cover;">';
+          html += '<h4 style="margin:0; font-size:1.3rem; color:var(--text-main);">'+n.titulo+'</h4><p style="font-size:0.95rem; color:#555; line-height: 1.5;">'+n.texto+'</p></div>';
+          nCont.innerHTML += html;
+        });
+
+        render(inscriptos);
+      };
+
+      function render(data) {
+        var contFeria = document.getElementById('guiaContenedor');
+        var gridArtistas = document.getElementById('artistasGrid');
+        var seccionArtistas = document.getElementById('seccionArtistas');
+        
+        contFeria.innerHTML = '';
+        gridArtistas.innerHTML = '';
+        baseInscriptos = []; 
+        var hayArtistas = false;
+
+        for (var c in data) {
+          var nombreCatMinuscula = c.toLowerCase();
+          
+          if (nombreCatMinuscula.includes('musica') || nombreCatMinuscula.includes('arte') || nombreCatMinuscula.includes('artista')) {
+            hayArtistas = true;
+            data[c].forEach(function(p) {
+              baseInscriptos.push(p);
+              var idx = baseInscriptos.length - 1; 
+              
+              var htmlNombrePersonal = p.nombrePersonal ? ' <span style="font-size:1rem; color:var(--wood); font-weight:normal;">| ' + p.nombrePersonal + '</span>' : '';
+              var cardHtml = '<div class="artist-card" onclick="abrirModal('+idx+')">' +
+                             '<div><span class="artist-badge">🎸 Cultura</span>' +
+                             '<div style="font-size:1.4rem; font-family:Lora; color:var(--text-main); margin-bottom:10px;"><b>'+p.nombre+'</b>'+htmlNombrePersonal+'</div>' +
+                             '<div style="font-size:0.95rem; color:#555; line-height:1.4; display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;">'+p.desc+'</div></div>' +
+                             '<div style="font-size:0.85rem; font-weight:bold; color:var(--accent); margin-top:15px; text-transform:uppercase;">Conocer artista +</div></div>';
+              gridArtistas.innerHTML += cardHtml;
+            });
+          } else {
+            var html = '<div style="margin-bottom:50px;"><span style="margin-left:40px; background:var(--text-main); color:white; padding:10px 25px; border-radius:10px 10px 0 0; font-weight:bold; letter-spacing: 1px;">'+c+'</span><div class="carousel">';
+            data[c].forEach(function(p) {
+              baseInscriptos.push(p);
+              var idx = baseInscriptos.length - 1; 
+              
+              var icon = (c.includes('Huerta') || c.includes('Agro')) ? '🌱' : (c.includes('Gastro') ? '🍯' : '✨');
+              var htmlNombrePersonal2 = p.nombrePersonal ? ' <span style="font-size:0.9rem; color:var(--wood); font-weight:normal;">| ' + p.nombrePersonal + '</span>' : '';
+              html += '<div class="card" onclick="abrirModal('+idx+')">' +
+                      '<div style="font-size:1.3rem; margin-bottom:10px; color:var(--text-main);"><span style="margin-right:8px">'+icon+'</span><b>'+p.nombre+'</b>'+htmlNombrePersonal2+'</div>' +
+                      '<div style="font-size:0.95rem; color:#666; line-height:1.5; display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">'+p.desc+'</div>' +
+                      '<div style="font-size:0.85rem; font-weight:bold; color:var(--wood); margin-top:20px;">ABRIR PERFIL +</div></div>';
+            });
+            contFeria.innerHTML += html + '</div></div>';
+          }
+        }
+
+        if (hayArtistas) { seccionArtistas.style.display = 'block'; }
+      }
+
+      function abrirModal(idx) {
+        var p = baseInscriptos[idx];
+        var modalNombre = p.nombre || '';
+        if (p.nombrePersonal) modalNombre += ' <span style="font-size:1.2rem; color:var(--wood);">(' + p.nombrePersonal + ')</span>';
+        document.getElementById('m-nombre').innerHTML = modalNombre;
+        document.getElementById('m-desc').innerText = p.desc || '';
+        var links = '';
+        
+        function formatLink(url, type) {
+          if(!url) return null;
+          var u = String(url).trim();
+          if (type === 'ig') return 'https://instagram.com/' + u.replace('@', '');
+          if(u.indexOf('http') !== 0) u = 'https://' + u;
+          return u;
+        }
+
+        if(p.contacto) {
+            var cel = String(p.contacto).replace(/\D/g,'');
+            links += '<a href="https://wa.me/'+cel+'" target="_blank" rel="noopener noreferrer" class="btn-link">💬 WhatsApp</a>';
+        }
+        if(p.ig) links += '<a href="'+formatLink(p.ig, 'ig')+'" target="_blank" rel="noopener noreferrer" class="btn-link">📸 Instagram</a>';
+        if(p.tienda) links += '<a href="'+formatLink(p.tienda, 'web')+'" target="_blank" rel="noopener noreferrer" class="btn-link">🔗 Web / Tienda</a>';
+        if(p.mapa) links += '<a href="'+formatLink(p.mapa, 'map')+'" target="_blank" rel="noopener noreferrer" class="btn-link">📍 Ubicación</a>';
+        
+        document.getElementById('m-links').innerHTML = links;
+        document.getElementById('modal').style.display = 'flex';
+      }
+
+      function enviarDatos(datos) {
+        var btn = document.querySelector('.btn-submit');
+        google.script.run
+          .withFailureHandler(function(err) {
+             if(window.loadingBtnInterval) clearInterval(window.loadingBtnInterval);
+             alert("Error del Servidor: " + err.message);
+             btn.disabled = false; btn.innerText = 'PUBLICAR PROPUESTA';
+          })
+          .withSuccessHandler(function() {
+             if(window.loadingBtnInterval) clearInterval(window.loadingBtnInterval);
+             document.getElementById('successOverlay').style.display = 'flex';
+             // Le damos 3 segundos para que intente recargar automático, si falla, el usuario tiene el botón.
+             setTimeout(function() { window.top.location.href = urlApp; }, 3000);
+          })
+          .guardarPropuesta(datos);
+      }
+
+      document.getElementById('formFeria').onsubmit = function(e) {
+        e.preventDefault();
+        var btn = e.target.querySelector('.btn-submit'); 
+        btn.disabled = true; 
+        
+        var datos = {
+           nombre: document.getElementById('nombre').value, 
+           nombrePersonal: document.getElementById('nombrePersonal').value, 
+           contacto: document.getElementById('contacto').value,
+           tipo: document.getElementById('tipo').value, 
+           descripcion: document.getElementById('descripcion').value,
+           instagram: document.getElementById('instagram').value, 
+           tienda: document.getElementById('tienda').value, 
+           mapa: document.getElementById('mapa').value
+        };
+
+        var fileInput = document.getElementById('imagenFlyer');
+        if (fileInput.files && fileInput.files[0]) {
+          // Cambiamos el texto del botón cada 3 segundos y la luna se va llenando 🌑 -> 🌕
+          var btnTextos = ['🌑 PROCESANDO FOTO...', '🌒 REMOVIENDO FONDO (IA)...', '🌓 ARMANDO DISEÑO...', '🌔 GUARDANDO FLYER...', '🌕 ÚLTIMOS RETOQUES...'];
+          var iTexto = 0;
+          btn.innerText = btnTextos[0];
+          window.loadingBtnInterval = setInterval(function(){
+            iTexto++;
+            if (iTexto < btnTextos.length) btn.innerText = btnTextos[iTexto];
+          }, 3500);
+
+          var file = fileInput.files[0];
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            datos.imagenBase64 = e.target.result;
+            datos.imagenMimeType = file.type;
+            datos.imagenNombre = file.name;
+            enviarDatos(datos);
+          };
+          reader.onerror = function() {
+            alert("Error al procesar la imagen.");
+            btn.disabled = false; btn.innerText = 'PUBLICAR PROPUESTA';
+          };
+          reader.readAsDataURL(file);
+        } else {
+          btn.innerText = 'GUARDANDO...';
+          enviarDatos(datos);
+        }
+      };
+    </script>
+  </body>
+</html>

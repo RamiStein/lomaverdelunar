@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700&display=swap');
+      
+      :root { 
+        --bg-color: #f3efe6; 
+        --card-bg: #ffffff; 
+        --text-main: #2b5329; 
+        --text-light: #496d47; 
+        --accent: #c48c26; 
+        --wood: #65773e; 
+      }
+      body { font-family: 'Nunito', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
+      h1, h2, h3 { font-family: 'Lora', serif; }
+
+      nav { background: rgba(243, 239, 230, 0.95); padding: 15px; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--text-main); display: flex; justify-content: center; }
+      .btn-volver { padding: 10px 20px; background: white; color: var(--text-main); border: 2px solid var(--text-main); border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+      .btn-volver:hover { background: var(--text-main); color: white; }
+
+      .container { width: 100%; max-width: 800px; margin: 40px auto; padding: 20px; box-sizing: border-box; }
+      
+      .header-card { background: white; padding: 40px; border-radius: 20px; border: 2px solid var(--text-main); text-align: center; box-shadow: 8px 8px 0px rgba(43, 83, 41, 0.1); margin-bottom: 40px; }
+      .header-card h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: var(--text-main); }
+      .presupuesto-monto { font-size: 3rem; color: var(--accent); font-weight: bold; margin: 20px 0; font-family: 'Lora', serif; }
+      
+      .lunas-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 25px 0; }
+      .luna-badge { background: rgba(255, 255, 255, 0.8); border: 1px solid var(--accent); padding: 10px 20px; border-radius: 50px; font-weight: bold; color: var(--text-main); font-size: 0.95rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+      .luna-badge span { color: var(--accent); margin-left: 8px; }
+      
+      .btn-contabilidad { display: inline-block; margin-top: 15px; padding: 12px 25px; background: white; color: var(--text-main); border: 2px solid var(--text-main); border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 1rem; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+      .btn-contabilidad:hover { background: var(--text-main); color: white; }
+
+      .glass-card { background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 20px; border: 1px solid var(--wood); margin-bottom: 30px; }
+      
+      .propuesta-item { border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 25px; }
+      .propuesta-item h4 { margin: 0 0 10px 0; font-size: 1.2rem; }
+      .propuesta-item p { margin: 0; color: #555; line-height: 1.5; }
+
+      .input-group { margin-bottom: 20px; text-align: left; }
+      label { display: block; font-size: 12px; font-weight: 800; color: var(--wood); text-transform: uppercase; margin-bottom: 8px; }
+      input, select, textarea { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 15px; box-sizing: border-box; background: #faf9f5; }
+      
+      .btn-submit { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 10px;}
+      .btn-submit:hover { background: var(--text-main); transform: translateY(-2px);}
+      .btn-submit:disabled { background: #888; cursor: not-allowed; transform: none; }
+
+      #successMsg { display: none; background: #e8f5e9; color: #2e7d32; padding: 20px; border-radius: 10px; border: 2px solid #4caf50; text-align: center; font-weight: bold; margin-top: 20px; }
+    </style>
+  </head>
+  <body>
+
+    <nav>
+      <a href="<?= urlApp ?>" class="btn-volver">← Volver al Inicio</a>
+    </nav>
+
+    <!-- LUNA FIJA GLOBAL -->
+    <div onclick="pedirClaveLuna()" id="btnLuna" style="position: fixed; top: 15px; right: 20px; font-size: 24px; cursor: pointer; opacity: 0.4; transition: 0.3s; z-index: 10001; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));" title="Acceso Lunar">
+      🌙
+    </div>
+
+    <div class="container">
+      
+      <!-- PANTALLA DE BIENVENIDA E INSCRIPCIÓN -->
+      <div id="pantallaBienvenida" class="header-card" style="margin-top: 20px;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 20px; color: var(--text-main);">Cosecha y aporte economico</h1>
+        <p style="font-size: 1.1rem; color: #555; max-width: 600px; margin: 0 auto 30px; line-height: 1.6;">
+          Con tu aporte economico podemos stener este sueño de feria que ya es una realidad, y tambien queremos hacerlo crecer.
+          Hoy quienes organizamos esta feria,somos vecin@s de Loma Verde y estamos brindando nuestro tiempo y recursos para el desarrollo de la feria mas hermosa que podemos lograr. 
+    
+        </p>
+        
+        <div style="background: rgba(243, 239, 230, 0.95); padding: 30px; border-radius: 15px; border: 2px dashed var(--accent); max-width: 500px; margin: 0 auto;" id="contenedorInscripcion">
+          <form id="formInscripcion">
+            <div class="input-group" style="margin-bottom: 15px;">
+              <label>Tu Nombre y Apellido</label>
+              <input type="text" id="inscNombre" placeholder="Ej: María Gómez" required>
+            </div>
+            <div class="input-group" style="margin-bottom: 25px;">
+              <label>Tu Teléfono / WhatsApp</label>
+              <input type="tel" id="inscTelefono" placeholder="Ej: 1122334455" required>
+            </div>
+            <button type="submit" class="btn-submit" id="btnInscripcion" style="background: var(--wood); color: white;">INSCRIBIRME Y ACCEDER</button>
+          </form>
+        </div>
+
+        <!-- Mensaje de agradecimiento (oculto inicialmente) -->
+        <div id="mensajeAgradecimiento" style="display: none; background: #e8f5e9; padding: 30px; border-radius: 15px; border: 2px solid #4caf50; max-width: 500px; margin: 0 auto; text-align: center;">
+          <h2 style="color: #2e7d32; margin-top: 0;">¡Gracias por sumarte! 🌿</h2>
+          <p style="font-size: 1.1rem; color: #333; line-height: 1.6;">
+            Parte del equipo de vecinos se pondrá en contacto con vos a la brevedad para darte la bienvenida al equipo.
+          </p>
+        </div>
+
+        <!-- ADELANTO DE PROYECTOS -->
+        <div style="margin-top: 40px; text-align: left; background: rgba(255,255,255,0.7); padding: 25px 30px; border-radius: 15px; border-left: 5px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.3rem; margin-bottom: 15px;">Adelanto: ¿En qué estamos pensando invertir?</h3>
+          <ul style="list-style-type: none; padding: 0; margin: 0;">
+            <? for (var i = 0; i < presupuestoData.opciones.length; i++) { ?>
+              <li style="margin-bottom: 12px; font-size: 1.05rem; color: #444; display: flex; align-items: flex-start; gap: 10px;">
+                <span style="color: var(--accent); font-size: 1.2rem;">✨</span> 
+                <span><?= presupuestoData.opciones[i].titulo ?></span>
+              </li>
+            <? } ?>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CONTENIDO DEL PRESUPUESTO (Oculto hasta inscribirse) -->
+      <div id="contenidoPresupuesto" style="display: none;">
+        <div class="header-card">
+        <h1>Presupuesto Participativo</h1>
+        <p style="font-size: 1.1rem; color: #555; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+          <?= presupuestoData.texto ?>
+        </p>
+        
+        <? if (presupuestoData.lunas && presupuestoData.lunas.length > 0) { ?>
+          <div class="lunas-container">
+            <? for (var i = 0; i < presupuestoData.lunas.length; i++) { ?>
+              <div class="luna-badge">
+                <?= presupuestoData.lunas[i].nombre ?>: <span><?= presupuestoData.lunas[i].monto ?></span>
+              </div>
+            <? } ?>
+          </div>
+        <? } ?>
+
+        <div class="presupuesto-monto"><?= presupuestoData.monto ?></div>
+        <p style="font-weight: bold; color: var(--wood); text-transform: uppercase; letter-spacing: 2px;">Fondo Total a Invertir</p>
+        
+        <a href="<?= urlApp ?>?page=contabilidad" class="btn-contabilidad">📊 Ver Detalle Contable</a>
+      </div>
+
+      <div class="glass-card">
+        <h3 style="margin-top: 0; color: var(--text-main);">Proyectos Propuestos (Fase 1)</h3>
+        <p style="margin-bottom: 25px; color: #666;">Conoce las opciones viables presentadas por la asamblea vecinal y elige la que creas más necesaria para el barrio.</p>
+        
+        <? for (var i = 0; i < presupuestoData.opciones.length; i++) { ?>
+          <div class="propuesta-item">
+            <h4><?= presupuestoData.opciones[i].titulo ?></h4>
+            <p><?= presupuestoData.opciones[i].desc ?></p>
+            <button onclick="window.top.location.href = '<?= urlApp ?>?page=proyecto&id=<?= presupuestoData.opciones[i].id ?>'" style="margin-top: 12px; padding: 8px 16px; background: white; color: var(--accent); border: 2px solid var(--accent); border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.2s;" onmouseover="this.style.background='var(--accent)'; this.style.color='white';" onmouseout="this.style.background='white'; this.style.color='var(--accent)';">🔍 Ver Detalles y Presupuesto</button>
+          </div>
+        <? } ?>
+      </div>
+
+      <div class="glass-card" style="border: 2px solid var(--text-main);">
+        <h3 style="margin-top: 0; text-align: center;">Emitir mi Voto</h3>
+        <form id="formVoto">
+          <h4 style="margin: 0 0 15px 0; color: var(--wood); border-bottom: 1px solid #ccc; padding-bottom: 5px;">Datos Personales</h4>
+          <div class="input-group">
+            <label>Nombre y Apellido</label>
+            <input type="text" id="nombre" placeholder="Ej. Juan Pérez" required>
+          </div>
+          
+          <div class="input-group">
+            <label>Teléfono de Contacto</label>
+            <input type="tel" id="telefono" placeholder="Ej. 11 2345-6789" required>
+          </div>
+          
+          <h4 style="margin: 30px 0 15px 0; color: var(--wood); border-bottom: 1px solid #ccc; padding-bottom: 5px;">Datos de Ubicación</h4>
+          
+          <div class="input-group">
+            <label>Partido</label>
+            <input type="text" id="partido" placeholder="Ej. Escobar" required>
+          </div>
+
+          <div class="input-group">
+            <label>Localidad</label>
+            <input type="text" id="localidad" placeholder="Ej. Loma Verde" required>
+          </div>
+
+          <div class="input-group">
+            <label>Calles (Entre Calles o Principal)</label>
+            <input type="text" id="calles" placeholder="Ej. Calle Principal 123 entre A y B" required>
+          </div>
+          
+          <h4 style="margin: 30px 0 15px 0; color: var(--wood); border-bottom: 1px solid #ccc; padding-bottom: 5px;">Elección de Proyecto</h4>
+          
+          <div class="input-group">
+            <label>Proyecto que Eliges</label>
+            <select id="opcion" required>
+              <option value="" disabled selected>Selecciona un proyecto...</option>
+              <? for (var i = 0; i < presupuestoData.opciones.length; i++) { ?>
+                <option value="<?= presupuestoData.opciones[i].titulo ?>"><?= presupuestoData.opciones[i].titulo ?></option>
+              <? } ?>
+            </select>
+          </div>
+          
+          <div class="input-group">
+            <label>¿Por qué consideras que es la mejor opción? (Breve justificación)</label>
+            <textarea id="justificacion" rows="4" placeholder="Cuéntanos por qué elegiste este proyecto..." required></textarea>
+          </div>
+          
+          <button type="submit" class="btn-submit">CONFIRMAR MI VOTO</button>
+        </form>
+        <div id="successMsg">¡Tu voto ha sido registrado con éxito! Gracias por participar en el futuro de Loma Verde.</div>
+      </div>
+      
+      </div> <!-- Fin contenidoPresupuesto -->
+    </div>
+
+    <script>
+      // Lógica de Luna y Seguridad
+      function actualizarLuna() {
+        var btnLuna = document.getElementById('btnLuna');
+        if (localStorage.getItem("adminLunar") === "true") {
+          btnLuna.style.opacity = '1';
+          btnLuna.style.filter = 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.9))';
+          btnLuna.style.transform = 'scale(1.1)';
+        } else {
+          btnLuna.style.opacity = '0.4';
+          btnLuna.style.filter = 'drop-shadow(0 0 2px rgba(255,255,255,0.5))';
+          btnLuna.style.transform = 'scale(1)';
+        }
+      }
+
+      function checkAdmin() {
+        if (localStorage.getItem("adminLunar") === "true") {
+          document.getElementById('pantallaBienvenida').style.display = 'none';
+          document.getElementById('contenidoPresupuesto').style.display = 'block';
+        } else {
+          document.getElementById('pantallaBienvenida').style.display = 'block';
+          document.getElementById('contenidoPresupuesto').style.display = 'none';
+        }
+      }
+
+      function pedirClaveLuna() {
+        if (localStorage.getItem("adminLunar") === "true") {
+          if (confirm("Ya estás en Modo Lunar. ¿Deseas cerrar sesión?")) {
+            localStorage.removeItem("adminLunar");
+            actualizarLuna();
+            checkAdmin();
+          }
+          return;
+        }
+        var clave = prompt("🌕 Ingresa la clave lunar de administración:");
+        if (clave === "lomaverde") {
+          localStorage.setItem("adminLunar", "true");
+          actualizarLuna();
+          checkAdmin();
+          alert("¡Modo Administrador activado! Pantalla de votación desbloqueada.");
+        } else if (clave !== null && clave !== "") {
+          alert("Esa no es la clave de nuestra tribu.");
+        }
+      }
+
+      window.onload = function() {
+        actualizarLuna();
+        checkAdmin();
+      };
+
+      // Lógica de Inscripción de Público
+      document.getElementById('formInscripcion').onsubmit = function(e) {
+        e.preventDefault();
+        var btn = document.getElementById('btnInscripcion');
+        btn.disabled = true;
+        btn.innerText = 'VALIDANDO...';
+        
+        var datosInsc = {
+          nombre: document.getElementById('inscNombre').value,
+          telefono: document.getElementById('inscTelefono').value
+        };
+
+        google.script.run
+          .withFailureHandler(function(err) {
+            alert("Error al inscribirte: " + err.message);
+            btn.disabled = false;
+            btn.innerText = 'INSCRIBIRME Y ACCEDER';
+          })
+          .withSuccessHandler(function(res) {
+            // Mostramos el mensaje de agradecimiento. No hay botón de continuar.
+            document.getElementById('contenedorInscripcion').style.display = 'none';
+            document.getElementById('mensajeAgradecimiento').style.display = 'block';
+          })
+          .inscribirVoluntario(datosInsc);
+      };
+
+      // Lógica de Votación
+      document.getElementById('formVoto').onsubmit = function(e) {
+        e.preventDefault();
+        var btn = e.target.querySelector('.btn-submit');
+        btn.disabled = true;
+        btn.innerText = 'REGISTRANDO VOTO...';
+        
+        var datos = {
+          nombre: document.getElementById('nombre').value,
+          telefono: document.getElementById('telefono').value,
+          partido: document.getElementById('partido').value,
+          localidad: document.getElementById('localidad').value,
+          calles: document.getElementById('calles').value,
+          opcion: document.getElementById('opcion').value,
+          justificacion: document.getElementById('justificacion').value
+        };
+
+        google.script.run
+          .withFailureHandler(function(err) {
+            alert("Hubo un error al registrar el voto: " + err.message);
+            btn.disabled = false;
+            btn.innerText = 'CONFIRMAR MI VOTO';
+          })
+          .withSuccessHandler(function() {
+            document.getElementById('formVoto').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+            
+            // Refrescar el form para que el admin pueda dárselo a otra persona
+            setTimeout(function() {
+              document.getElementById('formVoto').reset();
+              document.getElementById('formVoto').style.display = 'block';
+              document.getElementById('successMsg').style.display = 'none';
+              btn.disabled = false;
+              btn.innerText = 'CONFIRMAR MI VOTO';
+            }, 3000);
+          })
+          .guardarVoto(datos);
+      };
+    </script>
+  </body>
+</html>

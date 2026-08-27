@@ -1,0 +1,387 @@
+{
+  "config": {
+    "lunaActiva": "Luna Acuario",
+    "nombreEvento": "Encuentro Vecinal",
+    "subtitulo": "Luna Llena en Acuario ♒",
+    "signo": "Acuario",
+    "fechaEvento": "Sábado 1º de Agosto de 12 a 18hs",
+    "motto": "Celebramos el Día de la Pachamama 🌿",
+    "lugar": "Loma Verde - Escobar | Plaza La Misión y Nigromante",
+    "mistica": "Acuario nos invita a la innovación, al poder de la red y a pensar en el futuro de nuestra comunidad. En este encuentro, unimos esa energía visionaria de aire con nuestras raíces en la tierra, celebrando juntos el Día de la Pachamama. Agradecemos a la tierra que nos sostiene y proyectamos colectivamente el mañana. ♒🌬️🌍",
+    "quienesSomos": {
+      "titulo": "Loma Verde Lunar",
+      "texto": "Tejiendo redes comunitarias, economía fraterna y soberanía barrial en armonía con los ciclos de la naturaleza y la frecuencia 13:20."
+    },
+    "categorias": [
+      "Música / Arte",
+      "Gastronomía",
+      "Artesanías",
+      "Huerta / Vivero",
+      "Terapias Holísticas",
+      "Feria Americana",
+      "Productos Naturales"
+    ],
+    "idImagenFondo": "",
+    "claveAdmin": "lomaverde"
+  },
+  "noticias": [
+    {
+      "id": "noticia-1",
+      "titulo": "¡Gran Apertura del Mercado de Virtudes!",
+      "texto": "Lanzamos el sistema de troqueles comunitarios para fomentar el trueque e intercambio fraterno entre vecinos y productores locales.",
+      "img": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
+      "fecha": "2026-08-01"
+    },
+    {
+      "id": "noticia-2",
+      "titulo": "Taller de Huerta y Compostaje Comunitario",
+      "texto": "A las 15hs nos encontramos en el sector verde para aprender a armar composteras domiciliarias y sembrar plantines de estación.",
+      "img": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80",
+      "fecha": "2026-08-01"
+    }
+  ],
+  "feriantes": [
+    {
+      "id": "fer-1",
+      "lunaId": "Luna Acuario",
+      "nombre": "Finca El Nogal",
+      "nombrePersonal": "Marcos Almada",
+      "contacto": "1144332211",
+      "tipo": "Gastronomía",
+      "descripcion": "Miel pura de monte, polen agroecológico, mermeladas caseras sin conservantes y frutos secos.",
+      "instagram": "@fincaelnogal",
+      "tienda": "https://fincaelnogal.mitiendanube.com",
+      "mapa": "https://maps.google.com/?q=Loma+Verde+Escobar",
+      "imagenBase64": "",
+      "flyerUrl": "",
+      "estado": "aprobado",
+      "puestoAsignado": "Sector Gastronomía - Puesto 01",
+      "createdAt": "2026-08-27T03:16:11.532Z"
+    },
+    {
+      "id": "fer-2",
+      "lunaId": "Luna Acuario",
+      "nombre": "Taller Pachamama",
+      "nombrePersonal": "Solange Varela",
+      "contacto": "1155667788",
+      "tipo": "Artesanías",
+      "descripcion": "Bolsas de tela estampadas a mano, toallitas de tela reutilizables y almohadillas terapéuticas de semillas.",
+      "instagram": "@tallerpachamama.eco",
+      "tienda": "",
+      "mapa": "",
+      "imagenBase64": "",
+      "flyerUrl": "",
+      "estado": "aprobado",
+      "puestoAsignado": "Sector Artesanías - Puesto 05",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    },
+    {
+      "id": "fer-3",
+      "lunaId": "Luna Acuario",
+      "nombre": "Huerta Comunitaria La Misión",
+      "nombrePersonal": "Clara & Pedro",
+      "contacto": "1166778899",
+      "tipo": "Huerta / Vivero",
+      "descripcion": "Plantines orgánicos de albahaca, lechuga morada, tomates reliquia, semillas libres y biofertilizantes.",
+      "instagram": "@huerta.lamision",
+      "tienda": "",
+      "mapa": "",
+      "imagenBase64": "",
+      "flyerUrl": "",
+      "estado": "aprobado",
+      "puestoAsignado": "Sector Huerta - Puesto 02",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    },
+    {
+      "id": "fer-4",
+      "lunaId": "Luna Acuario",
+      "nombre": "Dúo Raíces del Viento",
+      "nombrePersonal": "Nahuel & Sofía",
+      "contacto": "1177889900",
+      "tipo": "Música / Arte",
+      "descripcion": "Música acústica folklórica y latinoamericana en vivo. Instrumentos autóctonos y cantos a la tierra.",
+      "instagram": "@raicesdelviento.musica",
+      "tienda": "",
+      "mapa": "",
+      "imagenBase64": "",
+      "flyerUrl": "",
+      "estado": "aprobado",
+      "puestoAsignado": "Escenario Acústico",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    },
+    {
+      "id": "fer-5",
+      "lunaId": "Luna Acuario",
+      "nombre": "Espacio Armonía y Sonido",
+      "nombrePersonal": "Mariana Costa",
+      "contacto": "1133221100",
+      "tipo": "Terapias Holísticas",
+      "descripcion": "Masajes sonoros con cuencos tibetanos, lecturas de oráculo maya 13:20 y armonización energética.",
+      "instagram": "@espacioarmonia1320",
+      "tienda": "",
+      "mapa": "",
+      "imagenBase64": "",
+      "flyerUrl": "",
+      "estado": "aprobado",
+      "puestoAsignado": "Gazebo de Sanación",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    }
+  ],
+  "voluntarios": [
+    {
+      "id": "vol-1",
+      "nombre": "Lucas Benítez",
+      "telefono": "1123456789",
+      "areaInteres": "Armado y Logística de Puestos",
+      "contactado": true,
+      "notas": "Disponible desde las 09:00hs para descarga de tablones.",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    },
+    {
+      "id": "vol-2",
+      "nombre": "Valeria Rossi",
+      "telefono": "1187654321",
+      "areaInteres": "Recepción y Troqueles",
+      "contactado": false,
+      "notas": "Interesada en coordinar el stand del Mercado de Virtudes.",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    }
+  ],
+  "presupuesto": {
+    "monto": "$2.500.000",
+    "texto": "Este año, la comunidad y el fondo vecinal han destinado un presupuesto especial para el mejoramiento sustentable de los espacios públicos de Loma Verde. ¡Los vecinos decidimos en qué se invierte!",
+    "lunas": [
+      {
+        "nombre": "Luna en Capricornio",
+        "monto": "$250.000"
+      },
+      {
+        "nombre": "Luna en Acuario",
+        "monto": "$420.000"
+      },
+      {
+        "nombre": "Luna en Piscis",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Aries",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Tauro",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Géminis",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Cáncer",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Leo",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Virgo",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Libra",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Escorpio",
+        "monto": "Pendiente"
+      },
+      {
+        "nombre": "Luna en Sagitario",
+        "monto": "Pendiente"
+      }
+    ],
+    "opciones": [
+      {
+        "id": 0,
+        "titulo": "1. Iluminación Sustentable en Plaza La Misión",
+        "desc": "Instalación de 15 farolas solares autónomas para mejorar la seguridad y extender el uso de la plaza durante la noche sin consumir energía de red.",
+        "presupuestoDetalle": "Farolas Solares LED (15 unidades): $1.500.000\nMano de obra instalación y postes: $300.000\nFletes, cables y logística: $50.000",
+        "donacion": "lomaverde.ilumina.mp",
+        "imagen": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        "id": 1,
+        "titulo": "2. Construcción de Huerta Comunitaria y Compostera",
+        "desc": "Cerco perimetral de madera, tierra fértil, cajones de siembra elevados y herramientas para crear un espacio de educación ambiental y soberanía alimentaria.",
+        "presupuestoDetalle": "Maderas tratadas para cajones y cerco: $200.000\nTierra fértil, compost y abono: $80.000\nHerramientas comunitarias: $150.000\nSemillas libres y plantines: $20.000",
+        "donacion": "lomaverde.huerta.mp",
+        "imagen": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        "id": 2,
+        "titulo": "3. Refugios Ecológicos para Paradas de Colectivo",
+        "desc": "Construcción de 3 refugios de espera con techos vivos (plantas autóctonas) y bancos de madera reciclada en las esquinas principales.",
+        "presupuestoDetalle": "Estructuras de hierro reforzado (3x): $1.200.000\nMaderas para bancos y respaldo: $250.000\nSustrato y plantas para techo vivo: $80.000",
+        "donacion": "lomaverde.refugios.mp",
+        "imagen": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+      }
+    ]
+  },
+  "votos": [
+    {
+      "id": "voto-1",
+      "proyectoId": 0,
+      "opcion": "1. Iluminación Sustentable en Plaza La Misión",
+      "nombre": "Martín Gómez",
+      "telefono": "1133445566",
+      "partido": "Escobar",
+      "localidad": "Loma Verde",
+      "calles": "Calle Los Nogales 450",
+      "justificacion": "La plaza queda muy oscura al atardecer y las farolas solares van a permitir que las familias se queden más tiempo.",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    },
+    {
+      "id": "voto-2",
+      "proyectoId": 1,
+      "opcion": "2. Construcción de Huerta Comunitaria y Compostera",
+      "nombre": "Carla Silveira",
+      "telefono": "1177665544",
+      "partido": "Escobar",
+      "localidad": "Loma Verde",
+      "calles": "La Misión y Nigromante",
+      "justificacion": "Es fundamental para que los niños del barrio aprendan de dónde viene la comida y cuidemos la tierra.",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    }
+  ],
+  "contabilidad": {
+    "gastos": [
+      {
+        "id": 1,
+        "fecha": "15/07/2026",
+        "detalle": "Sonido y micrófonos para escenario acústico",
+        "montoNum": 85000,
+        "montoStr": "85.000",
+        "comprobante": "",
+        "categoria": "Cultura y Sonido",
+        "createdAt": "2026-08-27T03:16:11.547Z"
+      },
+      {
+        "id": 2,
+        "fecha": "22/07/2026",
+        "detalle": "Bolsas de compost y plantines para taller vecinal",
+        "montoNum": 32000,
+        "montoStr": "32.000",
+        "comprobante": "",
+        "categoria": "Talleres y Huerta",
+        "createdAt": "2026-08-27T03:16:11.547Z"
+      },
+      {
+        "id": 3,
+        "fecha": "28/07/2026",
+        "detalle": "Impresión de cartelería y banderines reciclados",
+        "montoNum": 24500,
+        "montoStr": "24.500",
+        "comprobante": "",
+        "categoria": "Ambientación",
+        "createdAt": "2026-08-27T03:16:11.547Z"
+      }
+    ]
+  },
+  "virtudes": [
+    {
+      "id": 101,
+      "oferente": "Finca El Nogal",
+      "descripcion": "Miel Orgánica de Monte (500g)",
+      "valor": 5000,
+      "stock": 5,
+      "estado": "Disponible",
+      "categoria": "Gastronomía",
+      "imagenUrl": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=500&q=80"
+    },
+    {
+      "id": 102,
+      "oferente": "Taller Pachamama",
+      "descripcion": "Bolsa de Tela Estampada a Mano con Tintes Naturales",
+      "valor": 4000,
+      "stock": 3,
+      "estado": "Disponible",
+      "categoria": "Artesanías",
+      "imagenUrl": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=500&q=80"
+    },
+    {
+      "id": 103,
+      "oferente": "Huerta Comunitaria",
+      "descripcion": "Plantín de Albahaca Orgánica y Romero",
+      "valor": 2500,
+      "stock": 8,
+      "estado": "Disponible",
+      "categoria": "Huerta",
+      "imagenUrl": "https://images.unsplash.com/photo-1592417817098-8f3d6eb22509?auto=format&fit=crop&w=500&q=80"
+    },
+    {
+      "id": 104,
+      "oferente": "Panadería Artesanal La Espiga",
+      "descripcion": "Pan de Masamadre Multicereal Horneado a Leña",
+      "valor": 3500,
+      "stock": 0,
+      "estado": "Intercambiada",
+      "categoria": "Gastronomía",
+      "imagenUrl": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80"
+    },
+    {
+      "id": 105,
+      "oferente": "Espacio Armonía 1320",
+      "descripcion": "Sesión de Armonización Sonora con Cuencos (30 min)",
+      "valor": 6000,
+      "stock": 4,
+      "estado": "Disponible",
+      "categoria": "Terapias Holísticas",
+      "imagenUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=500&q=80"
+    },
+    {
+      "id": 106,
+      "oferente": "Cerámica Nativa",
+      "descripcion": "Cuenco de barro quemado en pozo a cielo abierto",
+      "valor": 4500,
+      "stock": 2,
+      "estado": "Disponible",
+      "categoria": "Artesanías",
+      "imagenUrl": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=500&q=80"
+    }
+  ],
+  "vouchers": [
+    {
+      "id": "vouch-1",
+      "idTroquel": "136901",
+      "compradorNombre": "Familia García Gómez",
+      "telefono": "1144556677",
+      "montoInicial": 20000,
+      "saldoActual": 15000,
+      "tipoAporte": "Aporte Brote",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    },
+    {
+      "id": "vouch-2",
+      "idTroquel": "136902",
+      "compradorNombre": "Mariano Morales",
+      "telefono": "1188990011",
+      "montoInicial": 10000,
+      "saldoActual": 10000,
+      "tipoAporte": "Aporte Semilla",
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    }
+  ],
+  "intercambios": [
+    {
+      "id": "int-1",
+      "idTroquel": "136901",
+      "idVirtud": 101,
+      "virtudDescripcion": "Miel Orgánica de Monte (500g)",
+      "oferente": "Finca El Nogal",
+      "compradorNombre": "Familia García Gómez",
+      "valor": 5000,
+      "saldoRestante": 15000,
+      "createdAt": "2026-08-27T03:16:11.547Z"
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700&display=swap');
+      
+      :root { 
+        --bg-color: #f3efe6; 
+        --card-bg: #ffffff; 
+        --text-main: #2b5329; 
+        --accent: #c48c26; 
+        --wood: #65773e; 
+      }
+      body { font-family: 'Nunito', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
+      h1, h2, h3 { font-family: 'Lora', serif; }
+
+      nav { background: rgba(243, 239, 230, 0.95); padding: 15px; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--text-main); display: flex; justify-content: center; }
+      .btn-volver { padding: 10px 20px; background: white; color: var(--text-main); border: 2px solid var(--text-main); border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+      .btn-volver:hover { background: var(--text-main); color: white; }
+
+      .container { width: 100%; max-width: 900px; margin: 40px auto; padding: 20px; box-sizing: border-box; }
+      
+      .header-card { background: white; padding: 40px; border-radius: 20px; border: 2px solid var(--text-main); text-align: center; box-shadow: 8px 8px 0px rgba(43, 83, 41, 0.1); margin-bottom: 30px; }
+      .header-card h1 { font-size: 2.5rem; margin: 0 0 10px 0; color: var(--text-main); }
+      
+      .search-box { margin-top: 25px; width: 100%; max-width: 500px; display: inline-block; position: relative; }
+      .search-box input { width: 100%; padding: 15px 20px 15px 45px; border: 2px solid var(--accent); border-radius: 50px; font-size: 1rem; font-family: 'Nunito', sans-serif; box-sizing: border-box; outline: none; transition: 0.3s; }
+      .search-box input:focus { box-shadow: 0 0 10px rgba(196, 140, 38, 0.3); }
+      .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: #888; }
+      
+      .rubro-section { margin-bottom: 40px; }
+      .rubro-title { font-size: 1.8rem; color: var(--wood); border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; }
+      
+      .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+      
+      .card { background: white; border-radius: 15px; border: 1px solid #e0e0e0; padding: 20px; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+      .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color: var(--wood); }
+      
+      .card h4 { margin: 0 0 5px 0; font-size: 1.3rem; color: var(--text-main); }
+      .card p.desc { color: #666; font-size: 0.95rem; line-height: 1.4; flex-grow: 1; margin: 10px 0; }
+      
+      .social-links { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+      .social-btn { padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+      
+      .btn-wp { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+      .btn-wp:hover { background: #c8e6c9; }
+      
+      .btn-ig { background: #fce4ec; color: #c2185b; border: 1px solid #f8bbd0; }
+      .btn-ig:hover { background: #f8bbd0; }
+      
+      .btn-store { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+      .btn-store:hover { background: #bbdefb; }
+
+      .empty-state { text-align: center; font-style: italic; color: #777; padding: 30px; display: none; }
+
+    </style>
+  </head>
+  <body>
+
+    <nav>
+      <a href="<?= urlApp ?>" class="btn-volver">← Volver al Inicio</a>
+    </nav>
+
+    <div class="container">
+      <div class="header-card">
+        <h1>Páginas Amarillas de Loma Verde</h1>
+        <p style="font-size: 1.1rem; color: #555; margin: 0;">
+          Directorio histórico de emprendedores y feriantes locales.<br>¡Apoyemos la economía de nuestro barrio!
+        </p>
+        
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Buscar por emprendimiento, rubro o producto..." onkeyup="filtrarDirectorio()">
+        </div>
+      </div>
+      
+      <div id="directorioContainer"></div>
+      <div class="empty-state" id="emptyMsg">No se encontraron emprendimientos que coincidan con la búsqueda.</div>
+    </div>
+
+    <script>
+      var directorio = JSON.parse(<?= directorio ?>);
+      var contenedor = document.getElementById('directorioContainer');
+      var emptyMsg = document.getElementById('emptyMsg');
+      
+      function renderizarDirectorio(filtro) {
+        contenedor.innerHTML = "";
+        var totalEncontrados = 0;
+        
+        var rubros = Object.keys(directorio).sort();
+        
+        rubros.forEach(function(rubro) {
+          var emprendedores = directorio[rubro];
+          var filtrados = emprendedores;
+          
+          if (filtro) {
+            var searchLower = filtro.toLowerCase();
+            filtrados = emprendedores.filter(function(emp) {
+              return emp.nombre.toLowerCase().includes(searchLower) || 
+                     (emp.nombrePersonal && emp.nombrePersonal.toLowerCase().includes(searchLower)) ||
+                     rubro.toLowerCase().includes(searchLower) ||
+                     emp.desc.toLowerCase().includes(searchLower);
+            });
+          }
+          
+          if (filtrados.length > 0) {
+            totalEncontrados += filtrados.length;
+            
+            var seccion = document.createElement('div');
+            seccion.className = 'rubro-section';
+            
+            var titulo = document.createElement('h2');
+            titulo.className = 'rubro-title';
+            titulo.innerText = rubro;
+            seccion.appendChild(titulo);
+            
+            var grid = document.createElement('div');
+            grid.className = 'cards-grid';
+            
+            filtrados.forEach(function(emp) {
+              var card = document.createElement('div');
+              card.className = 'card';
+              
+              var html = '<h4>' + emp.nombre + '</h4>';
+              if (emp.nombrePersonal) {
+                html += '<p style="margin:0 0 10px 0; font-size:0.9rem; color:var(--wood); font-weight:bold;">👤 ' + emp.nombrePersonal + '</p>';
+              }
+              if (emp.desc) html += '<p class="desc">' + emp.desc + '</p>';
+              
+              html += '<div class="social-links">';
+              
+              if (emp.contacto) {
+                var num = emp.contacto.replace(/[^0-9]/g, '');
+                if (num.length >= 10 && !num.startsWith('54')) num = '549' + num;
+                html += '<a href="https://wa.me/' + num + '" target="_blank" class="social-btn btn-wp">💬 WhatsApp</a>';
+              }
+              
+              if (emp.ig) {
+                var userIG = emp.ig.replace('@', '').replace('https://instagram.com/', '').replace('www.instagram.com/', '').replace('instagram.com/', '');
+                html += '<a href="https://instagram.com/' + userIG + '" target="_blank" class="social-btn btn-ig">📷 Instagram</a>';
+              }
+              
+              if (emp.tienda) {
+                var urlTienda = emp.tienda.indexOf('http') === 0 ? emp.tienda : 'https://' + emp.tienda;
+                html += '<a href="' + urlTienda + '" target="_blank" class="social-btn btn-store">🛒 Tienda</a>';
+              }
+              
+              html += '</div>';
+              card.innerHTML = html;
+              grid.appendChild(card);
+            });
+            
+            seccion.appendChild(grid);
+            contenedor.appendChild(seccion);
+          }
+        });
+        
+        if (totalEncontrados === 0) {
+          emptyMsg.style.display = 'block';
+        } else {
+          emptyMsg.style.display = 'none';
+        }
+      }
+      
+      function filtrarDirectorio() {
+        var query = document.getElementById('searchInput').value;
+        renderizarDirectorio(query);
+      }
+      
+      // Render inicial
+      renderizarDirectorio("");
+    </script>
+  </body>
+</html>

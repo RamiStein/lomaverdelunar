@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;700&display=swap');
+      
+      :root { 
+        --bg-color: #f3efe6; 
+        --text-main: #2b5329; 
+        --accent: #c48c26; 
+        --wood: #65773e; 
+      }
+      body { font-family: 'Nunito', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
+      h1, h2, h3 { font-family: 'Lora', serif; }
+
+      nav { background: rgba(243, 239, 230, 0.95); padding: 15px; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--text-main); display: flex; justify-content: center; }
+      .btn-volver { padding: 10px 20px; background: white; color: var(--text-main); border: 2px solid var(--text-main); border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+      .btn-volver:hover { background: var(--text-main); color: white; }
+
+      .container { width: 100%; max-width: 800px; margin: 40px auto; padding: 20px; box-sizing: border-box; }
+      
+      .header-card { background: white; padding: 40px; border-radius: 20px; border: 2px solid var(--text-main); text-align: center; box-shadow: 8px 8px 0px rgba(43, 83, 41, 0.1); margin-bottom: 40px; }
+      .header-card h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: var(--text-main); }
+      .gasto-total { font-size: 3rem; color: #d32f2f; font-weight: bold; margin: 20px 0; font-family: 'Lora', serif; }
+      
+      .glass-card { background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 20px; border: 1px solid var(--wood); margin-bottom: 30px; overflow-x: auto; }
+      
+      table { width: 100%; border-collapse: collapse; min-width: 600px; }
+      th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+      th { background-color: var(--wood); color: white; font-family: 'Lora', serif; font-size: 1.1rem; }
+      tr:hover { background-color: #f1f8e9; }
+      
+      .monto { font-weight: bold; color: #d32f2f; }
+      .btn-comprobante { display: inline-block; padding: 6px 12px; background: var(--accent); color: white; text-decoration: none; border-radius: 5px; font-size: 0.85rem; font-weight: bold; transition: 0.2s; }
+      .btn-comprobante:hover { background: #b07e22; transform: translateY(-1px); }
+
+      .empty-state { text-align: center; padding: 40px; color: #777; font-style: italic; }
+    </style>
+  </head>
+  <body>
+
+    <nav>
+      <a href="<?= urlApp ?>?page=presupuesto" class="btn-volver">← Volver a Presupuesto</a>
+    </nav>
+
+    <div class="container">
+      
+      <div class="header-card">
+        <h1>Transparencia y Economía Abierta</h1>
+        <p style="font-size: 1.1rem; color: #555; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+          Aquí publicamos el detalle contable de todos los gastos e inversiones realizadas con el fondo comunitario para la plaza. Cada peso cuenta.
+        </p>
+        <div class="gasto-total">$<?= contabilidad.totalGastado.toLocaleString('es-AR') ?></div>
+        <p style="font-weight: bold; color: var(--wood); text-transform: uppercase; letter-spacing: 2px;">Total Gastado Hasta Ahora</p>
+      </div>
+
+      <div class="glass-card">
+        <h3 style="margin-top: 0; color: var(--text-main); font-size: 1.8rem;">Registro de Egresos</h3>
+        
+        <? if (contabilidad.gastos && contabilidad.gastos.length > 0) { ?>
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Detalle del Gasto</th>
+                <th>Monto</th>
+                <th>Comprobante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <? for (var i = 0; i < contabilidad.gastos.length; i++) { var g = contabilidad.gastos[i]; ?>
+                <tr>
+                  <td style="color: #666;"><?= g.fecha ?></td>
+                  <td style="font-weight: bold; color: #333;"><?= g.detalle ?></td>
+                  <td class="monto">$<?= g.montoStr ?></td>
+                  <td>
+                    <? if (g.comprobante) { ?>
+                      <a href="<?= g.comprobante ?>" target="_blank" class="btn-comprobante">Ver Factura</a>
+                    <? } else { ?>
+                      <span style="color: #aaa; font-size: 0.85rem;">No adjunto</span>
+                    <? } ?>
+                  </td>
+                </tr>
+              <? } ?>
+            </tbody>
+          </table>
+        <? } else { ?>
+          <div class="empty-state">
+            Aún no se han registrado gastos en el sistema contable.<br>
+            ¡Pronto publicaremos las primeras inversiones!
+          </div>
+        <? } ?>
+      </div>
+
+    </div>
+  </body>
+</html>
