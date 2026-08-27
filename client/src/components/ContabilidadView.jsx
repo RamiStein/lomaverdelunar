@@ -1,25 +1,73 @@
 import React from 'react';
-import { Receipt, FileText, CheckCircle, ExternalLink, TrendingDown, DollarSign } from 'lucide-react';
+import { Receipt, FileText, CheckCircle, ExternalLink, TrendingDown, DollarSign, Lock, ShieldCheck, ArrowRight, HandHeart } from 'lucide-react';
 
-export default function ContabilidadView({ contabilidadData }) {
+export default function ContabilidadView({ contabilidadData, isAdmin, openLoginModal, setActiveTab }) {
   const gastos = contabilidadData?.gastos || [];
   const totalGastado = contabilidadData?.totalGastado || 0;
 
+  // Si no está logueado como Admin/Asociado, mostramos el acceso protegido
+  if (!isAdmin) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        <div className="bg-white/95 backdrop-blur-sm p-8 sm:p-12 rounded-3xl border-2 border-loma-green text-center shadow-[6px_6px_0px_rgba(43,83,41,0.1)]">
+          <div className="w-16 h-16 rounded-full bg-loma-wood/20 text-loma-green flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <span className="bg-loma-wood/20 text-loma-wood font-extrabold text-xs uppercase px-3.5 py-1.5 rounded-full tracking-wider inline-flex items-center gap-1.5 mb-3">
+            <Receipt className="w-4 h-4" /> Rendición de Cuentas
+          </span>
+
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-loma-green uppercase tracking-tight mb-4">
+            Transparencia y Economía Comunitaria 📊
+          </h1>
+
+          <p className="text-gray-700 text-sm sm:text-base leading-relaxed max-w-xl mx-auto mb-8">
+            La rendición contable detallada de egresos, facturas públicas y balances se comparte internamente con los <strong>vecinos asociados</strong> y el equipo de gestión en asamblea.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button
+              onClick={openLoginModal}
+              className="w-full sm:w-auto bg-loma-green hover:bg-loma-wood text-white px-6 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+            >
+              <ShieldCheck className="w-5 h-5 text-amber-300" />
+              <span>Ingresar con Clave Lunar</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('presupuesto')}
+              className="w-full sm:w-auto bg-white hover:bg-loma-bg text-loma-green border-2 border-loma-green px-6 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider shadow-xs hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+            >
+              <HandHeart className="w-5 h-5 text-loma-accent" />
+              <span>Sumarme como Vecino Asociado</span>
+            </button>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-gray-100 text-xs text-gray-500">
+            ¿Quieres ser parte del equipo de gestión y asamblea? Déjanos tus datos en la sección de Presupuesto.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Vista Completa para Administradores y Vecinos Asociados logueados
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       
       {/* Cabecera Principal */}
-      <div className="bg-white p-8 sm:p-12 rounded-3xl border-2 border-loma-green text-center shadow-[6px_6px_0px_rgba(43,83,41,0.1)] mb-10">
+      <div className="bg-white/95 backdrop-blur-sm p-8 sm:p-12 rounded-3xl border-2 border-loma-green text-center shadow-[6px_6px_0px_rgba(43,83,41,0.1)] mb-10">
         <span className="bg-loma-wood/20 text-loma-wood font-extrabold text-xs uppercase px-3.5 py-1.5 rounded-full tracking-wider inline-flex items-center gap-1.5 mb-3">
-          <Receipt className="w-4 h-4" /> Cuentas Claras
+          <ShieldCheck className="w-4 h-4" /> Vista Autenticada de Gestión
         </span>
         
         <h1 className="font-serif text-3xl sm:text-5xl font-bold text-loma-green uppercase tracking-tight">
-          Transparencia y Economía Abierta 📊
+          Balance y Rendición de Egresos 📊
         </h1>
         
         <p className="text-gray-600 text-sm sm:text-base max-w-xl mx-auto mt-3 leading-relaxed">
-          Publicamos el detalle contable de todos los gastos e inversiones realizadas con el fondo comunitario para la plaza. Cada peso cuenta.
+          Registro detallado de egresos, comprobantes y facturas cargadas en la plataforma comunitaria.
         </p>
 
         {/* Total Gastado Card */}
@@ -34,10 +82,10 @@ export default function ContabilidadView({ contabilidadData }) {
       </div>
 
       {/* Tabla de Egresos */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-loma-wood shadow-sm overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-sm p-6 sm:p-8 rounded-3xl border-2 border-loma-green shadow-sm overflow-hidden">
         <div className="flex items-center justify-between mb-6 border-b border-loma-wood/20 pb-4">
           <h2 className="font-serif text-2xl font-bold text-loma-green">
-            Registro de Egresos Comunitarios
+            Registro de Comprobantes
           </h2>
           <span className="text-xs font-bold text-loma-wood bg-loma-wood/15 px-3 py-1 rounded-full">
             {gastos.length} comprobantes

@@ -218,8 +218,9 @@ export default function App() {
           <div className="py-6">
             <PresupuestoView
               presupuestoData={presupuesto}
-              onVoteSubmitted={loadGlobalData}
               onVolunteerSubmitted={loadGlobalData}
+              isAdmin={isAdmin}
+              openLoginModal={() => setLoginModalOpen(true)}
             />
           </div>
         )}
@@ -249,7 +250,15 @@ export default function App() {
 
         {activeTab === 'contabilidad' && (
           <div className="py-6">
-            <ContabilidadView contabilidadData={contabilidad} />
+            <ContabilidadView
+              contabilidadData={contabilidad}
+              isAdmin={isAdmin}
+              openLoginModal={() => setLoginModalOpen(true)}
+              setActiveTab={(tab) => {
+                setActiveTab(tab);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
           </div>
         )}
 
