@@ -133,20 +133,22 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
               onClick={() => setActiveTab('feria')}
               className="bg-loma-green hover:bg-loma-wood text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-2"
             >
-              <span>🌿 Inscribir Emprendimiento</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('presupuesto')}
-              className="bg-loma-accent hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-2"
-            >
-              <span>🗳️ Presupuesto Participativo</span>
+              <Store className="w-4 h-4 text-amber-300" />
+              <span>🌿 La Feria & Feriantes</span>
             </button>
             <button
               onClick={() => setActiveTab('directorio')}
-              className="bg-emerald-800 hover:bg-emerald-900 text-white px-4 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-2"
+              className="bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-2"
             >
               <BookOpen className="w-4 h-4 text-amber-300" />
               <span>Directorio Barrial</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('escenario')}
+              className="bg-loma-accent hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider shadow-md hover:-translate-y-0.5 transition-all flex items-center gap-2"
+            >
+              <Music className="w-4 h-4 text-white" />
+              <span>Escenario & Música</span>
             </button>
             <button
               onClick={() => setShowFlyerModal(true)}
@@ -186,14 +188,14 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
               </h2>
               
               <p className="text-emerald-100 text-sm sm:text-base leading-relaxed mb-4">
-                {config?.mistica || 'La Luna Llena en Piscis nos invita a sumergirnos en la sensibilidad, la empatía profunda y la creatividad colectiva. Piscis es el signo del agua que todo lo abraza, recordándonos que somos parte de un mismo tejido vivo. En este encuentro, unimos el arte, la música del corazón, la economía fraterna y el cuidado mutuo para fortalecer los lazos de nuestra comunidad en Loma Verde.'}
+                {config?.mistica || 'La Luna Llena en Piscis nos invita a sumergirnos en la sensibilidad, la empatía profunda y la creatividad colectiva. Piscis es el signo del agua que todo lo abraza, recordándonos que somos parte de un mismo tejido vivo. En este encuentro, unimos el arte, la música del corazón, la economía solidaria y el cuidado mutuo para fortalecer los lazos de nuestra comunidad en Loma Verde.'}
               </p>
 
               <div className="flex flex-wrap gap-4 text-xs font-semibold text-amber-200/90 pt-2 border-t border-emerald-700/50">
                 <span className="flex items-center gap-1">✨ Frecuencia 13:20</span>
-                <span className="flex items-center gap-1">🌱 Economía Solidaria</span>
+                <span className="flex items-center gap-1">🌱 Economía Comunitaria</span>
                 <span className="flex items-center gap-1">🎶 Música y Arte en Vivo</span>
-                <span className="flex items-center gap-1">🌿 Soberanía Vecinal</span>
+                <span className="flex items-center gap-1">🌿 Soberanía Barrial</span>
               </div>
             </div>
 
@@ -211,7 +213,10 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
                   ¿Tienes una propuesta artesanal, gastronómica, artística u holística? ¡Súmate a la red!
                 </p>
                 <button
-                  onClick={() => setActiveTab('registro')}
+                  onClick={() => {
+                    const el = document.getElementById('seccion-inscripcion');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
                   className="w-full bg-loma-accent hover:bg-amber-600 text-white font-bold text-xs uppercase tracking-wider py-2.5 px-3 rounded-lg shadow transition-all"
                 >
                   Inscribirme Ahora
@@ -225,7 +230,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. PROPUESTAS VECINALES & PRESUPUESTO PARTICIPATIVO */}
+      {/* 3. PROPUESTAS VECINALES: DIRECTORIO Y ESCENARIO */}
       {/* ========================================================================= */}
       <div className="max-w-5xl mx-auto px-4 mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         
@@ -252,26 +257,26 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
           </button>
         </div>
 
-        {/* Presupuesto Participativo */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border-2 border-loma-green shadow-sm flex flex-col justify-between">
+        {/* Escenario y Cultura */}
+        <div className="bg-white/95 backdrop-blur-sm p-6 sm:p-8 rounded-3xl border-2 border-loma-green shadow-sm flex flex-col justify-between">
           <div>
-            <span className="bg-loma-green text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-wider inline-block mb-3">
-              Votación Vecinal
+            <span className="bg-loma-accent text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-wider inline-block mb-3">
+              Música & Encuentro
             </span>
             <h3 className="font-serif text-2xl font-bold text-loma-green mb-2">
-              Presupuesto Participativo 🗳️
+              Escenario y Artistas en Vivo 🎶
             </h3>
             <p className="text-xs sm:text-sm text-gray-700 leading-relaxed mb-4">
-              Conoce los proyectos en evaluación para mejorar la Plaza La Misión y los espacios públicos de Loma Verde. Tu voto decide la prioridad.
+              Disfruta de música acústica, danzas, poesía y expresiones culturales al aire libre en el corazón de la Plaza La Misión.
             </p>
           </div>
 
           <button
-            onClick={() => setActiveTab('presupuesto')}
+            onClick={() => setActiveTab('escenario')}
             className="w-full bg-loma-accent hover:bg-amber-600 text-white font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded-xl shadow transition-all text-center flex items-center justify-center gap-2"
           >
-            <span>Ver Proyectos y Votar</span>
-            <ArrowRight className="w-4 h-4" />
+            <Music className="w-4 h-4 text-white" />
+            <span>Conocer a los Artistas</span>
           </button>
         </div>
 

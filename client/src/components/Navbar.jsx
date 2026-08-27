@@ -11,30 +11,37 @@ import {
   ShieldCheck, 
   Moon,
   Menu,
-  X
+  X,
+  UserPlus
 } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, openLoginModal, openTroquelModal, config, showMercado }) {
+export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModal, openTroquelModal, config }) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  const baseNavItems = [
+  // Menú público principal: limpio, esencial y directo
+  const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
     { id: 'feria', label: 'La Feria', icon: Store },
     { id: 'escenario', label: 'Escenario', icon: Music },
     { id: 'directorio', label: 'Directorio', icon: BookOpen },
-    { id: 'presupuesto', label: 'Presupuesto', icon: Vote },
-    { id: 'flyer-studio', label: 'Flyer Studio', icon: ImageIcon },
-    { id: 'contabilidad', label: 'Transparencia', icon: Receipt },
   ];
 
-  // Si está en modo mercado o admin, se agrega Virtudes
-  const navItems = showMercado
-    ? [
-        ...baseNavItems.slice(0, 4),
-        { id: 'virtudes', label: 'Mercado de Virtudes', icon: Coins, highlight: true },
-        ...baseNavItems.slice(4)
-      ]
-    : baseNavItems;
+  // Si se accede directamente a una sección pausada o es admin, la mostramos contextual
+  const extraNavItems = [];
+  if (activeTab === 'presupuesto' || isAdmin) {
+    extraNavItems.push({ id: 'presupuesto', label: 'Presupuesto', icon: Vote });
+  }
+  if (activeTab === 'flyer-studio' || isAdmin) {
+    extraNavItems.push({ id: 'flyer-studio', label: 'Flyer Studio', icon: ImageIcon });
+  }
+  if (activeTab === 'contabilidad' || isAdmin) {
+    extraNavItems.push({ id: 'contabilidad', label: 'Transparencia', icon: Receipt });
+  }
+  if (activeTab === 'virtudes' || isAdmin) {
+    extraNavItems.push({ id: 'virtudes', label: 'Virtudes', icon: Coins, highlight: true });
+  }
+
+  const navItems = [...coreNavItems, ...extraNavItems];
 
   return (
     <nav className="bg-loma-bg/95 backdrop-blur-md sticky top-0 z-40 border-b-2 border-loma-green shadow-xs transition-all">
@@ -60,7 +67,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, o
           </div>
 
           {/* Enlaces Desktop */}
-          <div className="hidden xl:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -68,7 +75,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, o
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap transition-all ${
                     isActive
                       ? 'bg-loma-green text-white shadow-sm'
                       : item.highlight
@@ -85,16 +92,21 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, o
 
           {/* Botones Derecha */}
           <div className="flex items-center gap-2">
-            {showMercado && (
-              <button
-                onClick={openTroquelModal}
-                className="hidden sm:flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs"
-                title="Billetera de Troqueles"
-              >
-                <span>🎫</span>
-                <span className="hidden md:inline">Troquel</span>
-              </button>
-            )}
+            
+            {/* Botón rápido para participar */}
+            <button
+              onClick={() => {
+                setActiveTab('feria');
+                setTimeout(() => {
+                  const el = document.getElementById('seccion-inscripcion');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              className="hidden sm:inline-flex items-center gap-1.5 bg-loma-green hover:bg-loma-wood text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-xs transition-all"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-amber-300" />
+              <span>Participar</span>
+            </button>
 
             {/* Acceso CRM Admin */}
             {isAdmin ? (
@@ -122,7 +134,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, o
             {/* Botón Menú Mobile */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 text-loma-green hover:bg-loma-wood/10 rounded-lg transition-colors"
+              className="lg:hidden p-2 text-loma-green hover:bg-loma-wood/10 rounded-lg transition-colors"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -133,7 +145,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, o
 
       {/* Menú Mobile Desplegable */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-white border-b-2 border-loma-green px-4 pt-2 pb-6 space-y-1 shadow-lg animate-in slide-in-from-top-2">
+        <div className="lg:hidden bg-white border-b-2 border-loma-green px-4 pt-2 pb-6 space-y-1 shadow-lg animate-in slide-in-from-top-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -157,20 +169,6 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, o
               </button>
             );
           })}
-
-          {showMercado && (
-            <div className="pt-3 border-t border-gray-200 mt-2">
-              <button
-                onClick={() => {
-                  openTroquelModal();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-amber-100 text-amber-900 border border-amber-300 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-xs"
-              >
-                <span>🎫 Billetera de Troqueles</span>
-              </button>
-            </div>
-          )}
         </div>
       )}
     </nav>

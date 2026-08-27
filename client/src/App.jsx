@@ -57,29 +57,31 @@ export default function App() {
     }
   }, [userVoucher]);
 
-  // Check if accessed from mercado subdomain or query param
-  const isMercadoMode = () => {
-    try {
-      const hostname = window.location.hostname;
-      const params = new URLSearchParams(window.location.search);
-      return (
-        hostname.includes('mercado') ||
-        params.get('tab') === 'virtudes' ||
-        params.get('mercado') === 'true' ||
-        params.get('troquel') !== null
-      );
-    } catch {
-      return false;
-    }
-  };
-
+  // Subdomain & Direct Query Routing
   useEffect(() => {
-    if (isMercadoMode()) {
-      setActiveTab('virtudes');
+    try {
+      const hostname = window.location.hostname.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      
+      const tabParam = params.get('tab');
+      if (tabParam) {
+        setActiveTab(tabParam);
+        return;
+      }
+
+      if (hostname.startsWith('presupuesto')) {
+        setActiveTab('presupuesto');
+      } else if (hostname.startsWith('flyer')) {
+        setActiveTab('flyer-studio');
+      } else if (hostname.startsWith('transparencia') || hostname.startsWith('contabilidad')) {
+        setActiveTab('contabilidad');
+      } else if (hostname.startsWith('mercado') || params.get('mercado') === 'true' || params.get('troquel') !== null) {
+        setActiveTab('virtudes');
+      }
+    } catch (err) {
+      console.error('Error en enrutamiento por subdominio:', err);
     }
   }, []);
-
-  const showMercado = isMercadoMode() || activeTab === 'virtudes' || isAdmin;
 
   // Load all public initial data
   const loadGlobalData = async () => {
@@ -142,7 +144,6 @@ export default function App() {
         openLoginModal={() => setLoginModalOpen(true)}
         openTroquelModal={() => setTroquelModalOpen(true)}
         config={config}
-        showMercado={showMercado}
       />
 
       {/* 2. Contenido según pestaña activa */}
@@ -157,7 +158,6 @@ export default function App() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               openTroquelModal={() => setTroquelModalOpen(true)}
-              showMercado={showMercado}
             />
 
             {/* Muestra de la Feria en Inicio */}
