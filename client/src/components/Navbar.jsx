@@ -39,7 +39,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, setIsAdmin, o
             onClick={() => { setActiveTab('inicio'); setMobileMenuOpen(false); }}
           >
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-loma-wood border-2 border-loma-green flex items-center justify-center text-lg sm:text-xl text-white shadow-sm group-hover:scale-105 transition-transform flex-shrink-0">
-              ♒
+              {config?.signo === 'Piscis' ? '♓' : (config?.signo === 'Acuario' ? '♒' : (config?.signo === 'Aries' ? '♈' : '🌙'))}
             </div>
             <div className="whitespace-nowrap">
               <span className="font-serif font-bold text-base sm:text-lg text-loma-green tracking-wide block leading-none">
