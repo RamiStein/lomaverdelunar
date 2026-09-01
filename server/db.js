@@ -515,20 +515,33 @@ class Database {
   async addFeriante(f) {
     const config = await this.getConfig();
     const id = "fer-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+    const tipoVal = String(f.tipo || f.categoria || f.rubro || "Artesanías").trim();
+    
+    // Proteger contra imágenes base64 gigantes que superen el límite de Firestore
+    let imgBase64 = String(f.imagenBase64 || "");
+    if (imgBase64.length > 600000) {
+      imgBase64 = "";
+    }
+
     const nuevo = {
       id,
-      lunaId: f.lunaId || config.lunaActiva || "Luna Acuario",
+      lunaId: f.lunaId || config.lunaActiva || "Luna Piscis",
       nombre: String(f.nombre || "").trim(),
       nombrePersonal: String(f.nombrePersonal || "").trim(),
-      contacto: String(f.contacto || "").trim(),
-      tipo: String(f.tipo || "Varios").trim(),
+      contacto: String(f.contacto || f.telefono || "").trim(),
+      telefono: String(f.contacto || f.telefono || "").trim(),
+      tipo: tipoVal,
+      categoria: tipoVal,
+      rubro: tipoVal,
       descripcion: String(f.descripcion || "").trim(),
       instagram: String(f.instagram || "").trim(),
-      tienda: String(f.tienda || "").trim(),
+      tienda: String(f.tienda || f.web || "").trim(),
+      web: String(f.tienda || f.web || "").trim(),
       mapa: String(f.mapa || "").trim(),
-      imagenBase64: f.imagenBase64 || "",
+      imagenBase64: imgBase64,
       flyerUrl: f.flyerUrl || "",
-      estado: f.estado || "aprobado", // 'pendiente', 'aprobado', 'confirmado', 'rechazado'
+      estado: f.estado || "aprobado",
+      confirmado: true,
       puestoAsignado: f.puestoAsignado || "Sin asignar",
       createdAt: new Date().toISOString()
     };
