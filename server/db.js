@@ -1317,6 +1317,124 @@ class Database {
 
     return xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
   }
+
+  // ==========================================
+  // 9. MAPA COMUNITARIO & REPORTES VECINALES
+  // ==========================================
+  async getPuntosMapa(filtro = {}) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const snap = await fdb.collection('puntos_mapa').get();
+      let list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (filtro.categoria && filtro.categoria !== 'todos') {
+        list = list.filter(p => p.categoria === filtro.categoria);
+      }
+      return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    }
+    let list = this.data.puntosMapa || [];
+    if (filtro.categoria && filtro.categoria !== 'todos') {
+      list = list.filter(p => p.categoria === filtro.categoria);
+    }
+    return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  }
+
+  async addPuntoMapa(p) {
+    const id = "pto-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+    
+    // Proteger contra imágenes base64 gigantes
+    let imgFoto = String(p.foto || "");
+    if (imgFoto.length > 600000) {
+      imgFoto = "";
+    }
+
+    const nuevo = {
+      id,
+      titulo: String(p.titulo || "Reporte Vecinal").trim(),
+      categoria: String(p.categoria || "aviso").trim(),
+      categoriaLabel: String(p.categoriaLabel || "Novedad / Aviso Barrial 📣").trim(),
+      emoji: String(p.emoji || "📣").trim(),
+      color: String(p.color || "#c48c26").trim(),
+      descripcion: String(p.descripcion || "").trim(),
+      autorNombre: String(p.autorNombre || "Vecino de Loma Verde").trim(),
+      contacto: String(p.contacto || "").trim(),
+      calles: String(p.calles || "Loma Verde").trim(),
+      lat: Number(p.lat) || -34.3547,
+      lng: Number(p.lng) || -58.8258,
+      foto: imgFoto,
+      resuelto: false,
+      comentarios: [],
+      createdAt: new Date().toISOString()
+    };
+
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('puntos_mapa').doc(id).set(nuevo);
+      return nuevo;
+    }
+    if (!this.data.puntosMapa) this.data.puntosMapa = [];
+    this.data.puntosMapa.unshift(nuevo);
+    this.save();
+    return nuevo;
+  }
+
+  async addComentarioPunto(puntoId, com) {
+    const nuevoComentario = {
+      id: "com-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+      autorNombre: String(com.autorNombre || "Vecino").trim(),
+      texto: String(com.texto || "").trim(),
+      contacto: String(com.contacto || "").trim(),
+      createdAt: new Date().toISOString()
+    };
+
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('puntos_mapa').doc(puntoId);
+      const doc = await docRef.get();
+      if (!doc.exists) throw new Error("Punto del mapa no encontrado");
+      const current = doc.data();
+      const comentarios = current.comentarios || [];
+      comentarios.push(nuevoComentario);
+      await docRef.update({ comentarios });
+      return { ...current, comentarios };
+    }
+
+    if (!this.data.puntosMapa) this.data.puntosMapa = [];
+    const idx = this.data.puntosMapa.findIndex(p => p.id === puntoId);
+    if (idx === -1) throw new Error("Punto no encontrado");
+    if (!this.data.puntosMapa[idx].comentarios) this.data.puntosMapa[idx].comentarios = [];
+    this.data.puntosMapa[idx].comentarios.push(nuevoComentario);
+    this.save();
+    return this.data.puntosMapa[idx];
+  }
+
+  async toggleResolverPunto(puntoId) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('puntos_mapa').doc(puntoId);
+      const doc = await docRef.get();
+      if (!doc.exists) throw new Error("Punto no encontrado");
+      const current = doc.data();
+      const resuelto = !current.resuelto;
+      await docRef.update({ resuelto });
+      return { ...current, resuelto };
+    }
+    const idx = (this.data.puntosMapa || []).findIndex(p => p.id === puntoId);
+    if (idx === -1) throw new Error("Punto no encontrado");
+    this.data.puntosMapa[idx].resuelto = !this.data.puntosMapa[idx].resuelto;
+    this.save();
+    return this.data.puntosMapa[idx];
+  }
+
+  async deletePuntoMapa(puntoId) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('puntos_mapa').doc(puntoId).delete();
+      return true;
+    }
+    this.data.puntosMapa = (this.data.puntosMapa || []).filter(p => p.id !== puntoId);
+    this.save();
+    return true;
+  }
 }
 
 const db = new Database();

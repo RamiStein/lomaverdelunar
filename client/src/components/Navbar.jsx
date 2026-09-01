@@ -21,6 +21,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
   // Menú público principal: limpio, esencial y directo
   const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
+    { id: 'mapa', label: 'Mapa Vecinal', icon: MapPin },
     { id: 'feria', label: 'La Feria', icon: Store },
     { id: 'escenario', label: 'Escenario', icon: Music },
     { id: 'directorio', label: 'Directorio', icon: BookOpen },

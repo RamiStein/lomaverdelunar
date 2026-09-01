@@ -33,7 +33,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
     virtudes: [],
     contabilidad: { gastos: [], totalGastado: 0 },
     config: null,
-    noticias: []
+    noticias: [],
+    puntosMapa: []
   });
 
   // Filters & State
@@ -78,7 +79,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         virtRes,
         contRes,
         confRes,
-        notRes
+        notRes,
+        mapaRes
       ] = await Promise.all([
         fetch('/api/admin/dashboard', { headers }).then(r => r.json()),
         fetch('/api/admin/feriantes', { headers }).then(r => r.json()),
@@ -89,7 +91,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         fetch('/api/virtudes').then(r => r.json()),
         fetch('/api/contabilidad').then(r => r.json()),
         fetch('/api/config').then(r => r.json()),
-        fetch('/api/noticias').then(r => r.json())
+        fetch('/api/noticias').then(r => r.json()),
+        fetch('/api/mapa/puntos').then(r => r.json())
       ]);
 
       setData({
@@ -102,7 +105,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         virtudes: virtRes || [],
         contabilidad: contRes || { gastos: [], totalGastado: 0 },
         config: confRes || {},
-        noticias: notRes || []
+        noticias: notRes || [],
+        puntosMapa: Array.isArray(mapaRes) ? mapaRes : []
       });
 
       if (!configForm && confRes) {
@@ -294,8 +298,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       
-      {/* Barra Superior CRM */}
-      <div className="bg-white p-6 rounded-3xl border-2 border-loma-green shadow-md mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Cabecera CRM */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-white p-6 rounded-3xl border border-loma-wood/30 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-md">
             🛡️
@@ -345,6 +349,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       <div className="flex overflow-x-auto gap-2 pb-4 mb-6 no-scrollbar">
         {[
           { id: 'resumen', label: '📊 Resumen & KPIs' },
+          { id: 'mapa', label: `🗺️ Mapa Vecinal (${data.puntosMapa?.length || 0})` },
           { id: 'feriantes', label: `👥 Feriantes (${metricas.totalFeriantes || 0})` },
           { id: 'voluntarios', label: `🤝 Voluntarios (${metricas.totalVoluntarios || 0})` },
           { id: 'troqueles', label: `🎫 Troqueles & Mercado (${metricas.totalVouchers || 0})` },
@@ -368,7 +373,6 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
 
       {/* ========================================================= */}
       {/* 1. PESTAÑA RESUMEN & KPIS */}
-      {/* ========================================================= */}
       {crmTab === 'resumen' && (
         <div className="space-y-8 animate-fadeIn">
           
@@ -885,6 +889,88 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
                           <MessageCircle className="w-3.5 h-3.5" />
                         </a>
                       )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* PESTAÑA CRM MAPA VECINAL & REPORTES */}
+      {/* ========================================================= */}
+      {crmTab === 'mapa' && (
+        <div className="bg-white p-6 rounded-3xl border border-loma-wood/30 shadow-sm space-y-6 animate-fadeIn">
+          <div className="flex justify-between items-center border-b border-gray-200 pb-4">
+            <div>
+              <h2 className="font-serif text-xl font-bold text-loma-green">
+                Moderación de Reportes del Mapa Vecinal 🗺️
+              </h2>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Supervisión de puntos, novedades, alertas e hilos de comentarios publicados por vecinos.
+              </p>
+            </div>
+            <span className="text-xs font-bold text-loma-wood">
+              {data.puntosMapa.length} reportes
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="bg-loma-wood/10 text-loma-green border-b border-loma-wood/20">
+                  <th className="p-3">Categoría</th>
+                  <th className="p-3">Título & Detalle</th>
+                  <th className="p-3">Ubicación / Calles</th>
+                  <th className="p-3">Vecino / Contacto</th>
+                  <th className="p-3">Comentarios</th>
+                  <th className="p-3">Estado</th>
+                  <th className="p-3 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {data.puntosMapa.map((p) => (
+                  <tr key={p.id} className="hover:bg-[#faf9f5]">
+                    <td className="p-3">
+                      <span className="inline-flex items-center gap-1 font-bold text-xs">
+                        <span>{p.emoji}</span>
+                        <span>{p.categoriaLabel || p.categoria}</span>
+                      </span>
+                    </td>
+                    <td className="p-3 max-w-xs">
+                      <strong className="text-loma-green block">{p.titulo}</strong>
+                      <span className="text-gray-500 text-[11px] line-clamp-2">{p.descripcion}</span>
+                    </td>
+                    <td className="p-3 text-gray-700 font-semibold">{p.calles}</td>
+                    <td className="p-3">
+                      <div className="font-bold text-loma-green">{p.autorNombre}</div>
+                      {p.contacto && <div className="text-gray-500 font-mono text-[11px]">{p.contacto}</div>}
+                    </td>
+                    <td className="p-3">
+                      <span className="bg-amber-100 text-amber-900 font-extrabold px-2 py-0.5 rounded-full text-[10px]">
+                        💬 {(p.comentarios || []).length}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <button
+                        onClick={() => handleToggleResolverPuntoMapa(p.id)}
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                          p.resuelto ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {p.resuelto ? '✓ Resuelto' : '⏳ En curso'}
+                      </button>
+                    </td>
+                    <td className="p-3 text-right">
+                      <button
+                        onClick={() => handleDeletePuntoMapa(p.id)}
+                        className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                        title="Eliminar reporte del mapa"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </td>
                   </tr>
                 ))}

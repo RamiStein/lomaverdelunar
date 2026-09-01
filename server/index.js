@@ -134,6 +134,68 @@ app.get('/api/contabilidad', async (req, res) => {
 });
 
 // ==========================================
+// MAPA COMUNITARIO & REPORTES VECINALES
+// ==========================================
+
+// Listar puntos del mapa
+app.get('/api/mapa/puntos', async (req, res) => {
+  try {
+    const puntos = await db.getPuntosMapa(req.query);
+    res.json(puntos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Crear nuevo punto / reporte vecinal
+app.post('/api/mapa/puntos', async (req, res) => {
+  try {
+    const nuevo = await db.addPuntoMapa(req.body);
+    res.status(201).json({
+      success: true,
+      mensaje: '¡Reporte publicado en el mapa vecinal!',
+      punto: nuevo
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Agregar comentario a un punto
+app.post('/api/mapa/puntos/:id/comentarios', async (req, res) => {
+  try {
+    const updated = await db.addComentarioPunto(req.params.id, req.body);
+    res.status(201).json({
+      success: true,
+      mensaje: 'Comentario publicado en el hilo.',
+      punto: updated
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Marcar como resuelto / pendiente
+app.put('/api/mapa/puntos/:id/resolver', async (req, res) => {
+  try {
+    const updated = await db.toggleResolverPunto(req.params.id);
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Eliminar punto (Admin)
+app.delete('/api/admin/mapa/puntos/:id', verifyAdmin, async (req, res) => {
+  try {
+    await db.deletePuntoMapa(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// ==========================================
 // 2. RUTAS MERCADO DE VIRTUDES & TROQUELES
 // ==========================================
 

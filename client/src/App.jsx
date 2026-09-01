@@ -9,6 +9,7 @@ import DirectorioView from './components/DirectorioView';
 import PresupuestoView from './components/PresupuestoView';
 import ContabilidadView from './components/ContabilidadView';
 import MercadoVirtudes from './components/MercadoVirtudes';
+import MapaView from './components/Mapa/MapaView';
 import TroquelModal from './components/TroquelModal';
 import CRMLoginModal from './components/CRM/CRMLoginModal';
 import CRMDashboard from './components/CRM/CRMDashboard';
@@ -199,6 +200,12 @@ export default function App() {
                 }, 100);
               }}
             />
+          </div>
+        )}
+
+        {activeTab === 'mapa' && (
+          <div className="py-2">
+            <MapaView />
           </div>
         )}
 
