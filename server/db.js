@@ -1169,21 +1169,46 @@ class Database {
       this.getContabilidad()
     ]);
 
-    // Sheet: Feriantes
+    const lunasList = ['Luna Piscis', 'Luna Acuario', 'Luna Capricornio', 'Luna Sagitario', 'Luna Escorpio'];
+
+    // 1. Crear hojas individuales por cada Luna (igual que el Excel original)
+    lunasList.forEach(lunaName => {
+      const feriantesDeEstaLuna = (feriantes || []).filter(f => (f.lunaId || f.origen || '').includes(lunaName));
+      if (feriantesDeEstaLuna.length > 0) {
+        const rows = feriantesDeEstaLuna.map(f => ({
+          Fecha: f.createdAt ? f.createdAt.split('T')[0] : '',
+          Emprendimiento: f.nombre,
+          Responsable: f.nombrePersonal || '',
+          Telefono: f.contacto || f.telefono || '',
+          Rubro: f.tipo || f.categoria || '',
+          Descripcion: f.descripcion || '',
+          Instagram: f.instagram || '',
+          Tienda_Web: f.tienda || f.web || '',
+          Ubicacion_Mapa: f.mapa || '',
+          Puesto_Asignado: f.puestoAsignado || '',
+          Estado: f.estado || 'aprobado'
+        }));
+        const ws = xlsx.utils.json_to_sheet(rows);
+        xlsx.utils.book_append_sheet(wb, ws, lunaName);
+      }
+    });
+
+    // 2. Sheet: Directorio Histórico Completo
     const feriantesData = (feriantes || []).map(f => ({
-      Fecha: f.createdAt,
+      Fecha: f.createdAt ? f.createdAt.split('T')[0] : '',
       Emprendimiento: f.nombre,
-      Responsable: f.nombrePersonal,
-      Telefono: f.contacto,
-      Rubro: f.tipo,
-      Descripcion: f.descripcion,
-      Instagram: f.instagram,
-      Tienda: f.tienda,
-      Estado: f.estado,
-      Puesto: f.puestoAsignado
+      Responsable: f.nombrePersonal || '',
+      Telefono: f.contacto || f.telefono || '',
+      Rubro: f.tipo || f.categoria || '',
+      Descripcion: f.descripcion || '',
+      Instagram: f.instagram || '',
+      Tienda_Web: f.tienda || f.web || '',
+      Lunas_Participadas: f.origen || f.lunaId || '',
+      Estado: f.estado || 'aprobado',
+      Puesto: f.puestoAsignado || ''
     }));
     const wsFeriantes = xlsx.utils.json_to_sheet(feriantesData);
-    xlsx.utils.book_append_sheet(wb, wsFeriantes, "Feriantes");
+    xlsx.utils.book_append_sheet(wb, wsFeriantes, "Directorio Completo");
 
     // Sheet: Virtudes
     const virtudesData = (virtudes || []).map(v => ({

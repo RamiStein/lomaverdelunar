@@ -37,9 +37,21 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
   });
 
   // Filters & State
+  const [selectedLuna, setSelectedLuna] = useState('todas');
   const [ferianteFilter, setFerianteFilter] = useState('todos');
   const [ferianteSearch, setFerianteSearch] = useState('');
   const [editingFeriante, setEditingFeriante] = useState(null);
+  const [showAddFerianteModal, setShowAddFerianteModal] = useState(false);
+  const [newFerianteForm, setNewFerianteForm] = useState({
+    nombre: '',
+    nombrePersonal: '',
+    contacto: '',
+    tipo: 'Artesanías',
+    descripcion: '',
+    instagram: '',
+    lunaId: 'Luna Piscis',
+    puestoAsignado: ''
+  });
 
   // New Expense form
   const [newGasto, setNewGasto] = useState({ detalle: '', monto: '', categoria: 'General', comprobante: '' });
@@ -124,6 +136,38 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       fetchAllData();
       if (refreshGlobalData) refreshGlobalData();
       setEditingFeriante(null);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleCreateFeriante = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/admin/feriantes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+        body: JSON.stringify({
+          ...newFerianteForm,
+          lunaId: newFerianteForm.lunaId || data.config?.lunaActiva || 'Luna Piscis',
+          origen: newFerianteForm.lunaId || data.config?.lunaActiva || 'Luna Piscis'
+        })
+      });
+      if (!res.ok) throw new Error('Error al registrar feriante.');
+      alert('¡Feriante registrado con éxito!');
+      setShowAddFerianteModal(false);
+      setNewFerianteForm({
+        nombre: '',
+        nombrePersonal: '',
+        contacto: '',
+        tipo: 'Artesanías',
+        descripcion: '',
+        instagram: '',
+        lunaId: data.config?.lunaActiva || 'Luna Piscis',
+        puestoAsignado: ''
+      });
+      fetchAllData();
+      if (refreshGlobalData) refreshGlobalData();
     } catch (err) {
       alert(err.message);
     }
@@ -430,134 +474,360 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       {/* ========================================================= */}
       {/* 2. PESTAÑA CRM FERIANTES */}
       {/* ========================================================= */}
-      {crmTab === 'feriantes' && (
-        <div className="bg-white p-6 rounded-3xl border border-loma-wood/30 shadow-sm space-y-6 animate-fadeIn">
-          
-          {/* Controles de Filtrado */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-gray-200 pb-4">
-            <div className="flex items-center gap-2 flex-wrap">
-              {['todos', 'pendiente', 'aprobado', 'confirmado'].map((st) => (
+      {crmTab === 'feriantes' && (() => {
+        const lunasBase = ['Luna Piscis', 'Luna Acuario', 'Luna Capricornio', 'Luna Sagitario', 'Luna Escorpio'];
+        const lunasEnFeriantes = [...new Set((data.feriantes || []).map(f => f.lunaId || f.origen || '').flatMap(s => s.split(' / ').map(x => x.trim())).filter(Boolean))];
+        const lunasDisponibles = Array.from(new Set([...lunasBase, ...lunasEnFeriantes]));
+
+        const feriantesFiltrados = data.feriantes
+          .filter((f) => selectedLuna === 'todas' || (f.lunaId || f.origen || '').includes(selectedLuna))
+          .filter((f) => ferianteFilter === 'todos' || f.estado === ferianteFilter)
+          .filter((f) => !ferianteSearch || f.nombre.toLowerCase().includes(ferianteSearch.toLowerCase()) || (f.nombrePersonal && f.nombrePersonal.toLowerCase().includes(ferianteSearch.toLowerCase())) || (f.tipo && f.tipo.toLowerCase().includes(ferianteSearch.toLowerCase())));
+
+        return (
+          <div className="bg-white p-6 rounded-3xl border border-loma-wood/30 shadow-sm space-y-6 animate-fadeIn">
+            
+            {/* Cabecera y Selector de Pestañas de Luna */}
+            <div className="space-y-4 border-b border-gray-200 pb-5">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                  <h2 className="font-serif text-xl font-bold text-loma-green flex items-center gap-2">
+                    <span>Inscripciones y Feriantes por Ciclo Lunar</span>
+                    <span className="text-xs bg-loma-accent/20 text-loma-accent font-extrabold px-2.5 py-0.5 rounded-full">
+                      {data.feriantes.length} Total
+                    </span>
+                  </h2>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Separadas por pestañas de Luna histórica (igual que en el Excel oficial).
+                  </p>
+                </div>
+
                 <button
-                  key={st}
-                  onClick={() => setFerianteFilter(st)}
-                  className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                    ferianteFilter === st
-                      ? 'bg-loma-green text-white shadow-xs'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  onClick={() => setShowAddFerianteModal(true)}
+                  className="bg-loma-green hover:bg-loma-wood text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all active:scale-95 shrink-0"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Inscribir Feriante</span>
+                </button>
+              </div>
+
+              {/* Pestañas de Lunas */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 no-scrollbar">
+                <button
+                  onClick={() => setSelectedLuna('todas')}
+                  className={`px-3.5 py-2 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap transition-all ${
+                    selectedLuna === 'todas'
+                      ? 'bg-loma-green text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {st}
+                  <span>🌕 Todas las Lunas</span>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${selectedLuna === 'todas' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'}`}>
+                    {data.feriantes.length}
+                  </span>
                 </button>
-              ))}
-            </div>
 
-            <div className="relative w-full sm:w-64">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={ferianteSearch}
-                onChange={(e) => setFerianteSearch(e.target.value)}
-                placeholder="Buscar feriante o rubro..."
-                className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:border-loma-accent"
-              />
-            </div>
-          </div>
-
-          {/* Tabla de Feriantes */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="bg-loma-wood/10 text-loma-green border-b border-loma-wood/20">
-                  <th className="p-3">Emprendimiento</th>
-                  <th className="p-3">Responsable</th>
-                  <th className="p-3">Rubro</th>
-                  <th className="p-3">Ubicación / Puesto</th>
-                  <th className="p-3">Estado</th>
-                  <th className="p-3 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {data.feriantes
-                  .filter((f) => ferianteFilter === 'todos' || f.estado === ferianteFilter)
-                  .filter((f) => !ferianteSearch || f.nombre.toLowerCase().includes(ferianteSearch.toLowerCase()) || (f.nombrePersonal && f.nombrePersonal.toLowerCase().includes(ferianteSearch.toLowerCase())))
-                  .map((f) => (
-                    <tr key={f.id} className="hover:bg-[#faf9f5] transition-colors">
-                      <td className="p-3 font-bold text-loma-green">
-                        <div>{f.nombre}</div>
-                        {f.instagram && <span className="text-[10px] text-pink-600 font-semibold">{f.instagram}</span>}
-                      </td>
-                      <td className="p-3 text-gray-700 font-medium">
-                        <div>{f.nombrePersonal || '-'}</div>
-                        <span className="text-[10px] text-gray-400">{f.contacto}</span>
-                      </td>
-                      <td className="p-3 font-semibold text-loma-wood">{f.tipo}</td>
-                      <td className="p-3">
-                        <span className="bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded text-[10px] font-bold">
-                          {f.puestoAsignado || 'Sin asignar'}
+                {lunasDisponibles.map((luna) => {
+                  const count = data.feriantes.filter(f => (f.lunaId || f.origen || '').includes(luna)).length;
+                  const isActiva = data.config?.lunaActiva === luna;
+                  const icon = luna.includes('Piscis') ? '♓' : luna.includes('Acuario') ? '♒' : luna.includes('Capricornio') ? '♑' : luna.includes('Sagitario') ? '♐' : luna.includes('Escorpio') ? '♏' : '🌙';
+                  
+                  return (
+                    <button
+                      key={luna}
+                      onClick={() => setSelectedLuna(luna)}
+                      className={`px-3.5 py-2 rounded-2xl text-xs font-bold tracking-wider flex items-center gap-1.5 whitespace-nowrap transition-all ${
+                        selectedLuna === luna
+                          ? 'bg-loma-green text-white shadow-md'
+                          : 'bg-white text-loma-green border border-loma-wood/20 hover:bg-loma-bg'
+                      }`}
+                    >
+                      <span>{icon} {luna}</span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${selectedLuna === luna ? 'bg-white/20 text-white' : 'bg-loma-accent/15 text-loma-accent'}`}>
+                        {count}
+                      </span>
+                      {isActiva && (
+                        <span className="text-[9px] bg-amber-400 text-amber-950 font-black px-1.5 py-0.2 rounded-full uppercase">
+                          Actual
                         </span>
-                      </td>
-                      <td className="p-3">
-                        <select
-                          value={f.estado}
-                          onChange={(e) => handleUpdateFeriante(f.id, { estado: e.target.value })}
-                          className={`text-[10px] font-bold uppercase rounded px-2 py-1 border ${
-                            f.estado === 'aprobado' || f.estado === 'confirmado'
-                              ? 'bg-green-100 text-green-800 border-green-300'
-                              : f.estado === 'pendiente'
-                              ? 'bg-amber-100 text-amber-800 border-amber-300'
-                              : 'bg-red-100 text-red-800 border-red-300'
-                          }`}
-                        >
-                          <option value="pendiente">Pendiente</option>
-                          <option value="aprobado">Aprobado</option>
-                          <option value="confirmado">Confirmado</option>
-                          <option value="rechazado">Rechazado</option>
-                        </select>
-                      </td>
-                      <td className="p-3 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          {/* Botón WhatsApp */}
-                          {f.contacto && (
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Controles de Filtrado secundario (Estado y Búsqueda) */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold text-gray-400 uppercase mr-1">Estado:</span>
+                {['todos', 'pendiente', 'aprobado', 'confirmado'].map((st) => (
+                  <button
+                    key={st}
+                    onClick={() => setFerianteFilter(st)}
+                    className={`px-3 py-1 rounded-full text-xs font-bold uppercase transition-all ${
+                      ferianteFilter === st
+                        ? 'bg-loma-wood text-white shadow-xs'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {st}
+                  </button>
+                ))}
+              </div>
+
+              <div className="relative w-full sm:w-64">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={ferianteSearch}
+                  onChange={(e) => setFerianteSearch(e.target.value)}
+                  placeholder="Buscar feriante, rubro o responsable..."
+                  className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:border-loma-accent"
+                />
+              </div>
+            </div>
+
+            {/* Resumen de la vista actual */}
+            <div className="text-xs text-gray-500 font-semibold flex justify-between items-center">
+              <span>
+                Mostrando <strong>{feriantesFiltrados.length}</strong> feriantes en <strong>{selectedLuna === 'todas' ? 'Todas las Lunas' : selectedLuna}</strong>
+              </span>
+            </div>
+
+            {/* Tabla de Feriantes */}
+            <div className="overflow-x-auto rounded-2xl border border-gray-200">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="bg-loma-wood/10 text-loma-green border-b border-loma-wood/20 font-bold">
+                    <th className="p-3">Emprendimiento</th>
+                    <th className="p-3">Responsable</th>
+                    <th className="p-3">Rubro</th>
+                    <th className="p-3">Ciclo Lunar</th>
+                    <th className="p-3">Ubicación / Puesto</th>
+                    <th className="p-3">Estado</th>
+                    <th className="p-3 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {feriantesFiltrados.length > 0 ? (
+                    feriantesFiltrados.map((f) => (
+                      <tr key={f.id} className="hover:bg-[#faf9f5] transition-colors">
+                        <td className="p-3 font-bold text-loma-green">
+                          <div>{f.nombre}</div>
+                          {f.instagram && <span className="text-[10px] text-pink-600 font-semibold">{f.instagram}</span>}
+                        </td>
+                        <td className="p-3 text-gray-700 font-medium">
+                          <div>{f.nombrePersonal || '-'}</div>
+                          <span className="text-[10px] text-gray-400">{f.contacto || f.telefono}</span>
+                        </td>
+                        <td className="p-3 font-semibold text-loma-wood">{f.tipo || f.categoria}</td>
+                        <td className="p-3">
+                          <select
+                            value={f.lunaId || f.origen?.split(' / ')[0] || data.config?.lunaActiva || 'Luna Piscis'}
+                            onChange={(e) => handleUpdateFeriante(f.id, { lunaId: e.target.value, origen: e.target.value })}
+                            className="text-[10px] font-bold rounded-lg px-2 py-1 border border-gray-300 bg-white text-loma-green cursor-pointer shadow-2xs"
+                          >
+                            {lunasDisponibles.map((l) => (
+                              <option key={l} value={l}>{l}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="p-3">
+                          <span className="bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded text-[10px] font-bold">
+                            {f.puestoAsignado || 'Sin asignar'}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <select
+                            value={f.estado || 'aprobado'}
+                            onChange={(e) => handleUpdateFeriante(f.id, { estado: e.target.value })}
+                            className={`text-[10px] font-bold uppercase rounded px-2 py-1 border ${
+                              f.estado === 'aprobado' || f.estado === 'confirmado'
+                                ? 'bg-green-100 text-green-800 border-green-300'
+                                : f.estado === 'pendiente'
+                                ? 'bg-amber-100 text-amber-800 border-amber-300'
+                                : 'bg-red-100 text-red-800 border-red-300'
+                            }`}
+                          >
+                            <option value="pendiente">Pendiente</option>
+                            <option value="aprobado">Aprobado</option>
+                            <option value="confirmado">Confirmado</option>
+                            <option value="rechazado">Rechazado</option>
+                          </select>
+                        </td>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {/* Botón WhatsApp */}
+                            {(f.contacto || f.telefono) && (
+                              <button
+                                onClick={() => sendWhatsAppConfirmation(f)}
+                                className="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-2xs"
+                                title="Enviar mensaje de confirmación por WhatsApp"
+                              >
+                                <MessageCircle className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+
+                            {/* Botón Asignar Puesto */}
                             <button
-                              onClick={() => sendWhatsAppConfirmation(f)}
-                              className="p-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg"
-                              title="Enviar mensaje de confirmación por WhatsApp"
+                              onClick={() => {
+                                const nuevoPuesto = prompt('Asignar puesto en la plaza:', f.puestoAsignado || 'Sector A - Puesto 01');
+                                if (nuevoPuesto !== null) {
+                                  handleUpdateFeriante(f.id, { puestoAsignado: nuevoPuesto });
+                                }
+                              }}
+                              className="p-1.5 bg-loma-wood hover:bg-loma-green text-white rounded-lg shadow-2xs"
+                              title="Asignar puesto/ubicación"
                             >
-                              <MessageCircle className="w-3.5 h-3.5" />
+                              <Edit2 className="w-3.5 h-3.5" />
                             </button>
-                          )}
 
-                          {/* Botón Asignar Puesto */}
-                          <button
-                            onClick={() => {
-                              const nuevoPuesto = prompt('Asignar puesto en la plaza:', f.puestoAsignado || 'Sector A - Puesto 01');
-                              if (nuevoPuesto !== null) {
-                                handleUpdateFeriante(f.id, { puestoAsignado: nuevoPuesto });
-                              }
-                            }}
-                            className="p-1.5 bg-loma-wood hover:bg-loma-green text-white rounded-lg"
-                            title="Asignar puesto/ubicación"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-
-                          {/* Botón Eliminar */}
-                          <button
-                            onClick={() => handleDeleteFeriante(f.id)}
-                            className="p-1.5 bg-gray-200 hover:bg-red-600 hover:text-white text-gray-600 rounded-lg transition-colors"
-                            title="Eliminar registro"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
+                            {/* Botón Eliminar */}
+                            <button
+                              onClick={() => handleDeleteFeriante(f.id)}
+                              className="p-1.5 bg-gray-200 hover:bg-red-600 hover:text-white text-gray-600 rounded-lg transition-colors"
+                              title="Eliminar registro"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="p-8 text-center text-gray-400 italic">
+                        No se encontraron inscripciones para los filtros seleccionados.
                       </td>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Modal: Inscribir Feriante Manualmente */}
+            {showAddFerianteModal && (
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+                <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border-2 border-loma-green shadow-2xl space-y-4">
+                  <div className="flex justify-between items-center border-b pb-3">
+                    <h3 className="font-serif text-lg font-bold text-loma-green">
+                      Inscribir Feriante Manualmente 🌿
+                    </h3>
+                    <button onClick={() => setShowAddFerianteModal(false)} className="text-gray-400 hover:text-gray-600">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleCreateFeriante} className="space-y-3 text-xs">
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">Nombre del Emprendimiento *</label>
+                      <input
+                        type="text"
+                        required
+                        value={newFerianteForm.nombre}
+                        onChange={(e) => setNewFerianteForm({ ...newFerianteForm, nombre: e.target.value })}
+                        placeholder="Ej: Cerámica del Sol"
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-loma-wood uppercase mb-1">Nombre Responsable</label>
+                        <input
+                          type="text"
+                          value={newFerianteForm.nombrePersonal}
+                          onChange={(e) => setNewFerianteForm({ ...newFerianteForm, nombrePersonal: e.target.value })}
+                          placeholder="Ej: Sofía"
+                          className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-loma-wood uppercase mb-1">WhatsApp / Contacto *</label>
+                        <input
+                          type="text"
+                          required
+                          value={newFerianteForm.contacto}
+                          onChange={(e) => setNewFerianteForm({ ...newFerianteForm, contacto: e.target.value })}
+                          placeholder="Ej: 1122334455"
+                          className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-loma-wood uppercase mb-1">Luna / Ciclo *</label>
+                        <select
+                          value={newFerianteForm.lunaId}
+                          onChange={(e) => setNewFerianteForm({ ...newFerianteForm, lunaId: e.target.value })}
+                          className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-bold"
+                        >
+                          {lunasDisponibles.map((l) => (
+                            <option key={l} value={l}>{l}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block font-bold text-loma-wood uppercase mb-1">Rubro / Categoría</label>
+                        <select
+                          value={newFerianteForm.tipo}
+                          onChange={(e) => setNewFerianteForm({ ...newFerianteForm, tipo: e.target.value })}
+                          className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-semibold"
+                        >
+                          {['Artesanías', 'Gastronomía', 'Huerta / Vivero', 'Música / Arte', 'Terapias Holísticas', 'Feria Americana', 'Productos Naturales'].map(c => (
+                            <option key={c} value={c}>{c}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">Puesto Asignado en la Plaza</label>
+                      <input
+                        type="text"
+                        value={newFerianteForm.puestoAsignado}
+                        onChange={(e) => setNewFerianteForm({ ...newFerianteForm, puestoAsignado: e.target.value })}
+                        placeholder="Ej: Sector B - Puesto 04"
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">Descripción / Productos</label>
+                      <textarea
+                        rows={2}
+                        value={newFerianteForm.descripcion}
+                        onChange={(e) => setNewFerianteForm({ ...newFerianteForm, descripcion: e.target.value })}
+                        placeholder="Detalle de productos..."
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowAddFerianteModal(false)}
+                        className="w-1/2 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold uppercase"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        className="w-1/2 py-2.5 rounded-xl bg-loma-green hover:bg-loma-wood text-white font-bold uppercase shadow-sm"
+                      >
+                        Guardar Feriante
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ========================================================= */}
       {/* 3. PESTAÑA CRM VOLUNTARIOS */}

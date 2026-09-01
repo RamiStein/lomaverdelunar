@@ -274,6 +274,15 @@ app.get('/api/admin/feriantes', verifyAdmin, async (req, res) => {
   }
 });
 
+app.post('/api/admin/feriantes', verifyAdmin, async (req, res) => {
+  try {
+    const nuevo = await db.addFeriante(req.body);
+    res.status(201).json(nuevo);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 app.put('/api/admin/feriantes/:id', verifyAdmin, async (req, res) => {
   try {
     const updated = await db.updateFeriante(req.params.id, req.body);
