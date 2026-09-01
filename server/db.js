@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const xlsx = require('xlsx');
 const firebase = require('./firebase');
+const lunarCalendar = require('./lunarCalendar');
 
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
@@ -408,18 +409,45 @@ class Database {
   }
 
   // ==========================================
-  // 1. CONFIG / LUNA
+  // 1. CONFIG / LUNA (SISTEMA AUTOMÁTICO 13:20)
   // ==========================================
   async getConfig() {
+    let savedConfig = {};
     if (firebase.isFirebaseEnabled()) {
       const fdb = firebase.getDb();
       const doc = await fdb.collection('config').doc('general').get();
-      if (doc.exists) return doc.data();
-      // Si no existe en Firestore, guardar default
-      await fdb.collection('config').doc('general').set(SEED_DATA.config);
-      return SEED_DATA.config;
+      savedConfig = doc.exists ? doc.data() : SEED_DATA.config;
+    } else {
+      savedConfig = this.data.config || SEED_DATA.config;
     }
-    return this.data.config;
+
+    // Si el modo automático está activo (por defecto true), obtener el ciclo lunar por fecha actual
+    if (savedConfig.modoAutomatico !== false) {
+      const autoCycle = lunarCalendar.getAutoLunarCycle();
+      return {
+        ...autoCycle,
+        ...savedConfig,
+        // Campos dinámicos del ciclo activo (permitiendo sobreescritura manual si se guardó en config)
+        lunaActiva: savedConfig.lunaActiva || autoCycle.lunaActiva,
+        signo: savedConfig.signo || autoCycle.signo,
+        simboloZodiacal: autoCycle.simboloZodiacal,
+        elemento: autoCycle.elemento,
+        fechaEventoTexto: savedConfig.fechaEventoTexto || autoCycle.fechaEventoTexto,
+        diaSemanaTexto: autoCycle.diaSemanaTexto,
+        horarioTexto: savedConfig.horarioTexto || autoCycle.horarioTexto,
+        lema: savedConfig.lema || savedConfig.motto || autoCycle.lema,
+        mistica: savedConfig.mistica || autoCycle.mistica,
+        tags: autoCycle.tags,
+        fondoUrl: savedConfig.fondoUrl || '/fondo-loma-verde.jpg',
+        modoAutomatico: true,
+        ciclosDisponibles: lunarCalendar.getAllLunarCycles()
+      };
+    }
+
+    return {
+      ...savedConfig,
+      ciclosDisponibles: lunarCalendar.getAllLunarCycles()
+    };
   }
 
   async updateConfig(newConfig) {

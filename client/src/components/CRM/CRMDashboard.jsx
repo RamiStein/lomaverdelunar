@@ -1131,81 +1131,176 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       {crmTab === 'config' && configForm && (
         <div className="space-y-8 animate-fadeIn">
           
-          {/* Configuración de la Luna Activa */}
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-loma-wood/30 shadow-sm">
-            <h3 className="font-serif text-xl font-bold text-loma-green mb-4">
-              Configurador del Ciclo Lunar Activo ♒
-            </h3>
+          {/* Configuración de la Luna Activa y Motor Sincrónico */}
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-loma-wood/30 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-gray-200 pb-4">
+              <div>
+                <span className="text-[10px] font-extrabold uppercase bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full">
+                  Frecuencia Sincrónica 13:20
+                </span>
+                <h3 className="font-serif text-xl font-bold text-loma-green mt-1">
+                  Motor de Ciclos Lunares & Configuración General 🌕
+                </h3>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-300 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Modo Calendario Automático</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Selector Rápido de Ciclos Lunares */}
+            {configForm.ciclosDisponibles && (
+              <div className="bg-[#faf9f5] p-4 rounded-2xl border border-gray-200">
+                <label className="block text-xs font-extrabold text-loma-wood uppercase mb-1.5">
+                  ⚡ Cargar Plantilla de Ciclo Lunar (12 Plenilunios Zodiacales)
+                </label>
+                <select
+                  onChange={(e) => {
+                    const sel = configForm.ciclosDisponibles.find(c => c.lunaActiva === e.target.value);
+                    if (sel) {
+                      setConfigForm({
+                        ...configForm,
+                        lunaActiva: sel.lunaActiva,
+                        signo: sel.signo,
+                        simboloZodiacal: sel.simboloZodiacal,
+                        fechaEventoTexto: sel.fechaEventoTexto,
+                        diaSemanaTexto: sel.diaSemanaTexto,
+                        horarioTexto: sel.horarioTexto,
+                        lugarTexto: sel.lugarTexto,
+                        lema: sel.lema,
+                        mistica: sel.mistica,
+                        elemento: sel.elemento
+                      });
+                    }
+                  }}
+                  defaultValue=""
+                  className="w-full p-2.5 rounded-xl border border-gray-300 bg-white text-xs font-bold text-loma-green focus:outline-none focus:border-loma-accent"
+                >
+                  <option value="" disabled>Selecciona una Luna para autocompletar textos y mística...</option>
+                  {configForm.ciclosDisponibles.map((c) => (
+                    <option key={c.id} value={c.lunaActiva}>
+                      {c.simboloZodiacal} {c.lunaActiva} • {c.fechaEventoTexto} ({c.elemento})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <form onSubmit={handleSaveConfig} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Luna Activa (Pestaña)</label>
+                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Nombre de la Luna (Pestaña CRM)</label>
                   <input
                     type="text"
                     value={configForm.lunaActiva || ''}
                     onChange={(e) => setConfigForm({ ...configForm, lunaActiva: e.target.value })}
-                    placeholder="Ej: Luna Acuario"
+                    placeholder="Ej: Luna Piscis"
                     className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-bold text-loma-green"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Nombre del Encuentro</label>
+                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Signo Zodiacal</label>
                   <input
                     type="text"
-                    value={configForm.nombreEvento || ''}
-                    onChange={(e) => setConfigForm({ ...configForm, nombreEvento: e.target.value })}
+                    value={configForm.signo || ''}
+                    onChange={(e) => setConfigForm({ ...configForm, signo: e.target.value })}
+                    placeholder="Ej: Piscis"
                     className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-bold"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Signo / Subtítulo</label>
+                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Símbolo Zodiacal</label>
                   <input
                     type="text"
-                    value={configForm.subtitulo || ''}
-                    onChange={(e) => setConfigForm({ ...configForm, subtitulo: e.target.value })}
+                    value={configForm.simboloZodiacal || ''}
+                    onChange={(e) => setConfigForm({ ...configForm, simboloZodiacal: e.target.value })}
+                    placeholder="Ej: ♓"
                     className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-bold text-loma-accent"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Fecha y Horario</label>
+                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Fecha del Evento (Texto)</label>
                   <input
                     type="text"
-                    value={configForm.fechaEvento || ''}
-                    onChange={(e) => setConfigForm({ ...configForm, fechaEvento: e.target.value })}
+                    value={configForm.fechaEventoTexto || ''}
+                    onChange={(e) => setConfigForm({ ...configForm, fechaEventoTexto: e.target.value })}
+                    placeholder="Ej: 5 DE SEPTIEMBRE"
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Horario</label>
+                  <input
+                    type="text"
+                    value={configForm.horarioTexto || ''}
+                    onChange={(e) => setConfigForm({ ...configForm, horarioTexto: e.target.value })}
+                    placeholder="Ej: DE 12 A 18 HS"
                     className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Lugar / Ubicación</label>
+                  <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Lugar / Plaza</label>
                   <input
                     type="text"
-                    value={configForm.lugar || ''}
-                    onChange={(e) => setConfigForm({ ...configForm, lugar: e.target.value })}
+                    value={configForm.lugarTexto || configForm.lugar || ''}
+                    onChange={(e) => setConfigForm({ ...configForm, lugarTexto: e.target.value })}
+                    placeholder="Ej: Plaza La Misión y Nigromante"
                     className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Mística del Ciclo</label>
+                <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Lema / Slogan Inspirador</label>
+                <input
+                  type="text"
+                  value={configForm.lema || configForm.motto || ''}
+                  onChange={(e) => setConfigForm({ ...configForm, lema: e.target.value })}
+                  placeholder="Ej: Un encuentro para compartir, conectar y fortalecer nuestra comunidad."
+                  className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Mística del Ciclo Zodiacal</label>
                 <textarea
                   rows={3}
                   value={configForm.mistica || ''}
                   onChange={(e) => setConfigForm({ ...configForm, mistica: e.target.value })}
+                  placeholder="Texto explicativo sobre la energía mística de la Luna actual..."
                   className="w-full p-3 rounded-xl border border-gray-300 text-xs leading-relaxed"
                 />
               </div>
 
-              <button
-                type="submit"
-                className="bg-loma-green hover:bg-loma-wood text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow"
-              >
-                Guardar Configuración Lunar
-              </button>
+              <div>
+                <label className="block text-xs font-bold text-loma-wood uppercase mb-1">Imagen de Fondo / Wallpaper del Flyer (URL o ruta)</label>
+                <input
+                  type="text"
+                  value={configForm.fondoUrl || ''}
+                  onChange={(e) => setConfigForm({ ...configForm, fondoUrl: e.target.value })}
+                  placeholder="Ej: /fondo-loma-verde.jpg"
+                  className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-mono"
+                />
+                <span className="text-[10px] text-gray-400 mt-1 block">
+                  Por defecto usa <code>/fondo-loma-verde.jpg</code> (fondo artístico del evento).
+                </span>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="bg-loma-green hover:bg-loma-wood text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all active:scale-95 flex items-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Guardar y Aplicar en Todo el Sistema</span>
+                </button>
+              </div>
             </form>
           </div>
 

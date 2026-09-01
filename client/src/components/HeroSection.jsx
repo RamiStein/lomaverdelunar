@@ -92,22 +92,22 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
         {/* PLACA ORNAMENTADA DE FECHA Y HORARIO */}
         <div className="max-w-2xl mx-auto bg-gradient-to-b from-amber-50/95 to-white/95 border-2 border-loma-accent/60 p-6 sm:p-8 rounded-3xl shadow-[6px_6px_0px_rgba(43,83,41,0.12)] relative backdrop-blur-xs">
           
-          {/* SÁBADO */}
+          {/* DÍA DE LA SEMANA */}
           <div className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-loma-accent flex items-center justify-center gap-2 mb-1">
             <span>🌾</span>
-            <span>SÁBADO</span>
+            <span>{config?.diaSemanaTexto || 'SÁBADO'}</span>
             <span>🌾</span>
           </div>
 
-          {/* 5 DE SEPTIEMBRE */}
-          <div className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-loma-green tracking-tight my-1">
-            5 DE SEPTIEMBRE
+          {/* FECHA DEL EVENTO */}
+          <div className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-loma-green tracking-tight my-1 uppercase">
+            {config?.fechaEventoTexto || '5 DE SEPTIEMBRE'}
           </div>
 
-          {/* DE 12 A 18 HS */}
+          {/* HORARIO */}
           <div className="font-serif text-lg sm:text-2xl font-bold text-loma-wood tracking-wide mt-1 mb-4 flex items-center justify-center gap-2">
             <span>✦</span>
-            <span>DE 12 A 18 HS</span>
+            <span>{config?.horarioTexto || 'DE 12 A 18 HS'}</span>
             <span>✦</span>
           </div>
 
@@ -118,13 +118,13 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
             </div>
             <div className="text-xs sm:text-sm text-emerald-100 flex items-center justify-center gap-1.5 mt-0.5">
               <MapPin className="w-4 h-4 text-amber-300 shrink-0" />
-              <span>Plaza La Misión y Nigromante</span>
+              <span>{config?.lugarTexto || 'Plaza La Misión y Nigromante'}</span>
             </div>
           </div>
 
           {/* LEMA INSPIRADOR */}
           <p className="font-serif italic text-sm sm:text-base text-gray-700 mt-5 max-w-md mx-auto leading-relaxed">
-            "{config?.motto || 'Un encuentro para compartir, conectar y fortalecer nuestra comunidad.'} ♡"
+            "{config?.lema || config?.motto || 'Un encuentro para compartir, conectar y fortalecer nuestra comunidad.'} ♡"
           </p>
 
           {/* BOTONES DE ACCIÓN RÁPIDA */}
@@ -163,7 +163,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. SECCIÓN DESTACADA: MÍSTICA DE LA LUNA LLENA EN PISCIS ♓ */}
+      {/* 2. SECCIÓN DESTACADA: MÍSTICA DE LA LUNA LLENA EN VIVO */}
       {/* ========================================================================= */}
       <div className="max-w-5xl mx-auto px-4 mt-12">
         <div className="bg-gradient-to-r from-emerald-900 via-loma-green to-teal-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border-2 border-amber-300/40 relative overflow-hidden">
@@ -171,7 +171,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
           {/* Decoración astronómica de fondo */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-10 -left-10 text-9xl opacity-10 select-none pointer-events-none font-serif">
-            ♓
+            {config?.simboloZodiacal || signoSimbolo}
           </div>
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
@@ -180,15 +180,15 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
             <div className="lg:col-span-2">
               <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-200 border border-amber-300/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Mística del Ciclo Sincrónico</span>
+                <span>Mística del Ciclo Sincrónico • {config?.elemento || 'Frecuencia 13:20'}</span>
               </div>
               
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-amber-100 mb-3">
-                La Magia de la Luna Llena en Piscis ♓🌊
+                La Magia de la Luna Llena en {config?.signo || 'Piscis'} {config?.simboloZodiacal || signoSimbolo}
               </h2>
               
               <p className="text-emerald-100 text-sm sm:text-base leading-relaxed mb-4">
-                {config?.mistica || 'La Luna Llena en Piscis nos invita a sumergirnos en la sensibilidad, la empatía profunda y la creatividad colectiva. Piscis es el signo del agua que todo lo abraza, recordándonos que somos parte de un mismo tejido vivo. En este encuentro, unimos el arte, la música del corazón, la economía solidaria y el cuidado mutuo para fortalecer los lazos de nuestra comunidad en Loma Verde.'}
+                {config?.mistica || 'Un encuentro comunitario para integrar el sentir colectivo, la economía solidaria y el arte bajo el brillo de la Luna Llena.'}
               </p>
 
               <div className="flex flex-wrap gap-4 text-xs font-semibold text-amber-200/90 pt-2 border-t border-emerald-700/50">
