@@ -357,7 +357,35 @@ app.put('/api/admin/feriantes/:id', verifyAdmin, async (req, res) => {
 app.delete('/api/admin/feriantes/:id', verifyAdmin, async (req, res) => {
   try {
     await db.deleteFeriante(req.params.id);
-    res.json({ success: true });
+    res.json({ success: true, mensaje: 'Feriante movido a la papelera de reciclaje.' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// PAPELERA DE RECICLAJE DE FERIANTES
+app.get('/api/admin/feriantes/papelera', verifyAdmin, async (req, res) => {
+  try {
+    const list = await db.getFeriantesEliminados();
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/feriantes/:id/restaurar', verifyAdmin, async (req, res) => {
+  try {
+    const restored = await db.restoreFeriante(req.params.id);
+    res.json({ success: true, mensaje: 'Feriante restaurado exitosamente.', feriante: restored });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.delete('/api/admin/feriantes/:id/definitivo', verifyAdmin, async (req, res) => {
+  try {
+    await db.deleteFerianteDefinitivo(req.params.id);
+    res.json({ success: true, mensaje: 'Feriante eliminado definitivamente.' });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

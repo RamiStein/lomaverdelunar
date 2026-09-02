@@ -509,35 +509,53 @@ class Database {
   }
 
   // ==========================================
-  // 3. FERIANTES / EMPRENDEDORES
+  // 3. FERIANTES / EMPRENDEDORES (CON PAPELERA DE RECICLAJE)
   // ==========================================
   async getFeriantes(filtro = {}) {
     if (firebase.isFirebaseEnabled()) {
       const fdb = firebase.getDb();
       const snap = await fdb.collection('feriantes').get();
       let list = snap.docs.map(d => d.data());
+      
+      // Por defecto no incluir eliminados (Papelera)
+      if (!filtro.incluirEliminados) {
+        list = list.filter(f => !f.eliminado);
+      }
+      if (filtro.soloEliminados) {
+        list = list.filter(f => f.eliminado === true);
+      }
       if (filtro.estado) {
         list = list.filter(f => f.estado === filtro.estado);
       }
       if (filtro.rubro) {
         list = list.filter(f => (f.tipo || '').toLowerCase().includes(filtro.rubro.toLowerCase()));
       }
-      if (filtro.lunaId) {
-        list = list.filter(f => f.lunaId === filtro.lunaId);
+      if (filtro.lunaId && filtro.lunaId !== 'todas') {
+        list = list.filter(f => (f.lunaId || f.origen || '').includes(filtro.lunaId));
       }
       return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
     }
     let list = this.data.feriantes || [];
+    if (!filtro.incluirEliminados) {
+      list = list.filter(f => !f.eliminado);
+    }
+    if (filtro.soloEliminados) {
+      list = list.filter(f => f.eliminado === true);
+    }
     if (filtro.estado) {
       list = list.filter(f => f.estado === filtro.estado);
     }
     if (filtro.rubro) {
       list = list.filter(f => f.tipo.toLowerCase().includes(filtro.rubro.toLowerCase()));
     }
-    if (filtro.lunaId) {
-      list = list.filter(f => f.lunaId === filtro.lunaId);
+    if (filtro.lunaId && filtro.lunaId !== 'todas') {
+      list = list.filter(f => (f.lunaId || f.origen || '').includes(filtro.lunaId));
     }
     return list;
+  }
+
+  async getFeriantesEliminados() {
+    return this.getFeriantes({ soloEliminados: true, incluirEliminados: true });
   }
 
   async addFeriante(f) {
@@ -554,6 +572,7 @@ class Database {
     const nuevo = {
       id,
       lunaId: f.lunaId || config.lunaActiva || "Luna Piscis",
+      origen: f.lunaId || config.lunaActiva || "Luna Piscis",
       nombre: String(f.nombre || "").trim(),
       nombrePersonal: String(f.nombrePersonal || "").trim(),
       contacto: String(f.contacto || f.telefono || "").trim(),
@@ -570,6 +589,7 @@ class Database {
       flyerUrl: f.flyerUrl || "",
       estado: f.estado || "aprobado",
       confirmado: true,
+      eliminado: false,
       puestoAsignado: f.puestoAsignado || "Sin asignar",
       createdAt: new Date().toISOString()
     };
@@ -601,13 +621,59 @@ class Database {
     return this.data.feriantes[idx];
   }
 
+  // Borrado Seguro a la Papelera (Soft Delete)
   async deleteFeriante(id) {
+    const ahora = new Date().toISOString();
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('feriantes').doc(id);
+      const doc = await docRef.get();
+      if (!doc.exists) throw new Error("Feriante no encontrado");
+      await docRef.update({
+        eliminado: true,
+        eliminadoAt: ahora
+      });
+      return true;
+    }
+    const idx = (this.data.feriantes || []).findIndex(f => f.id === id);
+    if (idx !== -1) {
+      this.data.feriantes[idx].eliminado = true;
+      this.data.feriantes[idx].eliminadoAt = ahora;
+      this.save();
+    }
+    return true;
+  }
+
+  // Restaurar desde la Papelera
+  async restoreFeriante(id) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const docRef = fdb.collection('feriantes').doc(id);
+      const doc = await docRef.get();
+      if (!doc.exists) throw new Error("Feriante no encontrado");
+      await docRef.update({
+        eliminado: false,
+        restauradoAt: new Date().toISOString()
+      });
+      return { id, ...doc.data(), eliminado: false };
+    }
+    const idx = (this.data.feriantes || []).findIndex(f => f.id === id);
+    if (idx !== -1) {
+      this.data.feriantes[idx].eliminado = false;
+      this.save();
+      return this.data.feriantes[idx];
+    }
+    throw new Error("Feriante no encontrado");
+  }
+
+  // Eliminación Definitiva (Purga manual)
+  async deleteFerianteDefinitivo(id) {
     if (firebase.isFirebaseEnabled()) {
       const fdb = firebase.getDb();
       await fdb.collection('feriantes').doc(id).delete();
       return true;
     }
-    this.data.feriantes = this.data.feriantes.filter(f => f.id !== id);
+    this.data.feriantes = (this.data.feriantes || []).filter(f => f.id !== id);
     this.save();
     return true;
   }
