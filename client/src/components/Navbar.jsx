@@ -12,7 +12,8 @@ import {
   Moon,
   Menu,
   X,
-  UserPlus
+  UserPlus,
+  MapPin
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModal, openTroquelModal, config }) {
