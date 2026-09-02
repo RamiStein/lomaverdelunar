@@ -70,7 +70,7 @@ export default function PuntoDetalleDrawer({ punto, onClose, onUpdatePunto }) {
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl border-l-2 border-loma-green z-50 flex flex-col animate-slideInRight overflow-hidden">
+    <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl border-l-2 border-loma-green z-[9999] flex flex-col animate-slideInRight overflow-hidden">
       
       {/* Cabecera Drawer */}
       <div className="bg-gradient-to-r from-loma-green to-emerald-900 text-white p-4 sm:p-5 flex justify-between items-start shrink-0">

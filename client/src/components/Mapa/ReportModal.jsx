@@ -121,7 +121,7 @@ export default function ReportModal({ lat, lng, defaultCalles = '', onClose, onS
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 animate-fadeIn">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-[9999] animate-fadeIn">
       <div className="bg-white rounded-3xl max-w-lg w-full border-2 border-loma-green shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         
         {/* Cabecera Modal */}
