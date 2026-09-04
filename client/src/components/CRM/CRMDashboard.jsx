@@ -735,6 +735,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
                   <tr className="bg-loma-wood/10 text-loma-green border-b border-loma-wood/20 font-bold">
                     <th className="p-3">Emprendimiento</th>
                     <th className="p-3">Responsable</th>
+                    <th className="p-3">Fecha Inscripción</th>
                     <th className="p-3">Rubro</th>
                     <th className="p-3">Ciclo Lunar</th>
                     <th className="p-3">Ubicación / Puesto</th>
@@ -753,6 +754,16 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
                         <td className="p-3 text-gray-700 font-medium">
                           <div>{f.nombrePersonal || '-'}</div>
                           <span className="text-[10px] text-gray-400">{f.contacto || f.telefono}</span>
+                        </td>
+                        <td className="p-3 text-gray-600 whitespace-nowrap">
+                          <div className="font-bold text-gray-800 text-[11px]">
+                            {f.fechaInscripcionTexto ? f.fechaInscripcionTexto.split(',')[0] : (f.createdAt || f.fechaRegistro ? new Date(f.createdAt || f.fechaRegistro).toLocaleDateString('es-AR') : '-')}
+                          </div>
+                          <div className="text-[10px] text-gray-400">
+                            {f.fechaInscripcionTexto && f.fechaInscripcionTexto.includes(',') 
+                              ? f.fechaInscripcionTexto.split(',')[1] + ' hs'
+                              : (f.createdAt || f.fechaRegistro ? new Date(f.createdAt || f.fechaRegistro).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) + ' hs' : '')}
+                          </div>
                         </td>
                         <td className="p-3 font-semibold text-loma-wood">{f.tipo || f.categoria}</td>
                         <td className="p-3">
@@ -984,6 +995,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
                 <tr className="bg-loma-wood/10 text-loma-green border-b border-loma-wood/20">
                   <th className="p-3">Nombre</th>
                   <th className="p-3">Teléfono / WhatsApp</th>
+                  <th className="p-3">Fecha Inscripción</th>
                   <th className="p-3">Área de Interés</th>
                   <th className="p-3">Contactado</th>
                   <th className="p-3">Notas</th>
@@ -995,6 +1007,9 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
                   <tr key={vol.id} className="hover:bg-[#faf9f5]">
                     <td className="p-3 font-bold text-loma-green">{vol.nombre}</td>
                     <td className="p-3 font-mono">{vol.telefono}</td>
+                    <td className="p-3 text-gray-600 whitespace-nowrap text-[11px] font-bold">
+                      {vol.fechaInscripcionTexto || (vol.createdAt ? new Date(vol.createdAt).toLocaleDateString('es-AR') : '-')}
+                    </td>
                     <td className="p-3 font-semibold text-loma-wood">{vol.areaInteres}</td>
                     <td className="p-3">
                       <button

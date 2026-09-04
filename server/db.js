@@ -569,6 +569,17 @@ class Database {
       imgBase64 = "";
     }
 
+    const ahora = new Date();
+    const isoDate = ahora.toISOString();
+    const fechaTexto = ahora.toLocaleString('es-AR', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
     const nuevo = {
       id,
       lunaId: f.lunaId || config.lunaActiva || "Luna Piscis",
@@ -591,7 +602,10 @@ class Database {
       confirmado: true,
       eliminado: false,
       puestoAsignado: f.puestoAsignado || "Sin asignar",
-      createdAt: new Date().toISOString()
+      fechaInscripcion: f.fechaInscripcion || isoDate,
+      fechaInscripcionTexto: f.fechaInscripcionTexto || fechaTexto,
+      fechaRegistro: f.fechaRegistro || isoDate,
+      createdAt: f.createdAt || isoDate
     };
 
     if (firebase.isFirebaseEnabled()) {
@@ -729,6 +743,17 @@ class Database {
 
   async addVoluntario(v) {
     const id = "vol-" + Date.now();
+    const ahora = new Date();
+    const isoDate = ahora.toISOString();
+    const fechaTexto = ahora.toLocaleString('es-AR', {
+      timeZone: 'America/Argentina/Buenos_Aires',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
     const nuevo = {
       id,
       nombre: String(v.nombre || "").trim(),
@@ -736,7 +761,9 @@ class Database {
       areaInteres: v.areaInteres || "General",
       contactado: false,
       notas: v.notas || "",
-      createdAt: new Date().toISOString()
+      fechaInscripcion: v.fechaInscripcion || isoDate,
+      fechaInscripcionTexto: v.fechaInscripcionTexto || fechaTexto,
+      createdAt: v.createdAt || isoDate
     };
     if (firebase.isFirebaseEnabled()) {
       const fdb = firebase.getDb();
@@ -1270,7 +1297,7 @@ class Database {
       const feriantesDeEstaLuna = (feriantes || []).filter(f => (f.lunaId || f.origen || '').includes(lunaName));
       if (feriantesDeEstaLuna.length > 0) {
         const rows = feriantesDeEstaLuna.map(f => ({
-          Fecha: f.createdAt ? f.createdAt.split('T')[0] : '',
+          Fecha_Inscripcion: f.fechaInscripcionTexto || (f.createdAt ? f.createdAt.split('T')[0] : ''),
           Emprendimiento: f.nombre,
           Responsable: f.nombrePersonal || '',
           Telefono: f.contacto || f.telefono || '',
@@ -1289,7 +1316,7 @@ class Database {
 
     // 2. Sheet: Directorio Histórico Completo
     const feriantesData = (feriantes || []).map(f => ({
-      Fecha: f.createdAt ? f.createdAt.split('T')[0] : '',
+      Fecha_Inscripcion: f.fechaInscripcionTexto || (f.createdAt ? f.createdAt.split('T')[0] : ''),
       Emprendimiento: f.nombre,
       Responsable: f.nombrePersonal || '',
       Telefono: f.contacto || f.telefono || '',
