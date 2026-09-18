@@ -22,6 +22,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
   // Menú público principal: limpio, esencial y directo
   const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
+    { id: 'lunas', label: 'Ciclos Lunares', icon: Moon },
     { id: 'mapa', label: 'Mapa Vecinal', icon: MapPin },
     { id: 'feria', label: 'La Feria', icon: Store },
     { id: 'escenario', label: 'Escenario', icon: Music },
@@ -56,7 +57,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
             onClick={() => { setActiveTab('inicio'); setMobileMenuOpen(false); }}
           >
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-loma-wood border-2 border-loma-green flex items-center justify-center text-lg sm:text-xl text-white shadow-sm group-hover:scale-105 transition-transform flex-shrink-0">
-              {config?.signo === 'Piscis' ? '♓' : (config?.signo === 'Acuario' ? '♒' : (config?.signo === 'Aries' ? '♈' : '🌙'))}
+              {config?.simboloZodiacal || '🌙'}
             </div>
             <div className="whitespace-nowrap">
               <span className="font-serif font-bold text-base sm:text-lg text-loma-green tracking-wide block leading-none">

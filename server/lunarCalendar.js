@@ -223,7 +223,29 @@ function getAutoLunarCycle(targetDate = new Date()) {
   const future = LUNAR_CALENDAR.find(luna => nowIso <= luna.fechaFin);
   if (future) return future;
 
-  return LUNAR_CALENDAR[4]; // Luna Piscis
+  return LUNAR_CALENDAR[5] || LUNAR_CALENDAR[0];
+}
+
+function getUpcomingMoons(targetDate = new Date()) {
+  const now = new Date(targetDate);
+  const nowIso = now.toISOString().split('T')[0];
+  const activeCycle = getAutoLunarCycle(targetDate);
+
+  const activeIndex = LUNAR_CALENDAR.findIndex(l => l.id === activeCycle.id);
+  const fromIndex = activeIndex >= 0 ? activeIndex : 0;
+
+  return LUNAR_CALENDAR.slice(fromIndex).map((luna, idx) => {
+    const eventDate = new Date(luna.fechaEvento + 'T12:00:00-03:00');
+    const diffMs = eventDate.getTime() - now.getTime();
+    const diasFaltantes = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    return {
+      ...luna,
+      esActiva: idx === 0,
+      diasFaltantes: diasFaltantes > 0 ? diasFaltantes : 0,
+      ordenConsecutivo: idx + 1
+    };
+  });
 }
 
 function getAllLunarCycles() {
@@ -244,6 +266,7 @@ function getLunarCycleByName(name) {
 module.exports = {
   LUNAR_CALENDAR,
   getAutoLunarCycle,
+  getUpcomingMoons,
   getAllLunarCycles,
   getLunarCycleByName
 };

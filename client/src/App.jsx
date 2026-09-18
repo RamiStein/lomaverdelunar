@@ -13,6 +13,7 @@ import MapaView from './components/Mapa/MapaView';
 import TroquelModal from './components/TroquelModal';
 import CRMLoginModal from './components/CRM/CRMLoginModal';
 import CRMDashboard from './components/CRM/CRMDashboard';
+import CiclosLunaresSection from './components/CiclosLunaresSection';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -161,6 +162,15 @@ export default function App() {
               openTroquelModal={() => setTroquelModalOpen(true)}
             />
 
+            {/* ¿Dónde estamos ahora y Próximas Lunas Llenas? */}
+            <CiclosLunaresSection
+              config={config}
+              onOpenInscripcion={() => {
+                const formEl = document.getElementById('seccion-inscripcion');
+                if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+              }}
+            />
+
             {/* Muestra de la Feria en Inicio */}
             <div className="bg-white/80 border-y-2 border-loma-green/20 py-8 my-8">
               <FeriaSection
@@ -228,6 +238,21 @@ export default function App() {
               onVolunteerSubmitted={loadGlobalData}
               isAdmin={isAdmin}
               openLoginModal={() => setLoginModalOpen(true)}
+            />
+          </div>
+        )}
+
+        {activeTab === 'lunas' && (
+          <div className="py-8">
+            <CiclosLunaresSection
+              config={config}
+              onOpenInscripcion={() => {
+                setActiveTab('inicio');
+                setTimeout(() => {
+                  const formEl = document.getElementById('seccion-inscripcion');
+                  if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
             />
           </div>
         )}

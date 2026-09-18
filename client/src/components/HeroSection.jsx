@@ -6,7 +6,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
   const moon = getLunarPhase();
   const [showFlyerModal, setShowFlyerModal] = useState(false);
 
-  const signoSimbolo = config?.signo === 'Piscis' ? '♓' : (config?.signo === 'Acuario' ? '♒' : '🌙');
+  const signoSimbolo = config?.simboloZodiacal || '🌙';
 
   return (
     <div className="relative overflow-hidden pb-16">

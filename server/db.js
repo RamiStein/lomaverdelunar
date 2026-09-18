@@ -424,28 +424,32 @@ class Database {
     // Si el modo automático está activo (por defecto true), obtener el ciclo lunar por fecha actual
     if (savedConfig.modoAutomatico !== false) {
       const autoCycle = lunarCalendar.getAutoLunarCycle();
+      const proximasLunas = lunarCalendar.getUpcomingMoons();
       return {
-        ...autoCycle,
         ...savedConfig,
-        // Campos dinámicos del ciclo activo (permitiendo sobreescritura manual si se guardó en config)
-        lunaActiva: savedConfig.lunaActiva || autoCycle.lunaActiva,
-        signo: savedConfig.signo || autoCycle.signo,
+        // En modo automático continuo 13:20, la fecha actual determina la luna activa y próxima:
+        lunaActiva: autoCycle.lunaActiva,
+        signo: autoCycle.signo,
         simboloZodiacal: autoCycle.simboloZodiacal,
         elemento: autoCycle.elemento,
-        fechaEventoTexto: savedConfig.fechaEventoTexto || autoCycle.fechaEventoTexto,
+        fechaEvento: autoCycle.fechaEvento,
+        fechaEventoTexto: autoCycle.fechaEventoTexto,
         diaSemanaTexto: autoCycle.diaSemanaTexto,
-        horarioTexto: savedConfig.horarioTexto || autoCycle.horarioTexto,
-        lema: savedConfig.lema || savedConfig.motto || autoCycle.lema,
-        mistica: savedConfig.mistica || autoCycle.mistica,
+        horarioTexto: autoCycle.horarioTexto,
+        lugarTexto: autoCycle.lugarTexto,
+        lema: autoCycle.lema,
+        mistica: autoCycle.mistica,
         tags: autoCycle.tags,
         fondoUrl: savedConfig.fondoUrl || '/fondo-loma-verde.jpg',
         modoAutomatico: true,
+        proximasLunas,
         ciclosDisponibles: lunarCalendar.getAllLunarCycles()
       };
     }
 
     return {
       ...savedConfig,
+      proximasLunas: lunarCalendar.getUpcomingMoons(),
       ciclosDisponibles: lunarCalendar.getAllLunarCycles()
     };
   }
