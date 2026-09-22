@@ -26,7 +26,7 @@ export default function CiclosLunaresSection({ config, onOpenInscripcion }) {
     elemento: config?.elemento || 'Fuego Cardinal 🔥',
     fechaEventoTexto: config?.fechaEventoTexto || '3 DE OCTUBRE',
     diaSemanaTexto: config?.diaSemanaTexto || 'SÁBADO',
-    horarioTexto: config?.horarioTexto || 'DE 12 A 18 HS',
+    horarioTexto: config?.horarioTexto || 'DE 13 A 19 HS',
     lugarTexto: config?.lugarTexto || 'Plaza La Misión y Nigromante • Loma Verde',
     lema: config?.lema || 'Impulso, vitalidad, coraje emprendedor y nuevos comienzos bajo el sol de primavera.',
     mistica: config?.mistica || 'La Luna Llena en Aries despierta el fuego creador y la chispa pionera. Es el momento de dar el primer paso, activar nuevos proyectos en el barrio y expresar la fuerza viva de nuestra comunidad.',

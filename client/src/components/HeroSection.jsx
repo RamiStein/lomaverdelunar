@@ -107,7 +107,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
           {/* HORARIO */}
           <div className="font-serif text-lg sm:text-2xl font-bold text-loma-wood tracking-wide mt-1 mb-4 flex items-center justify-center gap-2">
             <span>✦</span>
-            <span>{config?.horarioTexto || 'DE 12 A 18 HS'}</span>
+            <span>{config?.horarioTexto || 'DE 13 A 19 HS'}</span>
             <span>✦</span>
           </div>
 

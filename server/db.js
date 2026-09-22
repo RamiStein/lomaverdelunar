@@ -24,9 +24,10 @@ const SEED_DATA = {
     lunaActiva: "Luna Acuario",
     nombreEvento: "Encuentro Vecinal",
     subtitulo: "Luna Llena en Acuario ♒",
-    signo: "Acuario",
-    fechaEvento: "Sábado 1º de Agosto de 12 a 18hs",
-    motto: "Celebramos el Día de la Pachamama 🌿",
+    signo: "Aries",
+    fechaEvento: "Sábado 3 de Octubre de 13 a 19hs",
+    horarioTexto: "DE 13 A 19 HS",
+    motto: "Impulso, vitalidad, coraje emprendedor y nuevos comienzos bajo el sol de primavera.",
     lugar: "Loma Verde - Escobar | Plaza La Misión y Nigromante",
     mistica: "Acuario nos invita a la innovación, al poder de la red y a pensar en el futuro de nuestra comunidad. En este encuentro, unimos esa energía visionaria de aire con nuestras raíces en la tierra, celebrando juntos el Día de la Pachamama. Agradecemos a la tierra que nos sostiene y proyectamos colectivamente el mañana. ♒🌬️🌍",
     quienesSomos: {
