@@ -112,7 +112,23 @@ export default function MapaView() {
       setClickToReportMode(false);
     });
 
+    // Invalidar tamaño para asegurar renderizado perfecto en cualquier pantalla
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    });
+
+    if (mapContainerRef.current) {
+      resizeObserver.observe(mapContainerRef.current);
+    }
+
     return () => {
+      resizeObserver.disconnect();
       map.remove();
       mapInstanceRef.current = null;
     };
@@ -381,7 +397,7 @@ export default function MapaView() {
   );
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col bg-[#faf9f5]">
+    <div className="relative w-full h-full flex flex-col overflow-hidden bg-[#faf9f5]">
       
       {/* Toast de Confirmación */}
       {toastMessage && (
@@ -394,7 +410,7 @@ export default function MapaView() {
       {/* ========================================================= */}
       {/* 1. BARRA SUPERIOR DE CONTROL, BÚSQUEDA Y FILTROS          */}
       {/* ========================================================= */}
-      <div className="relative z-30 bg-white border-b border-loma-wood/30 shadow-xs px-3 sm:px-6 py-3 space-y-2.5">
+      <div className="flex-shrink-0 z-30 bg-white/95 backdrop-blur-md border-b border-loma-wood/25 shadow-xs px-3 sm:px-6 py-2.5 space-y-2">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
           
           {/* Título & Conteo */}
@@ -536,28 +552,28 @@ export default function MapaView() {
       {/* ========================================================= */}
       {/* 2. CONTENEDOR PRINCIPAL: MAPA LEAFLET vs VISTA LISTA      */}
       {/* ========================================================= */}
-      <div className="flex-1 relative z-10">
+      <div className="flex-1 w-full h-full relative z-10 overflow-hidden">
         
         {/* VISTA MAPA */}
         <div 
           ref={mapContainerRef} 
-          className={`w-full h-[calc(100vh-12rem)] ${viewMode === 'lista' ? 'hidden sm:block' : 'block'}`}
-          style={{ minHeight: '520px', zIndex: 1 }}
+          className={`w-full h-full ${viewMode === 'lista' ? 'hidden sm:block' : 'block'}`}
+          style={{ zIndex: 1 }}
         />
 
-        {/* Botones Flotantes sobre el Mapa */}
+        {/* Botones Flotantes sobre el Mapa (Estilo Google Maps) */}
         <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
           <button
             onClick={handleRecenter}
-            className="p-2.5 bg-white text-loma-green rounded-xl shadow-lg border border-gray-200 hover:bg-loma-bg transition-all"
-            title="Centrar en Plaza La Misión (Loma Verde)"
+            className="p-3 bg-white text-loma-green rounded-2xl shadow-md border border-gray-200/90 hover:bg-loma-bg hover:shadow-lg active:scale-95 transition-all"
+            title="Centrar en Loma Verde"
           >
             <Compass className="w-5 h-5 text-loma-green" />
           </button>
 
           <button
             onClick={handleGeolocate}
-            className="p-2.5 bg-white text-loma-accent rounded-xl shadow-lg border border-gray-200 hover:bg-loma-bg transition-all"
+            className="p-3 bg-white text-loma-accent rounded-2xl shadow-md border border-gray-200/90 hover:bg-loma-bg hover:shadow-lg active:scale-95 transition-all"
             title="Mi ubicación actual GPS"
           >
             <Navigation className="w-5 h-5 text-loma-accent" />
@@ -565,7 +581,7 @@ export default function MapaView() {
 
           <button
             onClick={fetchPuntos}
-            className="p-2.5 bg-white text-gray-700 rounded-xl shadow-lg border border-gray-200 hover:bg-loma-bg transition-all"
+            className="p-3 bg-white text-gray-700 rounded-2xl shadow-md border border-gray-200/90 hover:bg-loma-bg hover:shadow-lg active:scale-95 transition-all"
             title="Recargar reportes"
           >
             <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -574,7 +590,7 @@ export default function MapaView() {
 
         {/* VISTA LISTA (Para móviles o lista rápida) */}
         {viewMode === 'lista' && (
-          <div className="sm:hidden p-4 space-y-3 bg-loma-bg min-h-[500px]">
+          <div className="sm:hidden p-4 space-y-3 bg-loma-bg h-full overflow-y-auto">
             {filtrados.length > 0 ? (
               filtrados.map((p) => (
                 <div

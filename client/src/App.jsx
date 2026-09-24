@@ -149,7 +149,7 @@ export default function App() {
       />
 
       {/* 2. Contenido según pestaña activa */}
-      <main className="flex-1">
+      <main className={activeTab === 'mapa' ? 'flex-1 flex flex-col h-[calc(100vh-4rem)] h-[calc(100dvh-4rem)] overflow-hidden' : 'flex-1'}>
         {activeTab === 'inicio' && (
           <div>
             <HeroSection
@@ -214,7 +214,7 @@ export default function App() {
         )}
 
         {activeTab === 'mapa' && (
-          <div className="py-2">
+          <div className="flex-1 w-full h-full flex flex-col overflow-hidden">
             <MapaView />
           </div>
         )}
@@ -305,33 +305,35 @@ export default function App() {
         )}
       </main>
 
-      {/* 3. Footer Oficial Loma Verde */}
-      <footer className="bg-loma-green text-white border-t-4 border-loma-accent py-12 px-4 mt-16 text-center">
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div className="w-12 h-12 rounded-full bg-loma-wood border-2 border-amber-400 mx-auto flex items-center justify-center text-2xl">
-            ♒
-          </div>
-          <h3 className="font-serif text-2xl font-bold tracking-wide">
-            {config?.quienesSomos?.titulo || 'Loma Verde Lunar'}
-          </h3>
-          <p className="text-gray-200 text-sm max-w-lg mx-auto leading-relaxed">
-            {config?.quienesSomos?.texto || 'Tejiendo redes comunitarias, economía fraterna y soberanía vecinal en armonía con la naturaleza.'}
-          </p>
+      {/* 3. Footer Oficial Loma Verde (Oculto en pestaña mapa para visual 100% fit estilo Google Maps) */}
+      {activeTab !== 'mapa' && (
+        <footer className="bg-loma-green text-white border-t-4 border-loma-accent py-12 px-4 mt-16 text-center">
+          <div className="max-w-4xl mx-auto space-y-4">
+            <div className="w-12 h-12 rounded-full bg-loma-wood border-2 border-amber-400 mx-auto flex items-center justify-center text-2xl">
+              ♒
+            </div>
+            <h3 className="font-serif text-2xl font-bold tracking-wide">
+              {config?.quienesSomos?.titulo || 'Loma Verde Lunar'}
+            </h3>
+            <p className="text-gray-200 text-sm max-w-lg mx-auto leading-relaxed">
+              {config?.quienesSomos?.texto || 'Tejiendo redes comunitarias, economía fraterna y soberanía vecinal en armonía con la naturaleza.'}
+            </p>
 
-          <div className="pt-6 border-t border-loma-wood/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-300">
-            <span>Encuentro Lunar 13:20 • Loma Verde - Escobar</span>
-            <button
-              onClick={() => {
-                if (isAdmin) setActiveTab('crm');
-                else setLoginModalOpen(true);
-              }}
-              className="text-amber-300 hover:text-amber-200 uppercase font-bold tracking-widest text-[10px]"
-            >
-              🌙 {isAdmin ? 'Abrir Panel CRM' : 'Acceso de Coordinación'}
-            </button>
+            <div className="pt-6 border-t border-loma-wood/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-300">
+              <span>Encuentro Lunar 13:20 • Loma Verde - Escobar</span>
+              <button
+                onClick={() => {
+                  if (isAdmin) setActiveTab('crm');
+                  else setLoginModalOpen(true);
+                }}
+                className="text-amber-300 hover:text-amber-200 uppercase font-bold tracking-widest text-[10px]"
+              >
+                🌙 {isAdmin ? 'Abrir Panel CRM' : 'Acceso de Coordinación'}
+              </button>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
 
       {/* Modales Globales */}
       <TroquelModal
