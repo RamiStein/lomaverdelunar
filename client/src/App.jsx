@@ -59,18 +59,32 @@ export default function App() {
     }
   }, [userVoucher]);
 
-  // Subdomain & Direct Query Routing
+  // Subdomain, Direct Path & Query Routing
   useEffect(() => {
     try {
       const hostname = window.location.hostname.toLowerCase();
+      const pathname = window.location.pathname.toLowerCase().replace(/\/+$/, '');
       const params = new URLSearchParams(window.location.search);
       
+      // 1. Ruta directa para el mapa (ej: /mapalomaverdelunar o /mapa)
+      if (
+        pathname === '/mapalomaverdelunar' ||
+        pathname === '/mapa' ||
+        pathname === '/mapavecinal' ||
+        pathname === '/mapa-vecinal'
+      ) {
+        setActiveTab('mapa');
+        return;
+      }
+
+      // 2. Parámetro ?tab=...
       const tabParam = params.get('tab');
       if (tabParam) {
         setActiveTab(tabParam);
         return;
       }
 
+      // 3. Subdominios y accesos directos
       if (hostname.startsWith('presupuesto')) {
         setActiveTab('presupuesto');
       } else if (hostname.startsWith('flyer')) {
@@ -81,9 +95,26 @@ export default function App() {
         setActiveTab('virtudes');
       }
     } catch (err) {
-      console.error('Error en enrutamiento por subdominio:', err);
+      console.error('Error en enrutamiento:', err);
     }
   }, []);
+
+  // Sincronizar URL amigable en la barra del navegador
+  useEffect(() => {
+    try {
+      if (activeTab === 'mapa') {
+        if (window.location.pathname !== '/mapalomaverdelunar') {
+          window.history.replaceState(null, '', '/mapalomaverdelunar');
+        }
+      } else if (activeTab === 'inicio') {
+        if (window.location.pathname !== '/' && window.location.pathname !== '') {
+          window.history.replaceState(null, '', '/');
+        }
+      }
+    } catch (e) {
+      // Ignorar restricciones en entornos aislados
+    }
+  }, [activeTab]);
 
   // Load all public initial data
   const loadGlobalData = async () => {
@@ -132,7 +163,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-transparent text-loma-green selection:bg-loma-accent selection:text-white">
+    <div className={`min-h-screen flex flex-col ${activeTab === 'mapa' ? 'h-screen overflow-hidden' : 'justify-between'} bg-transparent text-loma-green selection:bg-loma-accent selection:text-white`}>
       
       {/* 1. Barra de Navegación Sticky */}
       <Navbar
@@ -149,7 +180,10 @@ export default function App() {
       />
 
       {/* 2. Contenido según pestaña activa */}
-      <main className={activeTab === 'mapa' ? 'flex-1 flex flex-col h-[calc(100vh-4rem)] h-[calc(100dvh-4rem)] overflow-hidden' : 'flex-1'}>
+      <main 
+        className={activeTab === 'mapa' ? 'flex-1 flex flex-col overflow-hidden min-h-0' : 'flex-1'}
+        style={activeTab === 'mapa' ? { height: 'calc(100vh - 4rem)', minHeight: '520px' } : undefined}
+      >
         {activeTab === 'inicio' && (
           <div>
             <HeroSection
@@ -214,7 +248,7 @@ export default function App() {
         )}
 
         {activeTab === 'mapa' && (
-          <div className="flex-1 w-full h-full flex flex-col overflow-hidden">
+          <div className="flex-1 w-full h-full flex flex-col overflow-hidden min-h-0" style={{ width: '100%', height: '100%', minHeight: '520px' }}>
             <MapaView />
           </div>
         )}

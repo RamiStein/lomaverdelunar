@@ -19,7 +19,8 @@ import {
   RefreshCw,
   X,
   Navigation,
-  CheckCircle2
+  CheckCircle2,
+  Share2
 } from 'lucide-react';
 import ReportModal from './ReportModal';
 import PuntoDetalleDrawer from './PuntoDetalleDrawer';
@@ -112,10 +113,11 @@ export default function MapaView() {
       setClickToReportMode(false);
     });
 
-    // Invalidar tamaño para asegurar renderizado perfecto en cualquier pantalla
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 150);
+    // Invalidar tamaño con delays progresivos para asegurar renderizado en cualquier dispositivo
+    map.invalidateSize();
+    const t1 = setTimeout(() => map.invalidateSize(), 50);
+    const t2 = setTimeout(() => map.invalidateSize(), 200);
+    const t3 = setTimeout(() => map.invalidateSize(), 600);
 
     const resizeObserver = new ResizeObserver(() => {
       if (mapInstanceRef.current) {
@@ -128,6 +130,9 @@ export default function MapaView() {
     }
 
     return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
       resizeObserver.disconnect();
       map.remove();
       mapInstanceRef.current = null;
@@ -392,12 +397,38 @@ export default function MapaView() {
     setTimeout(() => setToastMessage(null), 4000);
   };
 
+  const handleShareMap = async () => {
+    const shareUrl = `${window.location.origin}/mapalomaverdelunar`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Mapa Vecinal de Loma Verde',
+          text: 'Entrá al Mapa Vecinal comunitario de Loma Verde Lunar:',
+          url: shareUrl
+        });
+        return;
+      } catch (err) {
+        // Fallback al portapapeles si el usuario canceló
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      showToast('¡Link copiado! lomaverdelunar.online/mapalomaverdelunar');
+    } catch {
+      window.prompt('Copia este enlace directo del mapa:', shareUrl);
+    }
+  };
+
   const filtrados = puntos.filter(p => 
     selectedCategoria === 'todos' || p.categoria === selectedCategoria
   );
 
   return (
-    <div className="relative w-full h-full flex flex-col overflow-hidden bg-[#faf9f5]">
+    <div 
+      className="relative w-full h-full flex flex-col overflow-hidden min-h-0 bg-[#faf9f5]"
+      style={{ width: '100%', height: 'calc(100vh - 4rem)', minHeight: '520px' }}
+    >
       
       {/* Toast de Confirmación */}
       {toastMessage && (
@@ -493,6 +524,16 @@ export default function MapaView() {
               )}
             </div>
 
+            {/* Botón Compartir Mapa */}
+            <button
+              onClick={handleShareMap}
+              className="bg-white hover:bg-emerald-50 text-loma-green border border-gray-300 px-3.5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-xs transition-all active:scale-95 shrink-0"
+              title="Compartir enlace directo: lomaverdelunar.online/mapalomaverdelunar"
+            >
+              <Share2 className="w-3.5 h-3.5 text-loma-accent" />
+              <span className="hidden sm:inline">Compartir</span>
+            </button>
+
             <button
               onClick={() => {
                 setClickToReportMode(true);
@@ -552,13 +593,16 @@ export default function MapaView() {
       {/* ========================================================= */}
       {/* 2. CONTENEDOR PRINCIPAL: MAPA LEAFLET vs VISTA LISTA      */}
       {/* ========================================================= */}
-      <div className="flex-1 w-full h-full relative z-10 overflow-hidden">
+      <div 
+        className="flex-1 w-full h-full relative z-10 overflow-hidden min-h-0"
+        style={{ width: '100%', height: '100%', minHeight: '450px' }}
+      >
         
         {/* VISTA MAPA */}
         <div 
           ref={mapContainerRef} 
           className={`w-full h-full ${viewMode === 'lista' ? 'hidden sm:block' : 'block'}`}
-          style={{ zIndex: 1 }}
+          style={{ width: '100%', height: '100%', minHeight: '450px', zIndex: 1 }}
         />
 
         {/* Botones Flotantes sobre el Mapa (Estilo Google Maps) */}
