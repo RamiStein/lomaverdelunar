@@ -23,8 +23,14 @@ import {
 } from 'lucide-react';
 import ReportModal from './ReportModal';
 import PuntoDetalleDrawer from './PuntoDetalleDrawer';
+import { 
+  LOMA_VERDE_CENTER, 
+  LOMA_VERDE_STREETS, 
+  searchLomaVerdeLocal, 
+  isWithinEscobarArea 
+} from './lomaVerdeGeo';
 
-const LOMA_VERDE_COORDS = [-34.3400, -58.8450];
+const LOMA_VERDE_COORDS = LOMA_VERDE_CENTER;
 
 const CATEGORIAS_CONFIG = [
   { id: 'todos', label: 'Todos', emoji: '🌕' },
@@ -34,61 +40,6 @@ const CATEGORIAS_CONFIG = [
   { id: 'huerta', label: 'Huerta', emoji: '🌿', color: '#2b5329' },
   { id: 'oficio', label: 'Oficios', emoji: '🛠️', color: '#0284c7' },
   { id: 'cultura', label: 'Cultura', emoji: '💫', color: '#7c3aed' },
-];
-
-// Base de datos local de calles, esquinas y lugares de Loma Verde y alrededores con coordenadas GPS exactas
-const LOMA_VERDE_STREETS = [
-  // Barrios Principales y Puntos de Referencia
-  { name: 'Barrio Haras Santa María', lat: -34.34827, lng: -58.86111, tipo: 'Barrio Privado' },
-  { name: 'Haras Santa María (Entrada Principal / Old Man)', lat: -34.34410, lng: -58.85242, tipo: 'Acceso Haras' },
-  { name: 'Haras Santa María - El Remanso', lat: -34.34445, lng: -58.85638, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - El Trébol', lat: -34.34784, lng: -58.85917, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - Los Robles', lat: -34.35090, lng: -58.86664, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - El Molino', lat: -34.35545, lng: -58.86067, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - Las Lomas', lat: -34.34232, lng: -58.86237, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - El Atardecer', lat: -34.34693, lng: -58.86927, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - Los Eucaliptus', lat: -34.33900, lng: -58.85347, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - Las Caballerizas', lat: -34.34360, lng: -58.85052, tipo: 'Sector Haras' },
-  { name: 'Haras Santa María - El Refugio', lat: -34.34153, lng: -58.86710, tipo: 'Sector Haras' },
-  { name: 'Barrio San Sebastián', lat: -34.34517, lng: -58.90203, tipo: 'Barrio Privado' },
-  { name: 'Barrio San Sebastián (Áreas 1 a 13)', lat: -34.35038, lng: -58.91014, tipo: 'Barrio Privado' },
-  { name: 'Plaza La Misión', lat: -34.33258, lng: -58.85154, tipo: 'Plaza Principal' },
-  { name: 'Plaza Luchetti (Loma Verde)', lat: -34.35578, lng: -58.81333, tipo: 'Plaza' },
-  { name: 'Bioparque Temaikèn', lat: -34.36574, lng: -58.80292, tipo: 'Bioparque' },
-
-  // Calles y Esquinas de Loma Verde
-  { name: 'Arturo Boote', lat: -34.33222, lng: -58.86542, tipo: 'Calle Principal' },
-  { name: 'Arturo Boote y Colectora Este (Acceso Panamericana Km 54)', lat: -34.33080, lng: -58.83862, tipo: 'Acceso Principal' },
-  { name: 'Old Man', lat: -34.33393, lng: -58.85491, tipo: 'Calle Principal' },
-  { name: 'Old Man y Botafogo', lat: -34.33750, lng: -58.85050, tipo: 'Esquina' },
-  { name: 'Old Man y Timbó', lat: -34.34100, lng: -58.84800, tipo: 'Esquina' },
-  { name: 'Old Man y Camino del Sol', lat: -34.34500, lng: -58.85200, tipo: 'Esquina' },
-  { name: 'Botafogo', lat: -34.34119, lng: -58.84334, tipo: 'Calle' },
-  { name: 'Botafogo y Timbó', lat: -34.34210, lng: -58.84350, tipo: 'Esquina' },
-  { name: 'Timbó', lat: -34.34288, lng: -58.84374, tipo: 'Calle' },
-  { name: 'Timbó y Málaga', lat: -34.33600, lng: -58.84700, tipo: 'Esquina' },
-  { name: 'Camino del Sol', lat: -34.34986, lng: -58.84521, tipo: 'Calle' },
-  { name: 'La Misión', lat: -34.33258, lng: -58.85154, tipo: 'Calle' },
-  { name: 'Nigromante', lat: -34.34368, lng: -58.83779, tipo: 'Calle' },
-  { name: 'Nigromante y La Misión', lat: -34.33650, lng: -58.84850, tipo: 'Esquina' },
-  { name: 'Málaga', lat: -34.32404, lng: -58.85846, tipo: 'Calle' },
-  { name: 'Yatasto / Posta de Yatasto', lat: -34.32630, lng: -58.85293, tipo: 'Calle' },
-  { name: 'Mineral', lat: -34.34195, lng: -58.84526, tipo: 'Calle' },
-  { name: 'Congreve', lat: -34.33800, lng: -58.84288, tipo: 'Calle' },
-  { name: 'Los Cerros', lat: -34.33656, lng: -58.84180, tipo: 'Calle' },
-  { name: 'Los Cerros y Colectora Este', lat: -34.33650, lng: -58.83850, tipo: 'Esquina' },
-  { name: 'Los Fresnos', lat: -34.33374, lng: -58.84221, tipo: 'Calle' },
-  { name: 'Los Tilos', lat: -34.33513, lng: -58.84056, tipo: 'Calle' },
-  { name: 'Los Álamos', lat: -34.33660, lng: -58.83054, tipo: 'Calle' },
-  { name: 'Los Aromos', lat: -34.33596, lng: -58.83655, tipo: 'Calle' },
-  { name: 'Los Laureles', lat: -34.33211, lng: -58.85187, tipo: 'Calle' },
-  { name: 'Viraró', lat: -34.35641, lng: -58.84531, tipo: 'Calle' },
-  { name: 'Avenida de los Inmigrantes', lat: -34.35519, lng: -58.82181, tipo: 'Avenida' },
-  { name: 'Las Araucarias', lat: -34.34264, lng: -58.82779, tipo: 'Calle' },
-  { name: 'Colectora Este (Loma Verde)', lat: -34.32926, lng: -58.83862, tipo: 'Colectora' },
-  { name: 'Colectora Oeste (Loma Verde)', lat: -34.33610, lng: -58.82741, tipo: 'Colectora' },
-  { name: 'Matheu (Centro y Estación)', lat: -34.37955, lng: -58.82572, tipo: 'Localidad Vecina' },
-  { name: 'Escobar Centro (Plaza San Martín)', lat: -34.34800, lng: -58.79800, tipo: 'Centro' },
 ];
 
 export default function MapaView() {
@@ -174,25 +125,18 @@ export default function MapaView() {
       return;
     }
 
-    const q = searchQuery.toLowerCase().trim();
+    const q = searchQuery.trim();
 
-    // 1. Coincidencias en base local de calles de Loma Verde
-    const localMatches = LOMA_VERDE_STREETS.filter(s => 
-      s.name.toLowerCase().includes(q) || q.split(' ').every(part => s.name.toLowerCase().includes(part))
-    ).map(s => ({
-      id: 'local-' + s.name,
-      titulo: s.name,
-      subtitulo: s.tipo + ' • Loma Verde, Escobar',
-      lat: s.lat,
-      lng: s.lng,
-      isAddress: true
-    }));
+    // 1. Coincidencias en base local inteligente de Loma Verde
+    // Resuelve esquinas (ej: "botafogo y timbo", "old man y botafogo"), alturas (ej: "botafogo 1250"), y typos (ej: "botafoto")
+    const localMatches = searchLomaVerdeLocal(q);
 
     // 2. Coincidencias en reportes publicados
+    const qLower = q.toLowerCase();
     const reportMatches = puntos.filter(p => 
-      p.titulo?.toLowerCase().includes(q) || 
-      p.descripcion?.toLowerCase().includes(q) || 
-      p.calles?.toLowerCase().includes(q)
+      p.titulo?.toLowerCase().includes(qLower) || 
+      p.descripcion?.toLowerCase().includes(qLower) || 
+      p.calles?.toLowerCase().includes(qLower)
     ).map(p => ({
       id: 'rep-' + p.id,
       titulo: p.titulo,
@@ -210,19 +154,27 @@ export default function MapaView() {
       setIsSearchingOnline(true);
       try {
         // Priorizar el área de Loma Verde y alrededores mediante bounding box
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&viewbox=-58.95,-34.30,-58.75,-34.42&bounded=0&countrycodes=ar&limit=5&addressdetails=1`;
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&viewbox=-58.95,-34.30,-58.75,-34.42&bounded=0&countrycodes=ar&limit=5&addressdetails=1`;
         const res = await fetch(url);
         let data = await res.json();
 
-        // Si no arrojó resultados en el viewbox, reintentar ampliando contexto
+        // Si no arrojó resultados en el viewbox, reintentar ampliando contexto a Escobar
         if (!Array.isArray(data) || data.length === 0) {
-          const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery + ', Escobar, Buenos Aires')}&countrycodes=ar&limit=4&addressdetails=1`;
+          const fallbackUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ', Escobar, Buenos Aires')}&countrycodes=ar&limit=5&addressdetails=1`;
           const fallbackRes = await fetch(fallbackUrl);
           data = await fallbackRes.json();
         }
 
         if (Array.isArray(data) && data.length > 0) {
-          const osmMatches = data.map(item => ({
+          // FILTRAR ESTRICTAMENTE: Solo aceptar resultados dentro del Partido de Escobar y Loma Verde
+          // Esto elimina para siempre resultados erróneos de Córdoba, Santa Fe u otras provincias
+          const validEscobarData = data.filter(item => {
+            const lat = parseFloat(item.lat);
+            const lng = parseFloat(item.lon);
+            return isWithinEscobarArea(lat, lng);
+          });
+
+          const osmMatches = validEscobarData.map(item => ({
             id: 'osm-' + item.place_id,
             titulo: item.display_name.split(',')[0],
             subtitulo: item.display_name,
