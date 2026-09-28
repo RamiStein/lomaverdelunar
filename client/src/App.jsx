@@ -14,6 +14,7 @@ import TroquelModal from './components/TroquelModal';
 import CRMLoginModal from './components/CRM/CRMLoginModal';
 import CRMDashboard from './components/CRM/CRMDashboard';
 import CiclosLunaresSection from './components/CiclosLunaresSection';
+import SumateLandingView from './components/SumateLandingView';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -66,7 +67,19 @@ export default function App() {
       const pathname = window.location.pathname.toLowerCase().replace(/\/+$/, '');
       const params = new URLSearchParams(window.location.search);
       
-      // 1. Ruta directa para el mapa (ej: /mapalomaverdelunar o /mapa)
+      // 1. Ruta directa para landing de inscripción (ej: /sumate_al_encuentro o /sumate)
+      if (
+        pathname === '/sumate_al_encuentro' ||
+        pathname === '/sumate-al-encuentro' ||
+        pathname === '/sumate' ||
+        pathname === '/inscripcion' ||
+        pathname === '/sumatealencuentro'
+      ) {
+        setActiveTab('sumate_al_encuentro');
+        return;
+      }
+
+      // 2. Ruta directa para el mapa (ej: /mapalomaverdelunar o /mapa)
       if (
         pathname === '/mapalomaverdelunar' ||
         pathname === '/mapa' ||
@@ -77,14 +90,14 @@ export default function App() {
         return;
       }
 
-      // 2. Parámetro ?tab=...
+      // 3. Parámetro ?tab=...
       const tabParam = params.get('tab');
       if (tabParam) {
         setActiveTab(tabParam);
         return;
       }
 
-      // 3. Subdominios y accesos directos
+      // 4. Subdominios y accesos directos
       if (hostname.startsWith('presupuesto')) {
         setActiveTab('presupuesto');
       } else if (hostname.startsWith('flyer')) {
@@ -105,6 +118,10 @@ export default function App() {
       if (activeTab === 'mapa') {
         if (window.location.pathname !== '/mapalomaverdelunar') {
           window.history.replaceState(null, '', '/mapalomaverdelunar');
+        }
+      } else if (activeTab === 'sumate_al_encuentro') {
+        if (window.location.pathname !== '/sumate_al_encuentro') {
+          window.history.replaceState(null, '', '/sumate_al_encuentro');
         }
       } else if (activeTab === 'inicio') {
         if (window.location.pathname !== '/' && window.location.pathname !== '') {
@@ -165,19 +182,21 @@ export default function App() {
   return (
     <div className={`min-h-screen flex flex-col ${activeTab === 'mapa' ? 'h-screen overflow-hidden' : 'justify-between'} bg-transparent text-loma-green selection:bg-loma-accent selection:text-white`}>
       
-      {/* 1. Barra de Navegación Sticky */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={(tab) => {
-          setActiveTab(tab);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        isAdmin={isAdmin}
-        setIsAdmin={setIsAdmin}
-        openLoginModal={() => setLoginModalOpen(true)}
-        openTroquelModal={() => setTroquelModalOpen(true)}
-        config={config}
-      />
+      {/* 1. Barra de Navegación Sticky (oculta en landing dedicada para máxima inmersión artística) */}
+      {activeTab !== 'sumate_al_encuentro' && (
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={(tab) => {
+            setActiveTab(tab);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          isAdmin={isAdmin}
+          setIsAdmin={setIsAdmin}
+          openLoginModal={() => setLoginModalOpen(true)}
+          openTroquelModal={() => setTroquelModalOpen(true)}
+          config={config}
+        />
+      )}
 
       {/* 2. Contenido según pestaña activa */}
       <main 
@@ -223,6 +242,18 @@ export default function App() {
 
             {/* Formulario de Inscripción en Inicio */}
             <div id="seccion-inscripcion" className="my-12 px-4">
+              <div className="max-w-xl mx-auto mb-4 text-center">
+                <button
+                  onClick={() => {
+                    setActiveTab('sumate_al_encuentro');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-amber-500/15 hover:from-amber-500/25 hover:to-rose-500/25 text-amber-900 border border-amber-400/50 px-4 py-2 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all shadow-2xs hover:scale-[1.01] active:scale-95 cursor-pointer"
+                >
+                  <span>✨</span>
+                  <span>¿Querés compartir esta convocatoria en redes? Abrir Landing Especial</span>
+                </button>
+              </div>
               <InscripcionForm
                 config={config}
                 onSuccess={loadGlobalData}
@@ -328,6 +359,18 @@ export default function App() {
           </div>
         )}
 
+        {activeTab === 'sumate_al_encuentro' && (
+          <SumateLandingView
+            config={config}
+            onSuccess={loadGlobalData}
+            onGoToFlyerStudio={handleGoToFlyerStudio}
+            onBackToHome={() => {
+              setActiveTab('inicio');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {activeTab === 'crm' && (
           <div className="py-6">
             <CRMDashboard
@@ -339,8 +382,8 @@ export default function App() {
         )}
       </main>
 
-      {/* 3. Footer Oficial Loma Verde (Oculto en pestaña mapa para visual 100% fit estilo Google Maps) */}
-      {activeTab !== 'mapa' && (
+      {/* 3. Footer Oficial Loma Verde (Oculto en pestaña mapa y en landing dedicada) */}
+      {activeTab !== 'mapa' && activeTab !== 'sumate_al_encuentro' && (
         <footer className="bg-loma-green text-white border-t-4 border-loma-accent py-12 px-4 mt-16 text-center">
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="w-12 h-12 rounded-full bg-loma-wood border-2 border-amber-400 mx-auto flex items-center justify-center text-2xl">

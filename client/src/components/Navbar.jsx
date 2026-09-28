@@ -22,6 +22,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
   // Menú público principal: limpio, esencial y directo
   const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
+    { id: 'sumate_al_encuentro', label: 'Sumate 🌿', icon: UserPlus, highlight: true },
     { id: 'lunas', label: 'Ciclos Lunares', icon: Moon },
     { id: 'mapa', label: 'Mapa Vecinal', icon: MapPin },
     { id: 'feria', label: 'La Feria', icon: Store },
@@ -98,17 +99,11 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
             
             {/* Botón rápido para participar */}
             <button
-              onClick={() => {
-                setActiveTab('feria');
-                setTimeout(() => {
-                  const el = document.getElementById('seccion-inscripcion');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
-              }}
-              className="hidden sm:inline-flex items-center gap-1.5 bg-loma-green hover:bg-loma-wood text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-xs transition-all"
+              onClick={() => setActiveTab('sumate_al_encuentro')}
+              className="hidden sm:inline-flex items-center gap-1.5 bg-loma-green hover:bg-loma-wood text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-xs transition-all active:scale-95"
             >
               <UserPlus className="w-3.5 h-3.5 text-amber-300" />
-              <span>Participar</span>
+              <span>Sumate</span>
             </button>
 
             {/* Acceso CRM Admin */}
