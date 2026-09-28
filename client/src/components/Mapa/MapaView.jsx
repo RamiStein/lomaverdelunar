@@ -534,6 +534,18 @@ export default function MapaView() {
               <span className="hidden sm:inline">Compartir</span>
             </button>
 
+            {/* Botón Placas WhatsApp */}
+            <a
+              href="/placas.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white hover:bg-emerald-50 text-loma-green border border-gray-300 px-3 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-xs transition-all active:scale-95 shrink-0"
+              title="Descargar placas y fotos para WhatsApp"
+            >
+              <span className="text-sm">🖼️</span>
+              <span className="hidden md:inline">Placas</span>
+            </a>
+
             <button
               onClick={() => {
                 setClickToReportMode(true);

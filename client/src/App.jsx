@@ -79,7 +79,13 @@ export default function App() {
         return;
       }
 
-      // 2. Ruta directa para el mapa (ej: /mapalomaverdelunar o /mapa)
+      // 2. Ruta directa para placas de WhatsApp
+      if (pathname === '/placas' || pathname === '/placas-whatsapp' || pathname === '/kit') {
+        window.location.href = '/placas.html';
+        return;
+      }
+
+      // 3. Ruta directa para el mapa (ej: /mapalomaverdelunar o /mapa)
       if (
         pathname === '/mapalomaverdelunar' ||
         pathname === '/mapa' ||
@@ -90,7 +96,7 @@ export default function App() {
         return;
       }
 
-      // 3. Parámetro ?tab=...
+      // 4. Parámetro ?tab=...
       const tabParam = params.get('tab');
       if (tabParam) {
         setActiveTab(tabParam);

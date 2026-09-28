@@ -9,6 +9,10 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/placas",
+      "destination": "/placas.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
