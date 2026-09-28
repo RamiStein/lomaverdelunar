@@ -922,7 +922,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
                           onChange={(e) => setNewFerianteForm({ ...newFerianteForm, tipo: e.target.value })}
                           className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-semibold"
                         >
-                          {['Artesanías', 'Gastronomía', 'Huerta / Vivero', 'Música / Arte', 'Terapias Holísticas', 'Feria Americana', 'Productos Naturales'].map(c => (
+                          {['Artesanías', 'Gastronomía', 'Oficio / Servicio', 'Huerta / Vivero', 'Música / Arte', 'Terapias Holísticas', 'Feria Americana', 'Productos Naturales'].map(c => (
                             <option key={c} value={c}>{c}</option>
                           ))}
                         </select>

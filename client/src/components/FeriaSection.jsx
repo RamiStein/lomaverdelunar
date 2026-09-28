@@ -10,6 +10,7 @@ export default function FeriaSection({ directorio, onOpenInscripcion }) {
   // Icon mapping per category
   const getCategoryIcon = (cat) => {
     const l = cat.toLowerCase();
+    if (l.includes('oficio') || l.includes('servicio') || l.includes('bici') || l.includes('taller') || l.includes('repara')) return '🔧';
     if (l.includes('huert') || l.includes('viver')) return '🌱';
     if (l.includes('gastro') || l.includes('comida')) return '🍯';
     if (l.includes('artesan')) return '🎨';
@@ -48,10 +49,10 @@ export default function FeriaSection({ directorio, onOpenInscripcion }) {
           <Store className="w-3.5 h-3.5" /> La Feria del Barrio
         </span>
         <h2 className="font-serif text-3xl sm:text-4xl text-loma-green font-bold uppercase tracking-tight">
-          Emprendimientos y Feriantes 🌿
+          Emprendimientos, Feriantes y Oficios 🌿
         </h2>
         <p className="text-gray-600 text-sm sm:text-base max-w-xl mx-auto mt-2">
-          Conoce a los productores locales, artesanos y creadores que le dan vida y sustentabilidad a nuestra plaza.
+          Conoce a los productores locales, artesanos, oficios vecinales y creadores que le dan vida y sustentabilidad a nuestra plaza.
         </p>
 
         {/* Botón para sumarse a la feria */}
@@ -61,7 +62,7 @@ export default function FeriaSection({ directorio, onOpenInscripcion }) {
             className="inline-flex items-center gap-2 bg-loma-green hover:bg-loma-wood text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow transition-all active:scale-95"
           >
             <PlusCircle className="w-4 h-4" />
-            <span>Publicar / Inscribir mi Emprendimiento</span>
+            <span>Publicar / Inscribir mi Proyecto u Oficio</span>
           </button>
         </div>
       </div>

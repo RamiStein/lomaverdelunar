@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placas de Difusión - Mapa Vecinal Loma Verde</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            loma: {
+              green: '#2b5329',
+              wood: '#65773e',
+              accent: '#c48c26',
+              bg: '#faf9f5'
+            }
+          },
+          fontFamily: {
+            serif: ['Lora', 'serif'],
+            sans: ['Nunito', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-loma-bg text-loma-green font-sans min-h-screen py-8 px-4 sm:px-6">
+
+  <div class="max-w-4xl mx-auto space-y-8">
+    
+    <!-- Header -->
+    <header class="text-center space-y-3">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-loma-green text-white text-2xl shadow-md">
+        🗺️
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-serif font-bold text-loma-green">
+        Kit de Difusión para WhatsApp
+      </h1>
+      <p class="text-sm sm:text-base text-gray-600 max-w-xl mx-auto font-semibold">
+        Placas gráficas oficiales del <strong class="text-loma-green">Mapa Vecinal de Loma Verde</strong> listas para guardar y compartir en grupos o estados.
+      </p>
+      <div class="pt-2">
+        <a href="/mapalomaverdelunar" class="inline-flex items-center gap-2 bg-loma-green hover:bg-loma-wood text-white px-5 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider shadow transition-all">
+          <span>Abrir Mapa Vecinal en Vivo →</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+
+      <!-- Placa 1 -->
+      <div class="bg-white rounded-3xl border-2 border-loma-green/20 shadow-lg overflow-hidden flex flex-col">
+        <div class="p-4 bg-emerald-900 text-white flex justify-between items-center">
+          <span class="font-bold text-xs uppercase tracking-wider">Placa 1 • Portada y Categorías</span>
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">3:4 HD</span>
+        </div>
+        <div class="p-4 bg-gray-50 flex justify-center">
+          <img src="/placas/placa1_mapa_categorias.jpg" alt="Placa 1 - Portada y Categorías" class="rounded-2xl max-h-[460px] w-auto shadow-md border border-gray-200 object-contain">
+        </div>
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-serif font-bold text-lg text-loma-green">Presentación del Mapa</h3>
+            <p class="text-xs text-gray-600 mt-1 italic">
+              "🗺️🌿 ¡Nuevo Mapa Vecinal de Loma Verde! Herramienta comunitaria gratuita para alertas 🚨, mascotas 🐾, avisos 📣, huerta 🌿 y oficios 🛠️..."
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <a href="/placas/placa1_mapa_categorias.jpg" download="Placa1_Mapa_Loma_Verde.jpg" class="flex-1 text-center bg-loma-green hover:bg-loma-wood text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all">
+              ⬇️ Descargar
+            </a>
+            <button onclick="copiarTexto(1)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+              📋 Copiar Texto
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placa 2 -->
+      <div class="bg-white rounded-3xl border-2 border-loma-green/20 shadow-lg overflow-hidden flex flex-col">
+        <div class="p-4 bg-amber-700 text-white flex justify-between items-center">
+          <span class="font-bold text-xs uppercase tracking-wider">Placa 2 • Paso a Paso</span>
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">3:4 HD</span>
+        </div>
+        <div class="p-4 bg-gray-50 flex justify-center">
+          <img src="/placas/placa2_paso_a_paso.jpg" alt="Placa 2 - Paso a Paso" class="rounded-2xl max-h-[460px] w-auto shadow-md border border-gray-200 object-contain">
+        </div>
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-serif font-bold text-lg text-loma-green">¿Cómo se usa en 3 pasos?</h3>
+            <p class="text-xs text-gray-600 mt-1 italic">
+              "📍 ¿Viste algo en el barrio? 1. Entrás al link, 2. Tocás '+ Reportar' sobre la calle, 3. Sumás foto y tu contacto de WhatsApp..."
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <a href="/placas/placa2_paso_a_paso.jpg" download="Placa2_Paso_a_Paso.jpg" class="flex-1 text-center bg-loma-accent hover:bg-amber-600 text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all">
+              ⬇️ Descargar
+            </a>
+            <button onclick="copiarTexto(2)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+              📋 Copiar Texto
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placa 3 -->
+      <div class="bg-white rounded-3xl border-2 border-loma-green/20 shadow-lg overflow-hidden flex flex-col">
+        <div class="p-4 bg-orange-700 text-white flex justify-between items-center">
+          <span class="font-bold text-xs uppercase tracking-wider">Placa 3 • Mascotas Barriales</span>
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">3:4 HD</span>
+        </div>
+        <div class="p-4 bg-gray-50 flex justify-center">
+          <img src="/placas/placa3_mascotas.jpg" alt="Placa 3 - Mascotas" class="rounded-2xl max-h-[460px] w-auto shadow-md border border-gray-200 object-contain">
+        </div>
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-serif font-bold text-lg text-loma-green">Mascotas en Loma Verde</h3>
+            <p class="text-xs text-gray-600 mt-1 italic">
+              "🐾 ¿Perdiste o encontraste una mascota? Marcá el punto exacto, subí la foto y dejá tu WhatsApp para contacto instantáneo..."
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <a href="/placas/placa3_mascotas.jpg" download="Placa3_Mascotas_Loma_Verde.jpg" class="flex-1 text-center bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all">
+              ⬇️ Descargar
+            </a>
+            <button onclick="copiarTexto(3)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+              📋 Copiar Texto
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placa 4 -->
+      <div class="bg-white rounded-3xl border-2 border-loma-green/20 shadow-lg overflow-hidden flex flex-col">
+        <div class="p-4 bg-red-700 text-white flex justify-between items-center">
+          <span class="font-bold text-xs uppercase tracking-wider">Placa 4 • Alertas y Precaución</span>
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">3:4 HD</span>
+        </div>
+        <div class="p-4 bg-gray-50 flex justify-center">
+          <img src="/placas/placa4_alertas_calles.jpg" alt="Placa 4 - Alertas" class="rounded-2xl max-h-[460px] w-auto shadow-md border border-gray-200 object-contain">
+        </div>
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-serif font-bold text-lg text-loma-green">Calles y Alertas Vecinales</h3>
+            <p class="text-xs text-gray-600 mt-1 italic">
+              "🚨 Calles anegadas, ramas caídas, cortes o pozos. Avisalo al toque en el mapa para circular con precaución..."
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <a href="/placas/placa4_alertas_calles.jpg" download="Placa4_Alertas_Loma_Verde.jpg" class="flex-1 text-center bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all">
+              ⬇️ Descargar
+            </a>
+            <button onclick="copiarTexto(4)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+              📋 Copiar Texto
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placa 5 -->
+      <div class="bg-white rounded-3xl border-2 border-loma-green/20 shadow-lg overflow-hidden flex flex-col md:col-span-2 max-w-lg mx-auto w-full">
+        <div class="p-4 bg-emerald-800 text-white flex justify-between items-center">
+          <span class="font-bold text-xs uppercase tracking-wider">Placa 5 • Interacción y Resolución</span>
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">3:4 HD</span>
+        </div>
+        <div class="p-4 bg-gray-50 flex justify-center">
+          <img src="/placas/placa5_interaccion_vecinal.jpg" alt="Placa 5 - Interacción" class="rounded-2xl max-h-[460px] w-auto shadow-md border border-gray-200 object-contain">
+        </div>
+        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-serif font-bold text-lg text-loma-green">Comunidad en Acción</h3>
+            <p class="text-xs text-gray-600 mt-1 italic">
+              "💬 Contacto 1-clic a WhatsApp, hilo de aportes comunitarios y botón para marcar cuando la situación ya fue resuelta..."
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <a href="/placas/placa5_interaccion_vecinal.jpg" download="Placa5_Interaccion_Loma_Verde.jpg" class="flex-1 text-center bg-loma-green hover:bg-loma-wood text-white py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all">
+              ⬇️ Descargar
+            </a>
+            <button onclick="copiarTexto(5)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+              📋 Copiar Texto
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const textos = {
+      1: "🗺️🌿 ¡Nuevo Mapa Vecinal de Loma Verde! Una herramienta comunitaria y 100% gratuita para avisarnos alertas 🚨, mascotas 🐾, reuniones barriales 📣, huerta 🌿 y oficios 🛠️. Entrá directo sin bajar ninguna app: lomaverdelunar.online/mapalomaverdelunar",
+      2: "📍 ¿Viste algo en el barrio o querés avisar una novedad? En 3 simples pasos podés publicarlo: 1. Entrás al link, 2. Tocás '+ Reportar' o marcás la calle, 3. Sumás foto y tu contacto de WhatsApp. ¡Tejamos red comunitaria! 🌾 lomaverdelunar.online/mapalomaverdelunar",
+      3: "🐾 ¿Perdiste o encontraste una mascota en Loma Verde? Ya podés marcar el punto exacto en el mapa, subir la foto y dejar tu WhatsApp directo para que quien lo vea se comunique al instante. ¡Compartí el mapa con los vecinos amantes de los animales! 🐶🐱 lomaverdelunar.online/mapalomaverdelunar",
+      4: "🚨 ¿Calles anegadas, ramas caídas, cortes o pozos? Avisalo al toque en el Mapa Vecinal para que todos los vecinos sepamos por dónde circular con precaución. Mantengamos Loma Verde segura y cuidada entre todos. ⚠️ lomaverdelunar.online/mapalomaverdelunar",
+      5: "💬 Además podés hablar directo por WhatsApp con el vecino que publicó, aportar datos en los comentarios y marcar cuando la situación ya esté 'Resuelta' ✓. ¡Sumate a usarlo! 🤝 lomaverdelunar.online/mapalomaverdelunar"
+    };
+
+    function copiarTexto(id) {
+      const txt = textos[id];
+      navigator.clipboard.writeText(txt).then(() => {
+        alert("¡Texto copiado al portapapeles! Listo para pegar en WhatsApp.");
+      }).catch(() => {
+        prompt("Copiá este mensaje para WhatsApp:", txt);
+      });
+    }
+  </script>
+</body>
+</html>

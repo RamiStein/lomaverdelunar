@@ -221,6 +221,7 @@ export default function MercadoVirtudes({
                 >
                   <option value="Gastronomía">Gastronomía</option>
                   <option value="Artesanías">Artesanías</option>
+                  <option value="Oficio / Servicio">Oficio / Servicio</option>
                   <option value="Huerta">Huerta & Plantas</option>
                   <option value="Terapias Holísticas">Terapias Holísticas</option>
                   <option value="Productos Naturales">Productos Naturales</option>

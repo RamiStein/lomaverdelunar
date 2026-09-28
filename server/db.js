@@ -35,10 +35,11 @@ const SEED_DATA = {
       texto: "Tejiendo redes comunitarias, economía fraterna y soberanía barrial en armonía con los ciclos de la naturaleza y la frecuencia 13:20."
     },
     categorias: [
-      "Música / Arte",
-      "Gastronomía",
       "Artesanías",
+      "Gastronomía",
+      "Oficio / Servicio",
       "Huerta / Vivero",
+      "Música / Arte",
       "Terapias Holísticas",
       "Feria Americana",
       "Productos Naturales"
@@ -422,6 +423,13 @@ class Database {
       savedConfig = this.data.config || SEED_DATA.config;
     }
 
+    // Garantizar que 'Oficio / Servicio' esté presente en la lista de categorías
+    const baseCats = Array.isArray(savedConfig.categorias) ? [...savedConfig.categorias] : [...SEED_DATA.config.categorias];
+    if (!baseCats.includes("Oficio / Servicio")) {
+      baseCats.splice(2, 0, "Oficio / Servicio");
+    }
+    savedConfig.categorias = baseCats;
+
     // Si el modo automático está activo (por defecto true), obtener el ciclo lunar por fecha actual
     if (savedConfig.modoAutomatico !== false) {
       const autoCycle = lunarCalendar.getAutoLunarCycle();
@@ -723,6 +731,7 @@ class Database {
   normalizarCategoria(cat) {
     let c = String(cat || "Varios").trim();
     const l = c.toLowerCase();
+    if (l.includes('oficio') || l.includes('servicio') || l.includes('bici') || l.includes('taller') || l.includes('repara')) return 'Oficio / Servicio';
     if (l.includes('música') || l.includes('musica') || l.includes('arte')) return 'Música / Arte';
     if (l.includes('gastro') || l.includes('comida') || l.includes('alimento')) return 'Gastronomía';
     if (l.includes('artesan')) return 'Artesanías';

@@ -20,15 +20,25 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
   const [error, setError] = useState(null);
   const [imageProcessing, setImageProcessing] = useState(false);
 
-  const categorias = config?.categorias || [
-    "Música / Arte",
-    "Gastronomía",
+  const DEFAULT_CATEGORIAS = [
     "Artesanías",
+    "Gastronomía",
+    "Oficio / Servicio",
     "Huerta / Vivero",
+    "Música / Arte",
     "Terapias Holísticas",
     "Feria Americana",
     "Productos Naturales"
   ];
+
+  const rawCategorias = config?.categorias || DEFAULT_CATEGORIAS;
+  const categorias = rawCategorias.includes("Oficio / Servicio")
+    ? rawCategorias
+    : [
+        ...rawCategorias.slice(0, 2),
+        "Oficio / Servicio",
+        ...rawCategorias.slice(2)
+      ];
 
   // Compresor automático de imagen en el navegador (ideal para fotos de iPhone/Android)
   const compressImage = (file, maxWidth = 800, maxHeight = 800, quality = 0.75) => {
@@ -204,10 +214,10 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
           <span>Inscripción Abierta: {config?.lunaActiva || 'Luna Aries'} • {config?.fechaEventoTexto || '3 DE OCTUBRE'}</span>
         </span>
         <h3 className="font-serif text-2xl font-bold text-loma-green">
-          Sumate a la Feria Lunar 🌿
+          Sumate a la Red y Feria Lunar 🌿
         </h3>
         <p className="text-xs text-gray-500 mt-1">
-          Completa tus datos para formar parte de la cartelera y el directorio vecinal.
+          Completa tus datos para formar parte de la feria, la cartelera vecinal y el directorio de oficios y emprendimientos.
         </p>
       </div>
 
@@ -221,14 +231,14 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-extrabold text-loma-wood uppercase mb-1">
-            Nombre del Emprendimiento / Proyecto *
+            Nombre del Emprendimiento / Oficio / Proyecto *
           </label>
           <input
             type="text"
             required
             value={formData.nombre}
             onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-            placeholder="Ej: LM Deco y Jardín"
+            placeholder="Ej: Bicicletería El Rayo / LM Deco y Jardín"
             className="w-full p-3 rounded-xl border border-gray-300 bg-[#faf9f5] text-sm focus:outline-none focus:border-loma-accent"
           />
         </div>
@@ -282,14 +292,14 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
 
         <div>
           <label className="block text-xs font-extrabold text-loma-wood uppercase mb-1">
-            ¿Qué ofrecés? (Descripción detallada) *
+            ¿Qué ofrecés o qué servicio brindás? (Descripción detallada) *
           </label>
           <textarea
             required
             rows={3}
             value={formData.descripcion}
             onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
-            placeholder="Deco boho, macetas rotomoldeadas, etc..."
+            placeholder="Service y reparación de bicicletas, deco boho, macetas rotomoldeadas, plantas, gastronomía..."
             className="w-full p-3 rounded-xl border border-gray-300 bg-[#faf9f5] text-sm focus:outline-none focus:border-loma-accent leading-relaxed"
           />
         </div>
