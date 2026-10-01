@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Store, MessageCircle, Instagram, Globe, MapPin, PlusCircle, ExternalLink, X, Tag } from 'lucide-react';
 
-export default function FeriaSection({ directorio, onOpenInscripcion }) {
+export default function FeriaSection({ directorio, onOpenInscripcion, onOpenMediaKit }) {
   const [selectedFeriante, setSelectedFeriante] = useState(null);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('TODOS');
 
@@ -55,15 +55,25 @@ export default function FeriaSection({ directorio, onOpenInscripcion }) {
           Conoce a los productores locales, artesanos, oficios vecinales y creadores que le dan vida y sustentabilidad a nuestra plaza.
         </p>
 
-        {/* Botón para sumarse a la feria */}
-        <div className="mt-4">
+        {/* Botón para sumarse a la feria y media kit */}
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={onOpenInscripcion}
-            className="inline-flex items-center gap-2 bg-loma-green hover:bg-loma-wood text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow transition-all active:scale-95"
+            className="inline-flex items-center gap-2 bg-loma-green hover:bg-loma-wood text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow transition-all active:scale-95 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Publicar / Inscribir mi Proyecto u Oficio</span>
           </button>
+
+          {onOpenMediaKit && (
+            <button
+              onClick={onOpenMediaKit}
+              className="inline-flex items-center gap-2 bg-amber-500/15 hover:bg-amber-500/25 text-amber-900 border border-amber-500/40 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all active:scale-95 cursor-pointer shadow-2xs"
+            >
+              <span>🎬</span>
+              <span>Media Kit 360° (Fotos & Videos)</span>
+            </button>
+          )}
         </div>
       </div>
 

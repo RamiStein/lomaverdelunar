@@ -13,7 +13,9 @@ import {
   AlertCircle,
   Wrench,
   Store,
-  Compass
+  Compass,
+  Camera,
+  Video
 } from 'lucide-react';
 
 // Temas y paletas artísticas para los 12 signos zodiacales
@@ -254,7 +256,7 @@ function resolveZodiacTheme(signoOrLuna) {
   return ZODIAC_THEMES.Aries;
 }
 
-export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio, onBackToHome }) {
+export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio, onGoToMediaKit, onBackToHome }) {
   // Estado del formulario
   const [formData, setFormData] = useState({
     nombre: '',
@@ -600,6 +602,14 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
                 </button>
 
                 <button
+                  onClick={() => onGoToMediaKit ? onGoToMediaKit() : (window.location.href = '/mediakit')}
+                  className="w-full bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-amber-500/10 hover:from-amber-500/20 hover:to-emerald-500/20 text-stone-800 border border-amber-500/30 font-bold text-xs uppercase tracking-wider py-3 px-4 rounded-2xl transition-all flex items-center justify-center gap-2"
+                >
+                  <Camera className="w-3.5 h-3.5 text-amber-600" />
+                  <span>¿Querés fotos y videos profesionales? Ver Media Kit 360°</span>
+                </button>
+
+                <button
                   onClick={() => {
                     setSubmitted(false);
                     setFormData({
@@ -806,6 +816,20 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
         <p className="text-[11px] text-stone-500">
           Economía fraterna, soberanía vecinal e intercambio en armonía con los ciclos naturales.
         </p>
+
+        <div className="pt-3 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold">
+          <button onClick={onBackToHome} className="text-stone-300 hover:text-amber-300 underline cursor-pointer">
+            Volver al Inicio
+          </button>
+          <span>•</span>
+          <button 
+            onClick={() => onGoToMediaKit ? onGoToMediaKit() : (window.location.href = '/mediakit')} 
+            className="text-amber-300 hover:text-amber-200 underline flex items-center gap-1 cursor-pointer"
+          >
+            <Camera className="w-3.5 h-3.5" />
+            <span>Media Kit 360° (Fotos & Videos)</span>
+          </button>
+        </div>
       </div>
 
     </div>

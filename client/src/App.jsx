@@ -15,6 +15,7 @@ import CRMLoginModal from './components/CRM/CRMLoginModal';
 import CRMDashboard from './components/CRM/CRMDashboard';
 import CiclosLunaresSection from './components/CiclosLunaresSection';
 import SumateLandingView from './components/SumateLandingView';
+import MediaKitLandingView from './components/MediaKitLandingView';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -79,13 +80,26 @@ export default function App() {
         return;
       }
 
-      // 2. Ruta directa para placas de WhatsApp
+      // 2. Ruta directa para mediakit (ej: /mediakit, /media-kit, /productora)
+      if (
+        pathname === '/mediakit' ||
+        pathname === '/media-kit' ||
+        pathname === '/productora' ||
+        pathname === '/agencia' ||
+        pathname === '/agencia360' ||
+        pathname === '/productora360'
+      ) {
+        setActiveTab('mediakit');
+        return;
+      }
+
+      // 3. Ruta directa para placas de WhatsApp
       if (pathname === '/placas' || pathname === '/placas-whatsapp' || pathname === '/kit') {
         window.location.href = '/placas.html';
         return;
       }
 
-      // 3. Ruta directa para el mapa (ej: /mapalomaverdelunar o /mapa)
+      // 4. Ruta directa para el mapa (ej: /mapalomaverdelunar o /mapa)
       if (
         pathname === '/mapalomaverdelunar' ||
         pathname === '/mapa' ||
@@ -96,14 +110,14 @@ export default function App() {
         return;
       }
 
-      // 4. Parámetro ?tab=...
+      // 5. Parámetro ?tab=...
       const tabParam = params.get('tab');
       if (tabParam) {
         setActiveTab(tabParam);
         return;
       }
 
-      // 4. Subdominios y accesos directos
+      // 6. Subdominios y accesos directos
       if (hostname.startsWith('presupuesto')) {
         setActiveTab('presupuesto');
       } else if (hostname.startsWith('flyer')) {
@@ -128,6 +142,10 @@ export default function App() {
       } else if (activeTab === 'sumate_al_encuentro') {
         if (window.location.pathname !== '/sumate_al_encuentro') {
           window.history.replaceState(null, '', '/sumate_al_encuentro');
+        }
+      } else if (activeTab === 'mediakit') {
+        if (window.location.pathname !== '/mediakit') {
+          window.history.replaceState(null, '', '/mediakit');
         }
       } else if (activeTab === 'inicio') {
         if (window.location.pathname !== '/' && window.location.pathname !== '') {
@@ -188,8 +206,8 @@ export default function App() {
   return (
     <div className={`min-h-screen flex flex-col ${activeTab === 'mapa' ? 'h-screen overflow-hidden' : 'justify-between'} bg-transparent text-loma-green selection:bg-loma-accent selection:text-white`}>
       
-      {/* 1. Barra de Navegación Sticky (oculta en landing dedicada para máxima inmersión artística) */}
-      {activeTab !== 'sumate_al_encuentro' && (
+      {/* 1. Barra de Navegación Sticky (oculta en landings dedicadas para máxima inmersión artística) */}
+      {activeTab !== 'sumate_al_encuentro' && activeTab !== 'mediakit' && (
         <Navbar
           activeTab={activeTab}
           setActiveTab={(tab) => {
@@ -238,6 +256,10 @@ export default function App() {
                   const formEl = document.getElementById('seccion-inscripcion');
                   if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
                 }}
+                onOpenMediaKit={() => {
+                  setActiveTab('mediakit');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
               />
             </div>
 
@@ -279,6 +301,10 @@ export default function App() {
                   const formEl = document.getElementById('seccion-inscripcion');
                   if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
                 }, 100);
+              }}
+              onOpenMediaKit={() => {
+                setActiveTab('mediakit');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             />
           </div>
@@ -370,8 +396,26 @@ export default function App() {
             config={config}
             onSuccess={loadGlobalData}
             onGoToFlyerStudio={handleGoToFlyerStudio}
+            onGoToMediaKit={() => {
+              setActiveTab('mediakit');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             onBackToHome={() => {
               setActiveTab('inicio');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
+        {activeTab === 'mediakit' && (
+          <MediaKitLandingView
+            config={config}
+            onBackToHome={() => {
+              setActiveTab('inicio');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onGoToInscripcion={() => {
+              setActiveTab('sumate_al_encuentro');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           />
@@ -388,8 +432,8 @@ export default function App() {
         )}
       </main>
 
-      {/* 3. Footer Oficial Loma Verde (Oculto en pestaña mapa y en landing dedicada) */}
-      {activeTab !== 'mapa' && activeTab !== 'sumate_al_encuentro' && (
+      {/* 3. Footer Oficial Loma Verde (Oculto en pestaña mapa y en landings dedicadas) */}
+      {activeTab !== 'mapa' && activeTab !== 'sumate_al_encuentro' && activeTab !== 'mediakit' && (
         <footer className="bg-loma-green text-white border-t-4 border-loma-accent py-12 px-4 mt-16 text-center">
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="w-12 h-12 rounded-full bg-loma-wood border-2 border-amber-400 mx-auto flex items-center justify-center text-2xl">

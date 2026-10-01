@@ -13,7 +13,8 @@ import {
   Menu,
   X,
   UserPlus,
-  MapPin
+  MapPin,
+  Video
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModal, openTroquelModal, config }) {
@@ -28,6 +29,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
     { id: 'feria', label: 'La Feria', icon: Store },
     { id: 'escenario', label: 'Escenario', icon: Music },
     { id: 'directorio', label: 'Directorio', icon: BookOpen },
+    { id: 'mediakit', label: 'Media Kit 🎬', icon: Video },
   ];
 
   // Si se accede directamente a una sección pausada o es admin, la mostramos contextual

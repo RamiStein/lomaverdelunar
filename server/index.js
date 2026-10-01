@@ -65,6 +65,12 @@ app.get('/api/directorio', async (req, res) => {
 app.post('/api/feriantes', async (req, res) => {
   try {
     const nuevo = await db.addFeriante(req.body);
+    // Publicar automáticamente en Instagram (Feed e Historias)
+    publicarEnInstagram({
+      titulo: nuevo.nombre || req.body.nombre,
+      descripcion: `🌱 Rubro: ${nuevo.tipo || req.body.tipo}\n💬 ${nuevo.descripcion || req.body.descripcion}\n👤 Por: ${nuevo.nombrePersonal || req.body.nombrePersonal || nuevo.nombre}`,
+      tipo: 'FERIANTE'
+    });
     res.status(201).json({
       success: true,
       mensaje: '¡Propuesta enviada con éxito! Ya formas parte de la red de Loma Verde.',
@@ -151,6 +157,12 @@ app.get('/api/mapa/puntos', async (req, res) => {
 app.post('/api/mapa/puntos', async (req, res) => {
   try {
     const nuevo = await db.addPuntoMapa(req.body);
+    // Publicar automáticamente en Instagram (Feed e Historias)
+    publicarEnInstagram({
+      titulo: `[${nuevo.categoria || 'Alerta'}] ${nuevo.titulo || nuevo.asunto || 'Alerta Sustentable'}`,
+      descripcion: `📍 Ubicación: ${nuevo.ubicacion || 'Loma Verde'}\n💬 Descargo: ${nuevo.descripcion || nuevo.detalle || ''}`,
+      tipo: 'ALERTA'
+    });
     res.status(201).json({
       success: true,
       mensaje: '¡Reporte publicado en el mapa vecinal!',
@@ -542,6 +554,57 @@ if (process.env.NODE_ENV === 'production' || process.env.SERVE_CLIENT === 'true'
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
   });
+}
+
+// Helper para Auto-Publicación en Instagram (Feed e Historias) via Meta Graph API
+async function publicarEnInstagram({ titulo, descripcion, tipo, imagenUrl }) {
+  const token = process.env.INSTAGRAM_ACCESS_TOKEN;
+  const accountId = process.env.INSTAGRAM_ACCOUNT_ID;
+
+  if (!token || !accountId) {
+    console.log("ℹ️ Auto-publicación de Instagram lista (Define INSTAGRAM_ACCESS_TOKEN e INSTAGRAM_ACCOUNT_ID en tus variables de entorno para activar la publicación automática).");
+    return;
+  }
+
+  const urlFoto = imagenUrl || "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1080&auto=format&fit=crop";
+  const caption = (tipo === 'FERIANTE' ? '✨ ¡NUEVO INTEGRANTE EN LOMA VERDE LUNAR! 🌿\n\n' : '🚨 ALERTA VECINAL SUSTENTABLE 🌿\n\n') +
+                  titulo + '\n\n' + descripcion + '\n\n#LomaVerdeLunar #LomaVerde #Sustentabilidad #Comunidad';
+
+  try {
+    // 1. Feed (IMAGE)
+    const resFeedContainer = await fetch(`https://graph.facebook.com/v19.0/${accountId}/media`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image_url: urlFoto, caption, access_token: token })
+    });
+    const dataFeedContainer = await resFeedContainer.json();
+
+    if (dataFeedContainer.id) {
+      await fetch(`https://graph.facebook.com/v19.0/${accountId}/media_publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ creation_id: dataFeedContainer.id, access_token: token })
+      });
+    }
+
+    // 2. Stories (STORIES)
+    const resStoryContainer = await fetch(`https://graph.facebook.com/v19.0/${accountId}/media`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image_url: urlFoto, media_type: 'STORIES', access_token: token })
+    });
+    const dataStoryContainer = await resStoryContainer.json();
+
+    if (dataStoryContainer.id) {
+      await fetch(`https://graph.facebook.com/v19.0/${accountId}/media_publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ creation_id: dataStoryContainer.id, access_token: token })
+      });
+    }
+  } catch (err) {
+    console.error("Error al publicar en Instagram:", err.message);
+  }
 }
 
 if (require.main === module) {
