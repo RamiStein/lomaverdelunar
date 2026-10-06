@@ -14,7 +14,8 @@ import {
   X,
   UserPlus,
   MapPin,
-  Video
+  Video,
+  ShieldAlert
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModal, openTroquelModal, config }) {
@@ -23,6 +24,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
   // Menú público principal: limpio, esencial y directo
   const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
+    { id: 'antena', label: 'No a la Antena 🚨', icon: ShieldAlert, alertStyle: true },
     { id: 'sumate_al_encuentro', label: 'Sumate 🌿', icon: UserPlus, highlight: true },
     { id: 'lunas', label: 'Ciclos Lunares', icon: Moon },
     { id: 'mapa', label: 'Mapa Vecinal', icon: MapPin },
@@ -83,7 +85,9 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
                   onClick={() => setActiveTab(item.id)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap transition-all ${
                     isActive
-                      ? 'bg-loma-green text-white shadow-sm'
+                      ? item.alertStyle ? 'bg-red-700 text-white shadow-sm ring-2 ring-red-400' : 'bg-loma-green text-white shadow-sm'
+                      : item.alertStyle
+                      ? 'bg-red-50 text-red-700 border border-red-300 hover:bg-red-700 hover:text-white shadow-2xs'
                       : item.highlight
                       ? 'bg-loma-accent/15 text-loma-accent border border-loma-accent/40 hover:bg-loma-accent hover:text-white'
                       : 'text-loma-green hover:bg-loma-wood/10'
@@ -158,7 +162,9 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
                 }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-colors ${
                   isActive
-                    ? 'bg-loma-green text-white'
+                    ? item.alertStyle ? 'bg-red-700 text-white' : 'bg-loma-green text-white'
+                    : item.alertStyle
+                    ? 'bg-red-50 text-red-700 border border-red-200'
                     : item.highlight
                     ? 'bg-amber-50 text-loma-accent border border-loma-accent/30'
                     : 'text-loma-green hover:bg-loma-bg'

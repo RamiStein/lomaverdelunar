@@ -1542,6 +1542,54 @@ class Database {
     this.save();
     return true;
   }
+
+  // ==========================================
+  // 12. FIRMAS Y ADHESIONES CONTRA LA ANTENA 5G
+  // ==========================================
+  async getFirmasAntena() {
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        const snap = await fdb.collection('firmas_antena').get();
+        const list = snap.docs.map(d => d.data());
+        return list.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      } catch (e) {
+        console.error("Error al traer firmas antena de Firebase:", e);
+      }
+    }
+    return this.data.firmasAntena || [];
+  }
+
+  async addFirmaAntena(f) {
+    const id = "firma-" + Date.now();
+    const ahora = new Date();
+    const nuevaFirma = {
+      id,
+      nombre: String(f.nombre || "").trim(),
+      telefono: String(f.telefono || "").trim(),
+      barrio: String(f.barrio || "Loma Verde").trim(),
+      calle: String(f.calle || "").trim(),
+      motivo: String(f.motivo || "").trim(),
+      esVecino: f.esVecino !== false,
+      createdAt: ahora.toISOString(),
+      fechaTexto: ahora.toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })
+    };
+
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        await fdb.collection('firmas_antena').doc(id).set(nuevaFirma);
+        return nuevaFirma;
+      } catch (e) {
+        console.error("Error guardando firma antena en Firebase:", e);
+      }
+    }
+
+    if (!this.data.firmasAntena) this.data.firmasAntena = [];
+    this.data.firmasAntena.unshift(nuevaFirma);
+    this.save();
+    return nuevaFirma;
+  }
 }
 
 const db = new Database();

@@ -16,6 +16,7 @@ import CRMDashboard from './components/CRM/CRMDashboard';
 import CiclosLunaresSection from './components/CiclosLunaresSection';
 import SumateLandingView from './components/SumateLandingView';
 import MediaKitLandingView from './components/MediaKitLandingView';
+import AntenaAlertaView from './components/AntenaAlertaView';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -68,6 +69,20 @@ export default function App() {
       const pathname = window.location.pathname.toLowerCase().replace(/\/+$/, '');
       const params = new URLSearchParams(window.location.search);
       
+      // 0. Ruta directa para alerta contra la antena 5G de Telmex (ej: /noalaantena, /antena)
+      if (
+        pathname === '/noalaantena' ||
+        pathname === '/no-a-la-antena' ||
+        pathname === '/antena' ||
+        pathname === '/antena5g' ||
+        pathname === '/antena-5g' ||
+        pathname === '/alerta-antena' ||
+        pathname === '/noantena'
+      ) {
+        setActiveTab('antena');
+        return;
+      }
+
       // 1. Ruta directa para landing de inscripción (ej: /sumate_al_encuentro o /sumate)
       if (
         pathname === '/sumate_al_encuentro' ||
@@ -138,6 +153,10 @@ export default function App() {
       if (activeTab === 'mapa') {
         if (window.location.pathname !== '/mapalomaverdelunar') {
           window.history.replaceState(null, '', '/mapalomaverdelunar');
+        }
+      } else if (activeTab === 'antena') {
+        if (window.location.pathname !== '/noalaantena') {
+          window.history.replaceState(null, '', '/noalaantena');
         }
       } else if (activeTab === 'sumate_al_encuentro') {
         if (window.location.pathname !== '/sumate_al_encuentro') {
@@ -421,6 +440,16 @@ export default function App() {
           />
         )}
 
+        {activeTab === 'antena' && (
+          <AntenaAlertaView
+            config={config}
+            onBackToHome={() => {
+              setActiveTab('inicio');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {activeTab === 'crm' && (
           <div className="py-6">
             <CRMDashboard
@@ -433,7 +462,7 @@ export default function App() {
       </main>
 
       {/* 3. Footer Oficial Loma Verde (Oculto en pestaña mapa y en landings dedicadas) */}
-      {activeTab !== 'mapa' && activeTab !== 'sumate_al_encuentro' && activeTab !== 'mediakit' && (
+      {activeTab !== 'mapa' && activeTab !== 'sumate_al_encuentro' && activeTab !== 'mediakit' && activeTab !== 'antena' && (
         <footer className="bg-loma-green text-white border-t-4 border-loma-accent py-12 px-4 mt-16 text-center">
           <div className="max-w-4xl mx-auto space-y-4">
             <div className="w-12 h-12 rounded-full bg-loma-wood border-2 border-amber-400 mx-auto flex items-center justify-center text-2xl">

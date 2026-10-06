@@ -95,6 +95,42 @@ app.post('/api/voluntarios', async (req, res) => {
   }
 });
 
+// ==========================================
+// ADHESIONES VECINALES CONTRA LA ANTENA 5G
+// ==========================================
+app.get('/api/antena/firmas', async (req, res) => {
+  try {
+    const list = await db.getFirmasAntena();
+    res.json({
+      total: list.length,
+      firmas: list.map(f => ({
+        id: f.id,
+        nombre: f.nombre,
+        barrio: f.barrio,
+        motivo: f.motivo,
+        createdAt: f.createdAt
+      }))
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/antena/firmas', async (req, res) => {
+  try {
+    const nueva = await db.addFirmaAntena(req.body);
+    const list = await db.getFirmasAntena();
+    res.status(201).json({
+      success: true,
+      mensaje: '¡Tu adhesión vecinal ha sido registrada con éxito!',
+      total: list.length,
+      firma: nueva
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // Presupuesto Participativo & Proyectos
 app.get('/api/presupuesto', async (req, res) => {
   try {

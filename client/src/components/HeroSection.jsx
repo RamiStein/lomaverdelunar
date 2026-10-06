@@ -43,7 +43,35 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
       {/* ========================================================================= */}
       {/* 1. LUNA GRANDE Y HEADER CENTRAL VINTAGE DEL FLYER */}
       {/* ========================================================================= */}
-      <div className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10 text-center">
+      <div className="max-w-5xl mx-auto px-4 pt-4 sm:pt-8 text-center">
+
+        {/* BANNER DESTACADO DE ALERTA VECINAL: NO A LA ANTENA 5G */}
+        <div 
+          onClick={() => setActiveTab('antena')}
+          className="mb-6 max-w-2xl mx-auto bg-gradient-to-r from-red-700 via-red-800 to-stone-900 text-white p-3.5 sm:p-4 rounded-2xl shadow-lg border-2 border-amber-400 cursor-pointer hover:scale-[1.01] transition-transform text-left flex items-center justify-between gap-3 group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-400 text-stone-950 flex items-center justify-center font-black text-lg flex-shrink-0 animate-bounce">
+              ⚠️
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-amber-300">
+                <span>Alerta Vecinal en Loma Verde</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping" />
+              </div>
+              <h3 className="font-serif font-bold text-sm sm:text-base text-white leading-tight">
+                No a la Antena 5G de Telmex • Exigimos Fibra Óptica Limpia
+              </h3>
+              <p className="text-[11px] sm:text-xs text-stone-300 line-clamp-1">
+                Defendamos la salud de nuestras familias y el entorno natural. Sumá tu firma y conocé la verdad.
+              </p>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-1 bg-white/20 group-hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors flex-shrink-0">
+            <span>Ver Alerta</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </div>
+        </div>
         
         {/* LUNA DORADA RADIANTE CON LAURELES BOTÁNICOS */}
         <div className="relative inline-flex flex-col items-center mb-4 group cursor-pointer" onClick={() => setShowFlyerModal(true)}>
