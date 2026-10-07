@@ -1294,14 +1294,15 @@ class Database {
   async exportToExcel() {
     const wb = xlsx.utils.book_new();
 
-    const [feriantes, virtudes, vouchers, intercambios, votos, voluntarios, contabilidad] = await Promise.all([
+    const [feriantes, virtudes, vouchers, intercambios, votos, voluntarios, contabilidad, firmasAntena] = await Promise.all([
       this.getFeriantes(),
       this.getVirtudes(),
       this.getVouchers(),
       this.getIntercambios(),
       this.getVotos(),
       this.getVoluntarios(),
-      this.getContabilidad()
+      this.getContabilidad(),
+      this.getFirmasAntena()
     ]);
 
     const lunasList = ['Luna Piscis', 'Luna Acuario', 'Luna Capricornio', 'Luna Sagitario', 'Luna Escorpio'];
@@ -1421,6 +1422,21 @@ class Database {
     }));
     const wsContabilidad = xlsx.utils.json_to_sheet(contabilidadData);
     xlsx.utils.book_append_sheet(wb, wsContabilidad, "Contabilidad");
+
+    // Sheet: Adhesiones No a la Antena 5G
+    const firmasData = (firmasAntena || []).map(f => ({
+      Fecha: f.fechaTexto || f.createdAt,
+      Nombre: f.nombre,
+      Telefono: f.telefono,
+      Barrio: f.barrio,
+      Calle: f.calle,
+      Motivo_Observaciones: f.motivo,
+      EsVecino: f.esVecino !== false ? "SI" : "NO",
+      Contactado: f.contactado ? "SI" : "NO",
+      Notas: f.notas || ""
+    }));
+    const wsFirmas = xlsx.utils.json_to_sheet(firmasData);
+    xlsx.utils.book_append_sheet(wb, wsFirmas, "No a la Antena 5G");
 
     return xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
   }
@@ -1589,6 +1605,44 @@ class Database {
     this.data.firmasAntena.unshift(nuevaFirma);
     this.save();
     return nuevaFirma;
+  }
+
+  async updateFirmaAntena(id, updates) {
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        const docRef = fdb.collection('firmas_antena').doc(id);
+        const doc = await docRef.get();
+        if (!doc.exists) throw new Error("Firma no encontrada");
+        const updated = { ...doc.data(), ...updates };
+        await docRef.set(updated, { merge: true });
+        return updated;
+      } catch (e) {
+        console.error("Error al actualizar firma antena en Firebase:", e);
+      }
+    }
+    const idx = (this.data.firmasAntena || []).findIndex(f => f.id === id);
+    if (idx !== -1) {
+      this.data.firmasAntena[idx] = { ...this.data.firmasAntena[idx], ...updates };
+      this.save();
+      return this.data.firmasAntena[idx];
+    }
+    throw new Error("Firma no encontrada");
+  }
+
+  async deleteFirmaAntena(id) {
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        await fdb.collection('firmas_antena').doc(id).delete();
+        return true;
+      } catch (e) {
+        console.error("Error eliminando firma antena en Firebase:", e);
+      }
+    }
+    this.data.firmasAntena = (this.data.firmasAntena || []).filter(f => f.id !== id);
+    this.save();
+    return true;
   }
 }
 

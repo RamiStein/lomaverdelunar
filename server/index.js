@@ -333,7 +333,7 @@ app.post('/api/admin/login', async (req, res) => {
 // Dashboard general con métricas
 app.get('/api/admin/dashboard', verifyAdmin, async (req, res) => {
   try {
-    const [feriantes, virtudes, vouchers, intercambios, votos, voluntarios, contabilidad, config] = await Promise.all([
+    const [feriantes, virtudes, vouchers, intercambios, votos, voluntarios, contabilidad, config, firmasAntena] = await Promise.all([
       db.getFeriantes(),
       db.getVirtudes(),
       db.getVouchers(),
@@ -341,7 +341,8 @@ app.get('/api/admin/dashboard', verifyAdmin, async (req, res) => {
       db.getVotos(),
       db.getVoluntarios(),
       db.getContabilidad(),
-      db.getConfig()
+      db.getConfig(),
+      db.getFirmasAntena()
     ]);
 
     const totalAporteTroqueles = vouchers.reduce((acc, v) => acc + (v.montoInicial || 0), 0);
@@ -362,12 +363,15 @@ app.get('/api/admin/dashboard', verifyAdmin, async (req, res) => {
         saldoTroquelesCirculante,
         totalIntercambiado,
         totalVotosPresupuesto: votos.length,
-        totalGastadoContabilidad: contabilidad.totalGastado
+        totalGastadoContabilidad: contabilidad.totalGastado,
+        totalFirmasAntena: (firmasAntena || []).length,
+        firmasAntenaSinContactar: (firmasAntena || []).filter(f => !f.contactado).length
       },
       lunaActiva: config.lunaActiva,
       ultimosIntercambios: intercambios.slice(0, 10),
       ultimosVotos: votos.slice(0, 10),
-      ultimosFeriantes: feriantes.slice(0, 10)
+      ultimosFeriantes: feriantes.slice(0, 10),
+      ultimasFirmasAntena: (firmasAntena || []).slice(0, 10)
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -464,6 +468,53 @@ app.delete('/api/admin/voluntarios/:id', verifyAdmin, async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// ==========================================
+// CRM ADHESIONES NO A LA ANTENA 5G
+// ==========================================
+app.get('/api/admin/antena/firmas', verifyAdmin, async (req, res) => {
+  try {
+    const list = await db.getFirmasAntena();
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/antena/firmas/:id', verifyAdmin, async (req, res) => {
+  try {
+    const updated = await db.updateFirmaAntena(req.params.id, req.body);
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.delete('/api/admin/antena/firmas/:id', verifyAdmin, async (req, res) => {
+  try {
+    await db.deleteFirmaAntena(req.params.id);
+    res.json({ success: true, mensaje: 'Firma eliminada correctamente.' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/admin/antena/export-csv', verifyAdmin, async (req, res) => {
+  try {
+    const list = await db.getFirmasAntena();
+    let csv = "ID,Fecha,Nombre,Telefono,Barrio,Calle,Motivo,EsVecino,Contactado,Notas\n";
+    list.forEach(f => {
+      const escape = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
+      csv += `${escape(f.id)},${escape(f.fechaTexto || f.createdAt)},${escape(f.nombre)},${escape(f.telefono)},${escape(f.barrio)},${escape(f.calle)},${escape(f.motivo)},${escape(f.esVecino !== false ? 'SI' : 'NO')},${escape(f.contactado ? 'SI' : 'NO')},${escape(f.notas || '')}\n`;
+    });
+    const filename = `Firmas_No_A_La_Antena_Loma_Verde_${new Date().toISOString().split('T')[0]}.csv`;
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send("\uFEFF" + csv);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

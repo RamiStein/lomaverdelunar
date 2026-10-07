@@ -17,11 +17,15 @@ import {
   Edit2, 
   RefreshCw,
   LogOut,
-  Sparkles
+  Sparkles,
+  ShieldAlert,
+  FileText,
+  ExternalLink,
+  AlertTriangle
 } from 'lucide-react';
 
 export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) {
-  const [crmTab, setCrmTab] = useState('resumen'); // 'resumen', 'feriantes', 'voluntarios', 'troqueles', 'votos', 'finanzas', 'config'
+  const [crmTab, setCrmTab] = useState('resumen'); // 'resumen', 'antena', 'feriantes', 'voluntarios', 'troqueles', 'votos', 'finanzas', 'config'
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     dashboard: null,
@@ -34,13 +38,16 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
     contabilidad: { gastos: [], totalGastado: 0 },
     config: null,
     noticias: [],
-    puntosMapa: []
+    puntosMapa: [],
+    firmasAntena: []
   });
 
   // Filters & State
   const [selectedLuna, setSelectedLuna] = useState('todas');
   const [ferianteFilter, setFerianteFilter] = useState('todos');
   const [ferianteSearch, setFerianteSearch] = useState('');
+  const [antenaSearch, setAntenaSearch] = useState('');
+  const [antenaFilter, setAntenaFilter] = useState('todas');
   const [editingFeriante, setEditingFeriante] = useState(null);
   const [showAddFerianteModal, setShowAddFerianteModal] = useState(false);
   const [newFerianteForm, setNewFerianteForm] = useState({
@@ -81,7 +88,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         confRes,
         notRes,
         mapaRes,
-        papeleraRes
+        papeleraRes,
+        antenaRes
       ] = await Promise.all([
         fetch('/api/admin/dashboard', { headers }).then(r => r.json()),
         fetch('/api/admin/feriantes', { headers }).then(r => r.json()),
@@ -94,7 +102,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         fetch('/api/config').then(r => r.json()),
         fetch('/api/noticias').then(r => r.json()),
         fetch('/api/mapa/puntos').then(r => r.json()),
-        fetch('/api/admin/feriantes/papelera', { headers }).then(r => r.json())
+        fetch('/api/admin/feriantes/papelera', { headers }).then(r => r.json()),
+        fetch('/api/admin/antena/firmas', { headers }).then(r => r.json()).catch(() => [])
       ]);
 
       setData({
@@ -109,7 +118,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         config: confRes || {},
         noticias: notRes || [],
         puntosMapa: Array.isArray(mapaRes) ? mapaRes : [],
-        papeleraFeriantes: Array.isArray(papeleraRes) ? papeleraRes : []
+        papeleraFeriantes: Array.isArray(papeleraRes) ? papeleraRes : [],
+        firmasAntena: Array.isArray(antenaRes) ? antenaRes : []
       });
 
       if (!configForm && confRes) {
@@ -328,6 +338,75 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
     }
   };
 
+  // --- ACTIONS: ADHESIONES NO A LA ANTENA 5G ---
+  const handleToggleContactadoFirma = async (firma) => {
+    try {
+      const nuevoEstado = !firma.contactado;
+      const res = await fetch(`/api/admin/antena/firmas/${firma.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+        body: JSON.stringify({ contactado: nuevoEstado })
+      });
+      if (!res.ok) throw new Error('Error al actualizar estado.');
+      setData(prev => ({
+        ...prev,
+        firmasAntena: prev.firmasAntena.map(f => f.id === firma.id ? { ...f, contactado: nuevoEstado } : f)
+      }));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleEditNotasFirma = async (firma) => {
+    const notas = prompt('Notas de coordinación para esta firma:', firma.notas || '');
+    if (notas === null) return;
+    try {
+      const res = await fetch(`/api/admin/antena/firmas/${firma.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+        body: JSON.stringify({ notas })
+      });
+      if (!res.ok) throw new Error('Error al guardar notas.');
+      setData(prev => ({
+        ...prev,
+        firmasAntena: prev.firmasAntena.map(f => f.id === firma.id ? { ...f, notas } : f)
+      }));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleDeleteFirma = async (id) => {
+    if (!confirm('¿Estás seguro de eliminar esta firma/adhesión del registro?')) return;
+    try {
+      const res = await fetch(`/api/admin/antena/firmas/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-key': adminKey }
+      });
+      if (!res.ok) throw new Error('Error al eliminar firma.');
+      setData(prev => ({
+        ...prev,
+        firmasAntena: prev.firmasAntena.filter(f => f.id !== id)
+      }));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleExportCsvAntena = () => {
+    window.location.href = `/api/admin/antena/export-csv?adminKey=${adminKey}`;
+  };
+
+  const handleWhatsAppFirma = (firma) => {
+    const telLimpio = String(firma.telefono || '').replace(/[^0-9]/g, '');
+    if (!telLimpio) {
+      alert('Esta firma no cuenta con teléfono registrado.');
+      return;
+    }
+    const msg = `Hola ${firma.nombre || ''}, te escribimos desde la Coordinación Vecinal de Loma Verde en relación a la adhesión contra la antena de Telmex. ¡Muchas gracias por sumar tu firma y apoyar la fibra óptica! Te compartimos novedades de la causa:`;
+    window.open(`https://wa.me/${telLimpio}?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
   const metricas = data.dashboard?.metricas || {};
 
   return (
@@ -384,6 +463,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       <div className="flex overflow-x-auto gap-2 pb-4 mb-6 no-scrollbar">
         {[
           { id: 'resumen', label: '📊 Resumen & KPIs' },
+          { id: 'antena', label: `🛡️ No a la Antena (${data.firmasAntena?.length || 0})`, isAlert: true },
           { id: 'mapa', label: `🗺️ Mapa Vecinal (${data.puntosMapa?.length || 0})` },
           { id: 'feriantes', label: `👥 Feriantes (${metricas.totalFeriantes || 0})` },
           { id: 'voluntarios', label: `🤝 Voluntarios (${metricas.totalVoluntarios || 0})` },
@@ -397,7 +477,9 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
             onClick={() => setCrmTab(tab.id)}
             className={`px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
               crmTab === tab.id
-                ? 'bg-loma-green text-white shadow-md'
+                ? tab.isAlert ? 'bg-red-700 text-white shadow-md' : 'bg-loma-green text-white shadow-md'
+                : tab.isAlert
+                ? 'bg-red-50 text-red-700 border border-red-300 hover:bg-red-100'
                 : 'bg-white text-loma-green border border-loma-wood/20 hover:bg-loma-bg'
             }`}
           >
@@ -412,7 +494,23 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         <div className="space-y-8 animate-fadeIn">
           
           {/* Tarjetas KPI */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+            <div 
+              onClick={() => setCrmTab('antena')}
+              className="bg-white p-5 rounded-2xl border-2 border-red-300 shadow-xs cursor-pointer hover:border-red-500 hover:scale-[1.01] transition-all col-span-2 sm:col-span-1"
+            >
+              <span className="text-xs font-bold text-red-700 uppercase block mb-1 flex items-center justify-between">
+                <span>No a la Antena 5G</span>
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              </span>
+              <div className="font-serif text-3xl font-black text-red-600">
+                {metricas.totalFirmasAntena || data.firmasAntena?.length || 0}
+              </div>
+              <span className="text-[11px] text-gray-500 font-semibold block">
+                {metricas.firmasAntenaSinContactar ?? (data.firmasAntena?.filter(f => !f.contactado).length || 0)} sin contactar • Gestionar
+              </span>
+            </div>
+
             <div className="bg-white p-5 rounded-2xl border border-loma-green/30 shadow-xs">
               <span className="text-xs font-bold text-gray-500 uppercase block mb-1">Feriantes Inscriptos</span>
               <div className="font-serif text-3xl font-black text-loma-green">{metricas.totalFeriantes || 0}</div>
@@ -1043,6 +1141,249 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
           </div>
         </div>
       )}
+
+      {/* ========================================================= */}
+      {/* PESTAÑA CRM: ADHESIONES NO A LA ANTENA 5G */}
+      {/* ========================================================= */}
+      {crmTab === 'antena' && (() => {
+        const firmasFiltradas = (data.firmasAntena || []).filter(f => {
+          const matchFiltro = 
+            antenaFilter === 'todas' ? true :
+            antenaFilter === 'contactados' ? f.contactado :
+            !f.contactado;
+
+          const q = antenaSearch.toLowerCase().trim();
+          const matchBusqueda = !q ||
+            (f.nombre || '').toLowerCase().includes(q) ||
+            (f.telefono || '').toLowerCase().includes(q) ||
+            (f.barrio || '').toLowerCase().includes(q) ||
+            (f.calle || '').toLowerCase().includes(q) ||
+            (f.motivo || '').toLowerCase().includes(q) ||
+            (f.notas || '').toLowerCase().includes(q);
+
+          return matchFiltro && matchBusqueda;
+        });
+
+        const totalFirmas = (data.firmasAntena || []).length;
+        const totalContactados = (data.firmasAntena || []).filter(f => f.contactado).length;
+        const totalPendientes = totalFirmas - totalContactados;
+
+        return (
+          <div className="bg-white p-6 rounded-3xl border border-red-200 shadow-sm space-y-6 animate-fadeIn">
+            {/* Header de la sección */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-200 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="p-1.5 rounded-lg bg-red-100 text-red-700">
+                    <ShieldAlert className="w-5 h-5" />
+                  </span>
+                  <h2 className="font-serif text-xl font-bold text-stone-900">
+                    Firmas y Adhesiones: No a la Antena 5G en Loma Verde 🛡️
+                  </h2>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Gestión integral de vecinos adheridos al petitorio formal y oposición a Telmex / Claro.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  onClick={handleExportCsvAntena}
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow transition-all active:scale-95"
+                  title="Descargar padrón de firmas en formato CSV para Excel o impresión"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Exportar CSV</span>
+                </button>
+
+                <a
+                  href="/noalaantena"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-300 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+                  title="Abrir la landing pública de alerta vecinal"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Ver Landing Pública</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Badges de Métricas de la Causa */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-stone-50 border border-stone-200 p-3.5 rounded-2xl flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">Total Adhesiones</span>
+                  <span className="font-serif text-2xl font-black text-stone-900">{totalFirmas}</span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-bold text-lg">
+                  ✍️
+                </div>
+              </div>
+
+              <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block">Vecinos Contactados</span>
+                  <span className="font-serif text-2xl font-black text-emerald-800">{totalContactados}</span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-200 text-emerald-800 flex items-center justify-center font-bold text-lg">
+                  ✓
+                </div>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 block">Pendientes de Contacto</span>
+                  <span className="font-serif text-2xl font-black text-amber-800">{totalPendientes}</span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-amber-200 text-amber-800 flex items-center justify-center font-bold text-lg">
+                  ⏳
+                </div>
+              </div>
+            </div>
+
+            {/* Filtros y Buscador */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-between items-center bg-stone-50 p-3.5 rounded-2xl border border-stone-200">
+              <div className="relative w-full sm:w-80">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={antenaSearch}
+                  onChange={(e) => setAntenaSearch(e.target.value)}
+                  placeholder="Buscar por vecino, calle, barrio o motivo..."
+                  className="w-full pl-9 pr-3 py-2 bg-white border border-gray-300 rounded-xl text-xs focus:outline-hidden focus:border-red-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <span className="text-xs font-bold text-gray-500 whitespace-nowrap">Filtrar:</span>
+                <select
+                  value={antenaFilter}
+                  onChange={(e) => setAntenaFilter(e.target.value)}
+                  className="p-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-700"
+                >
+                  <option value="todas">Todas las firmas ({totalFirmas})</option>
+                  <option value="pendientes">Pendientes ({totalPendientes})</option>
+                  <option value="contactados">Contactados ({totalContactados})</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Tabla de Firmas */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-stone-100 text-stone-800 border-b border-stone-200">
+                    <th className="p-3">Fecha</th>
+                    <th className="p-3">Vecino / Nombre</th>
+                    <th className="p-3">Teléfono / WhatsApp</th>
+                    <th className="p-3">Barrio & Ubicación</th>
+                    <th className="p-3">Motivo / Mensaje</th>
+                    <th className="p-3">Estado Contacto</th>
+                    <th className="p-3">Notas Internas</th>
+                    <th className="p-3 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {firmasFiltradas.length > 0 ? (
+                    firmasFiltradas.map((f) => (
+                      <tr key={f.id} className="hover:bg-amber-50/40 transition-colors">
+                        <td className="p-3 whitespace-nowrap text-stone-500 text-[11px]">
+                          {f.fechaTexto || (f.createdAt ? new Date(f.createdAt).toLocaleDateString('es-AR') : '-')}
+                        </td>
+                        <td className="p-3">
+                          <strong className="text-stone-900 block font-bold">{f.nombre}</strong>
+                          {f.esVecino !== false && (
+                            <span className="inline-block text-[9px] font-extrabold uppercase bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                              Vecino Loma Verde
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3 font-mono text-stone-700 whitespace-nowrap">
+                          {f.telefono || '-'}
+                        </td>
+                        <td className="p-3 text-stone-700">
+                          <div className="font-semibold">{f.barrio || 'Loma Verde'}</div>
+                          {f.calle && <div className="text-[11px] text-gray-500">{f.calle}</div>}
+                        </td>
+                        <td className="p-3 max-w-xs text-stone-600 text-[11px]">
+                          {f.motivo ? (
+                            <span className="italic">"{f.motivo}"</span>
+                          ) : (
+                            <span className="text-gray-400">Sin mensaje</span>
+                          )}
+                        </td>
+                        <td className="p-3">
+                          <button
+                            onClick={() => handleToggleContactadoFirma(f)}
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all shadow-2xs ${
+                              f.contactado
+                                ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                                : 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                            }`}
+                            title="Clic para cambiar estado"
+                          >
+                            {f.contactado ? '✓ Contactado' : '⏳ Pendiente'}
+                          </button>
+                        </td>
+                        <td className="p-3 text-stone-500 text-[11px] max-w-xs">
+                          {f.notas ? (
+                            <span className="bg-yellow-50 text-yellow-900 px-2 py-0.5 rounded border border-yellow-200 block truncate">
+                              {f.notas}
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleEditNotasFirma(f)}
+                              className="text-stone-400 hover:text-stone-700 text-[10px] underline"
+                            >
+                              + Agregar nota
+                            </button>
+                          )}
+                        </td>
+                        <td className="p-3 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {f.telefono && (
+                              <button
+                                onClick={() => handleWhatsAppFirma(f)}
+                                className="p-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-2xs transition-colors"
+                                title="Escribir por WhatsApp a este vecino"
+                              >
+                                <MessageCircle className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+
+                            <button
+                              onClick={() => handleEditNotasFirma(f)}
+                              className="p-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-lg transition-colors"
+                              title="Editar notas de coordinación"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+
+                            <button
+                              onClick={() => handleDeleteFirma(f.id)}
+                              className="p-1.5 bg-stone-100 hover:bg-red-600 hover:text-white text-stone-500 rounded-lg transition-colors"
+                              title="Eliminar registro"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="8" className="p-8 text-center text-gray-400 italic">
+                        No se encontraron firmas registradas con los filtros seleccionados.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ========================================================= */}
       {/* PESTAÑA CRM MAPA VECINAL & REPORTES */}
