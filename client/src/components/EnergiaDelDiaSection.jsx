@@ -20,7 +20,10 @@ import {
   MessageCircle,
   ExternalLink,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  Zap,
+  Radio,
+  Globe
 } from 'lucide-react';
 import { getEnergiaDelDia, generarMensajeWhatsAppEnergia } from '../utils/energiaCalc';
 
@@ -352,7 +355,107 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       </div>
 
       {/* ========================================================================= */}
-      {/* 4. SINTONÍA Y CONSEJOS COTIDIANOS PARA LOMA VERDE                         */}
+      {/* 4. CLIMA CÓSMICO & TRÁNSITOS MAYORES: PLUTÓN DIRECTO EN ACUARIO ♒        */}
+      {/* ========================================================================= */}
+      {energia.transitosPlanetarios && (
+        <section className="space-y-6">
+          
+          {/* Card del Hito Estelar: Plutón Directo en Acuario */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-purple-400/70">
+            <div className="absolute -right-8 -bottom-8 opacity-15 text-9xl select-none pointer-events-none font-serif">
+              ♒
+            </div>
+
+            <div className="relative z-10 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1.5 bg-purple-500/30 text-purple-200 border border-purple-400/40 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider">
+                  <Zap className="w-3.5 h-3.5 text-purple-300 animate-pulse" />
+                  Hito Cósmico del Día • Estación Directa
+                </span>
+                <span className="text-xs font-mono font-bold bg-white/10 text-purple-200 px-3 py-1 rounded-full border border-white/10">
+                  {energia.transitosPlanetarios.eventoEstelar.posicion}
+                </span>
+              </div>
+
+              <div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-extrabold text-purple-100 leading-tight">
+                  {energia.transitosPlanetarios.eventoEstelar.titulo}
+                </h3>
+                <p className="text-purple-300 text-xs sm:text-sm mt-1 font-medium">
+                  {energia.transitosPlanetarios.eventoEstelar.estado}
+                </p>
+              </div>
+
+              <p className="text-xs sm:text-sm text-stone-200 leading-relaxed font-light">
+                {energia.transitosPlanetarios.eventoEstelar.resumen}
+              </p>
+
+              <div className="bg-purple-900/50 border border-purple-400/30 p-3.5 rounded-2xl flex items-start gap-3">
+                <span className="text-xl flex-shrink-0">🌿</span>
+                <p className="text-xs text-purple-100 leading-relaxed">
+                  <strong className="text-purple-200">Sintonía con Loma Verde:</strong> {energia.transitosPlanetarios.eventoEstelar.impacto}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Grid de Otros Tránsitos Planetarios Activos */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-stone-500 block">
+                  Bóveda Celeste
+                </span>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-stone-900">
+                  Aspectos Planetarios del Día
+                </h3>
+              </div>
+              <span className="text-xs font-semibold text-stone-600 bg-stone-100 border border-stone-200 px-3 py-1 rounded-full self-start sm:self-auto">
+                {energia.transitosPlanetarios.aspectos?.length || 6} tránsitos activos hoy
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {energia.transitosPlanetarios.aspectos?.map((aspecto) => (
+                <div
+                  key={aspecto.id}
+                  className="bg-white rounded-2xl p-5 border border-stone-200/90 shadow-2xs hover:shadow-md hover:border-amber-400/60 transition-all flex flex-col justify-between space-y-3"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xl">{aspecto.icono}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200/60">
+                        {aspecto.aspecto}
+                      </span>
+                    </div>
+
+                    <h4 className="font-serif font-bold text-sm sm:text-base text-stone-900 leading-snug">
+                      {aspecto.titulo}
+                    </h4>
+
+                    <span className="text-[11px] font-semibold text-amber-800 block">
+                      {aspecto.categoria}
+                    </span>
+
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      {aspecto.descripcion}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-stone-100 text-[11px] font-mono text-stone-500 flex items-center justify-between">
+                    <span>Tránsito:</span>
+                    <span className="font-semibold text-stone-700">{aspecto.planetas}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </section>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 5. SINTONÍA Y CONSEJOS COTIDIANOS PARA LOMA VERDE                         */}
       {/* ========================================================================= */}
       <section className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-10 shadow-sm space-y-6">
         
@@ -387,7 +490,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. NAVEGACIÓN Y ENLACE AL RESTO DE LA EXPERIENCIA LUNAR                   */}
+      {/* 6. NAVEGACIÓN Y ENLACE AL RESTO DE LA EXPERIENCIA LUNAR                   */}
       {/* ========================================================================= */}
       <div className="bg-gradient-to-r from-loma-bg via-amber-50 to-emerald-50 rounded-3xl p-6 sm:p-8 border border-loma-wood/30 text-center space-y-4">
         <h3 className="font-serif text-xl sm:text-2xl font-bold text-loma-green">

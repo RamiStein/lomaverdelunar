@@ -325,6 +325,81 @@ function getEnergiaDelDia(customData = {}) {
         "🔥 Canalizá el entusiasmo sagitariano: Ideá proyectos que expandan el bienestar barrial con alegría y espíritu generoso.",
         "⚖️ Armonizá tu espacio: Regalale a tu casa o jardín un toque de belleza y equilibrio bajo la mirada venusina de Libra."
       ]
+    },
+    transitosPlanetarios: {
+      titulo: "Clima Cósmico & Tránsitos Mayores",
+      eventoEstelar: {
+        titulo: "Hito Cósmico: Plutón despierta y arranca DIRECTO en Acuario",
+        signo: "Acuario",
+        simbolo: "♒",
+        posicion: "03° 14' Acuario",
+        estado: "Estación Directa (Fin de 5 meses de retrogradación)",
+        icono: "⚡",
+        resumen: "Tras 5 meses de retrogradación (desde mayo), Plutón se estaciona directo hoy en Acuario. La transformación profunda deja de ser un proceso mental/subterráneo y se convierte en acción concreta en el mundo: liberación colectiva, soberanía comunitaria y empoderamiento de las redes vecinales.",
+        impacto: "Un espaldarazo cósmico a la autonomía de Loma Verde: el poder ya no reside en cúpulas ni monopolios, sino en la red humana viva."
+      },
+      aspectos: [
+        {
+          id: "sol-jupiter",
+          titulo: "Sol en Libra sextil Júpiter en Leo",
+          aspecto: "Sextil Armónico (60°)",
+          planetas: "Sol ♎ • Júpiter ♌",
+          icono: "✨",
+          categoria: "Oportunidad y Vínculos",
+          descripcion: "Favorece acuerdos justos, benevolencia social y sinergias artísticas y colaborativas. La diplomacia encuentra generosidad.",
+          color: "amber"
+        },
+        {
+          id: "trigono-fuego",
+          titulo: "Gran Trígono de Fuego: Luna, Marte y Júpiter",
+          aspecto: "Trígono Fluido (120°)",
+          planetas: "Luna ♐ • Marte ♌ • Júpiter ♌",
+          icono: "🔥",
+          categoria: "Vitalidad y Coraje",
+          descripcion: "Una ola de entusiasmo, coraje e inspiración colectiva. Impulso para emprender, defender causas justas y celebrar sin miedo.",
+          color: "orange"
+        },
+        {
+          id: "venus-rx",
+          titulo: "Venus en Escorpio (Retrógrada)",
+          aspecto: "Fase Retrógrada",
+          planetas: "Venus ♏ Rx",
+          icono: "🌹",
+          categoria: "Revisión de Valores y Deseos",
+          descripcion: "Viaje al fondo del sentir: evaluar qué tiene verdadero valor, desarticular pactos tácitos tóxicos y sanar el corazón comunitario.",
+          color: "rose"
+        },
+        {
+          id: "mercurio-escorpio",
+          titulo: "Mercurio en Escorpio",
+          aspecto: "Tránsito Directo",
+          planetas: "Mercurio ♏",
+          icono: "🦅",
+          categoria: "Mente Perceptiva & Agudeza",
+          descripcion: "Mente inquisitiva y quirúrgica. Capacidad para ver lo no dicho, investigar a fondo la verdad y conversar con honestidad total.",
+          color: "teal"
+        },
+        {
+          id: "saturno-neptuno-aries",
+          titulo: "Saturno y Neptuno retrógrados en Aries",
+          aspecto: "Revisión Cardinal",
+          planetas: "Saturno ♈ Rx • Neptuno ♈ Rx",
+          icono: "🛡️",
+          categoria: "Madurez e Iniciativa Consciente",
+          descripcion: "Frenar la impulsividad ciega para fundar una nueva disciplina del espíritu. Madurar el liderazgo personal con paciencia y propósito.",
+          color: "indigo"
+        },
+        {
+          id: "urano-geminis",
+          titulo: "Urano retrógrado en Géminis",
+          aspecto: "Evolución Tecnológica & Social",
+          planetas: "Urano ♊ Rx",
+          icono: "🌐",
+          categoria: "Redes y Telecomunicaciones Libres",
+          descripcion: "Cuestionamiento profundo a los modelos tradicionales de conectividad y medios. Fomento de tecnologías éticas y comunicación barrial.",
+          color: "cyan"
+        }
+      ]
     }
   };
 
@@ -341,6 +416,15 @@ function getEnergiaDelDia(customData = {}) {
     sintoniaLomaVerde: {
       ...defaults.sintoniaLomaVerde,
       ...(customData.sintoniaLomaVerde || {})
+    },
+    transitosPlanetarios: {
+      ...defaults.transitosPlanetarios,
+      ...(customData.transitosPlanetarios || {}),
+      eventoEstelar: {
+        ...defaults.transitosPlanetarios.eventoEstelar,
+        ...(customData.transitosPlanetarios?.eventoEstelar || {})
+      },
+      aspectos: customData.transitosPlanetarios?.aspectos || defaults.transitosPlanetarios.aspectos
     }
   };
 }
