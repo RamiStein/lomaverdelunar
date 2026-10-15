@@ -16,7 +16,8 @@ import {
   MapPin,
   Video,
   ShieldAlert,
-  Sun
+  Sun,
+  Palette
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModal, openTroquelModal, config }) {
@@ -25,6 +26,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
   // Menú público principal: limpio, esencial y directo
   const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
+    { id: 'muro', label: 'Muro Cósmico 🎨', icon: Palette, highlight: true },
     { id: 'energia', label: 'Energía de Hoy ✨', icon: Sun, highlight: true },
     { id: 'antena', label: 'No a la Antena 🚨', icon: ShieldAlert, alertStyle: true },
     { id: 'sumate_al_encuentro', label: 'Sumate 🌿', icon: UserPlus },

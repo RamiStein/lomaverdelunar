@@ -63,6 +63,88 @@ const SEED_DATA = {
       fecha: "2026-08-01"
     }
   ],
+  publicacionesMuro: [
+    {
+      id: "post-1",
+      titulo: "El Susurro de las Cañas en Plenilunio",
+      contenido: "Hay una hora en la tarde de Loma Verde donde el viento del este acaricia las cañas tacuara y el cielo se tiñe de violeta y oro. En esa pausa sagrada, el barrio recuerda su pacto con la tierra: no somos espectadores del paisaje, somos el paisaje haciéndose palabra, silencio y raíz viva.",
+      autor: "Loma Verde Lunar",
+      redOrigen: "mi_arte",
+      redEtiqueta: "Mi Arte & Cosmovisión 🎨",
+      urlOriginal: "",
+      imagenUrl: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=1200&q=80",
+      videoUrl: "",
+      tags: ["#Poesia", "#Fotografia", "#LomaVerde", "#Frecuencia1320"],
+      fijado: true,
+      reacciones: { amor: 24, magia: 31, fuego: 12, tierra: 19, luz: 28 },
+      createdAt: "2026-10-15T12:00:00.000Z",
+      fechaTexto: "15 de Octubre • Plenilunio"
+    },
+    {
+      id: "post-2",
+      titulo: "Sembrando con la Luna: Sabiduría de Huerta Vecinal",
+      contenido: "Compartido desde el grupo de WhatsApp de huerteros de Loma Verde:\n\n«Vecis, con la Luna en fase ascendente y el calorcito de esta semana, es el momento justo para trasplantar tomates y albahacas. Cubran la tierra con pasto seco para retener la humedad viva y no rieguen con el sol arriba. El agua es medicina si se da a tiempo.»",
+      autor: "Comunidad de Huerta Loma Verde",
+      redOrigen: "whatsapp",
+      redEtiqueta: "Rescatado de WhatsApp 💬",
+      urlOriginal: "",
+      imagenUrl: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80",
+      videoUrl: "",
+      tags: ["#HuertaOrganica", "#Biodinamica", "#VecinosEnRed", "#SoberaniaAlimentaria"],
+      fijado: false,
+      reacciones: { amor: 18, magia: 9, fuego: 14, tierra: 35, luz: 15 },
+      createdAt: "2026-10-14T18:30:00.000Z",
+      fechaTexto: "14 de Octubre"
+    },
+    {
+      id: "post-3",
+      titulo: "Geometría Sagrada y Bioconstrucción Ancestral",
+      contenido: "Resonancia desde el arte del mundo: cuando miramos un panal de abejas, una flor de girasol o las cúpulas de adobe que levantaban nuestros ancestros, comprendemos que la belleza no es un adorno: es la estructura misma de la vida en armonía. Que nuestras casas y plazas en Loma Verde sigan honrando esa proporción áurea.",
+      autor: "Red Global de Arte & Biocultura",
+      redOrigen: "mundo",
+      redEtiqueta: "El Arte del Mundo 🌍",
+      urlOriginal: "https://instagram.com",
+      imagenUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+      videoUrl: "",
+      tags: ["#ArteDelMundo", "#GeometriaSagrada", "#Bioconstruccion", "#Armonia"],
+      fijado: false,
+      reacciones: { amor: 15, magia: 27, fuego: 8, tierra: 22, luz: 33 },
+      createdAt: "2026-10-13T10:15:00.000Z",
+      fechaTexto: "13 de Octubre"
+    },
+    {
+      id: "post-4",
+      titulo: "Alquimia en Barro: El Toque de Manos Feriantes",
+      contenido: "Visto en Instagram: El proceso de tornear un cuenco de cerámica gres, paso a paso, hasta que el fuego sella la memoria del artesano. En la feria de Loma Verde celebramos los oficios que conservan el alma humana frente a la producción en masa.",
+      autor: "@tallerpachamama.eco",
+      redOrigen: "instagram",
+      redEtiqueta: "Visto en Instagram 📸",
+      urlOriginal: "https://instagram.com/tallerpachamama.eco",
+      imagenUrl: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=1200&q=80",
+      videoUrl: "",
+      tags: ["#OficiosVivos", "#Ceramica", "#ManosHacedoras", "#FeriaLomaVerde"],
+      fijado: false,
+      reacciones: { amor: 22, magia: 16, fuego: 25, tierra: 18, luz: 14 },
+      createdAt: "2026-10-12T16:45:00.000Z",
+      fechaTexto: "12 de Octubre"
+    },
+    {
+      id: "post-5",
+      titulo: "Nuestra Tierra no se Negocia: El Cielo de Loma Verde",
+      contenido: "Publicado en los grupos vecinales de Facebook:\n\n«Los vecinos estamos despiertos y alertas. Ninguna antena 5G ni emprendimiento invasivo puede avanzar sin el consentimiento libre e informado de quienes habitamos este suelo. La red real es la humana, mirándonos a los ojos.»",
+      autor: "Asamblea Vecinal Loma Verde",
+      redOrigen: "facebook",
+      redEtiqueta: "Visto en Facebook 👥",
+      urlOriginal: "https://facebook.com",
+      imagenUrl: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80",
+      videoUrl: "",
+      tags: ["#DefensaDelBarrio", "#NoAlaAntena", "#SoberaniaVecinal", "#CieloLimpio"],
+      fijado: false,
+      reacciones: { amor: 42, magia: 11, fuego: 38, tierra: 29, luz: 20 },
+      createdAt: "2026-10-11T09:20:00.000Z",
+      fechaTexto: "11 de Octubre"
+    }
+  ],
   feriantes: [
     {
       id: "fer-1",
@@ -384,6 +466,9 @@ class Database {
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf8');
         this.data = JSON.parse(raw);
+        if (!this.data.publicacionesMuro || this.data.publicacionesMuro.length === 0) {
+          this.data.publicacionesMuro = JSON.parse(JSON.stringify(SEED_DATA.publicacionesMuro || []));
+        }
       } else {
         this.data = JSON.parse(JSON.stringify(SEED_DATA));
       }
@@ -1647,6 +1732,172 @@ class Database {
     this.data.firmasAntena = (this.data.firmasAntena || []).filter(f => f.id !== id);
     this.save();
     return true;
+  }
+
+  // ==========================================
+  // 13. MURO & RED SOCIAL COMUNITARIA
+  // ==========================================
+  async getPublicacionesMuro(filtro = {}) {
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        const snap = await fdb.collection('muro_publicaciones').get();
+        if (!snap.empty) {
+          let list = snap.docs.map(d => d.data());
+          if (filtro.red && filtro.red !== 'todas') {
+            list = list.filter(p => p.redOrigen === filtro.red);
+          }
+          if (filtro.tag) {
+            list = list.filter(p => (p.tags || []).some(t => t.toLowerCase().includes(filtro.tag.toLowerCase())));
+          }
+          return list.sort((a, b) => {
+            if (a.fijado && !b.fijado) return -1;
+            if (!a.fijado && b.fijado) return 1;
+            return (b.createdAt || '').localeCompare(a.createdAt || '');
+          });
+        }
+      } catch (e) {
+        console.error("Error al traer publicaciones del muro de Firebase:", e);
+      }
+    }
+
+    let list = this.data.publicacionesMuro || SEED_DATA.publicacionesMuro || [];
+    if (filtro.red && filtro.red !== 'todas') {
+      list = list.filter(p => p.redOrigen === filtro.red);
+    }
+    if (filtro.tag) {
+      list = list.filter(p => (p.tags || []).some(t => t.toLowerCase().includes(filtro.tag.toLowerCase())));
+    }
+    return list.slice().sort((a, b) => {
+      if (a.fijado && !b.fijado) return -1;
+      if (!a.fijado && b.fijado) return 1;
+      return (b.createdAt || '').localeCompare(a.createdAt || '');
+    });
+  }
+
+  async addPublicacionMuro(p) {
+    const id = "post-" + Date.now();
+    const ahora = new Date();
+    const fechaTexto = ahora.toLocaleDateString('es-AR', {
+      day: 'numeric',
+      month: 'long'
+    });
+
+    const tagsArray = Array.isArray(p.tags) 
+      ? p.tags 
+      : String(p.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+
+    const nueva = {
+      id,
+      titulo: String(p.titulo || '').trim(),
+      contenido: String(p.contenido || '').trim(),
+      autor: String(p.autor || 'Loma Verde Lunar').trim(),
+      redOrigen: String(p.redOrigen || 'mi_arte').trim(),
+      redEtiqueta: String(p.redEtiqueta || '').trim() || (
+        p.redOrigen === 'whatsapp' ? 'Rescatado de WhatsApp 💬' :
+        p.redOrigen === 'instagram' ? 'Visto en Instagram 📸' :
+        p.redOrigen === 'facebook' ? 'Visto en Facebook 👥' :
+        p.redOrigen === 'mundo' ? 'El Arte del Mundo 🌍' :
+        p.redOrigen === 'video' ? 'Cápsula Audiovisual 🎥' : 'Mi Arte & Cosmovisión 🎨'
+      ),
+      urlOriginal: String(p.urlOriginal || '').trim(),
+      imagenUrl: String(p.imagenUrl || '').trim(),
+      videoUrl: String(p.videoUrl || '').trim(),
+      tags: tagsArray,
+      fijado: Boolean(p.fijado),
+      reacciones: { amor: 0, magia: 0, fuego: 0, tierra: 0, luz: 0 },
+      createdAt: ahora.toISOString(),
+      fechaTexto: String(p.fechaTexto || fechaTexto)
+    };
+
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        await fdb.collection('muro_publicaciones').doc(id).set(nueva);
+        return nueva;
+      } catch (e) {
+        console.error("Error guardando publicación en Firebase:", e);
+      }
+    }
+
+    if (!this.data.publicacionesMuro) {
+      this.data.publicacionesMuro = JSON.parse(JSON.stringify(SEED_DATA.publicacionesMuro || []));
+    }
+    this.data.publicacionesMuro.unshift(nueva);
+    this.save();
+    return nueva;
+  }
+
+  async updatePublicacionMuro(id, updates) {
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        const docRef = fdb.collection('muro_publicaciones').doc(id);
+        const doc = await docRef.get();
+        if (doc.exists) {
+          const updated = { ...doc.data(), ...updates };
+          await docRef.set(updated, { merge: true });
+          return updated;
+        }
+      } catch (e) {
+        console.error("Error al actualizar post en Firebase:", e);
+      }
+    }
+
+    const idx = (this.data.publicacionesMuro || []).findIndex(p => p.id === id);
+    if (idx !== -1) {
+      this.data.publicacionesMuro[idx] = { ...this.data.publicacionesMuro[idx], ...updates };
+      this.save();
+      return this.data.publicacionesMuro[idx];
+    }
+    throw new Error("Publicación no encontrada");
+  }
+
+  async deletePublicacionMuro(id) {
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        await fdb.collection('muro_publicaciones').doc(id).delete();
+        return true;
+      } catch (e) {
+        console.error("Error eliminando post en Firebase:", e);
+      }
+    }
+
+    this.data.publicacionesMuro = (this.data.publicacionesMuro || []).filter(p => p.id !== id);
+    this.save();
+    return true;
+  }
+
+  async reaccionarPublicacionMuro(id, tipo) {
+    const tiposValidos = ['amor', 'magia', 'fuego', 'tierra', 'luz'];
+    const campo = tiposValidos.includes(tipo) ? tipo : 'amor';
+
+    if (firebase.isFirebaseEnabled()) {
+      try {
+        const fdb = firebase.getDb();
+        const docRef = fdb.collection('muro_publicaciones').doc(id);
+        const doc = await docRef.get();
+        if (doc.exists) {
+          const data = doc.data();
+          const reacciones = data.reacciones || { amor: 0, magia: 0, fuego: 0, tierra: 0, luz: 0 };
+          reacciones[campo] = (reacciones[campo] || 0) + 1;
+          await docRef.update({ reacciones });
+          return { id, reacciones };
+        }
+      } catch (e) {
+        console.error("Error al reaccionar en Firebase:", e);
+      }
+    }
+
+    const post = (this.data.publicacionesMuro || []).find(p => p.id === id);
+    if (post) {
+      if (!post.reacciones) post.reacciones = { amor: 0, magia: 0, fuego: 0, tierra: 0, luz: 0 };
+      post.reacciones[campo] = (post.reacciones[campo] || 0) + 1;
+      this.save();
+      return { id, reacciones: post.reacciones };
+    }
+    throw new Error("Publicación no encontrada");
   }
 }
 

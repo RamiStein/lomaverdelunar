@@ -106,6 +106,28 @@ app.post('/api/voluntarios', async (req, res) => {
 });
 
 // ==========================================
+// RED SOCIAL & MURO COMUNITARIO 13:20
+// ==========================================
+app.get('/api/muro', async (req, res) => {
+  try {
+    const list = await db.getPublicacionesMuro(req.query);
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/muro/:id/reaccionar', async (req, res) => {
+  try {
+    const { tipo } = req.body;
+    const resultado = await db.reaccionarPublicacionMuro(req.params.id, tipo);
+    res.json(resultado);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// ==========================================
 // ADHESIONES VECINALES CONTRA LA ANTENA 5G
 // ==========================================
 app.get('/api/antena/firmas', async (req, res) => {
@@ -343,7 +365,7 @@ app.post('/api/admin/login', async (req, res) => {
 // Dashboard general con métricas
 app.get('/api/admin/dashboard', verifyAdmin, async (req, res) => {
   try {
-    const [feriantes, virtudes, vouchers, intercambios, votos, voluntarios, contabilidad, config, firmasAntena] = await Promise.all([
+    const [feriantes, virtudes, vouchers, intercambios, votos, voluntarios, contabilidad, config, firmasAntena, publicacionesMuro] = await Promise.all([
       db.getFeriantes(),
       db.getVirtudes(),
       db.getVouchers(),
@@ -352,7 +374,8 @@ app.get('/api/admin/dashboard', verifyAdmin, async (req, res) => {
       db.getVoluntarios(),
       db.getContabilidad(),
       db.getConfig(),
-      db.getFirmasAntena()
+      db.getFirmasAntena(),
+      db.getPublicacionesMuro()
     ]);
 
     const totalAporteTroqueles = vouchers.reduce((acc, v) => acc + (v.montoInicial || 0), 0);
@@ -375,13 +398,15 @@ app.get('/api/admin/dashboard', verifyAdmin, async (req, res) => {
         totalVotosPresupuesto: votos.length,
         totalGastadoContabilidad: contabilidad.totalGastado,
         totalFirmasAntena: (firmasAntena || []).length,
-        firmasAntenaSinContactar: (firmasAntena || []).filter(f => !f.contactado).length
+        firmasAntenaSinContactar: (firmasAntena || []).filter(f => !f.contactado).length,
+        totalPublicacionesMuro: (publicacionesMuro || []).length
       },
       lunaActiva: config.lunaActiva,
       ultimosIntercambios: intercambios.slice(0, 10),
       ultimosVotos: votos.slice(0, 10),
       ultimosFeriantes: feriantes.slice(0, 10),
-      ultimasFirmasAntena: (firmasAntena || []).slice(0, 10)
+      ultimasFirmasAntena: (firmasAntena || []).slice(0, 10),
+      ultimasPublicacionesMuro: (publicacionesMuro || []).slice(0, 10)
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -627,6 +652,45 @@ app.delete('/api/admin/noticias/:id', verifyAdmin, async (req, res) => {
   try {
     await db.deleteNoticia(req.params.id);
     res.json({ success: true });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// ==========================================
+// CRM: GESTIÓN DE PUBLICACIONES DEL MURO
+// ==========================================
+app.get('/api/admin/muro', verifyAdmin, async (req, res) => {
+  try {
+    const list = await db.getPublicacionesMuro(req.query);
+    res.json(list);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/muro', verifyAdmin, async (req, res) => {
+  try {
+    const nuevo = await db.addPublicacionMuro(req.body);
+    res.status(201).json(nuevo);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/muro/:id', verifyAdmin, async (req, res) => {
+  try {
+    const updated = await db.updatePublicacionMuro(req.params.id, req.body);
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.delete('/api/admin/muro/:id', verifyAdmin, async (req, res) => {
+  try {
+    await db.deletePublicacionMuro(req.params.id);
+    res.json({ success: true, mensaje: 'Publicación eliminada correctamente.' });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

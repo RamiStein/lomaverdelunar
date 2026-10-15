@@ -18,6 +18,7 @@ import SumateLandingView from './components/SumateLandingView';
 import MediaKitLandingView from './components/MediaKitLandingView';
 import AntenaAlertaView from './components/AntenaAlertaView';
 import EnergiaDelDiaSection from './components/EnergiaDelDiaSection';
+import MuroSocialSection from './components/MuroSocialSection';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -84,7 +85,22 @@ export default function App() {
         return;
       }
 
-      // 0.1. Ruta directa para la Energía del Día (ej: /energia, /energiadeldia, /sincronia)
+      // 0.1. Ruta directa para Muro Cósmico & Red Social (ej: /muro, /red, /red-social, /comunidad)
+      if (
+        pathname === '/muro' ||
+        pathname === '/red' ||
+        pathname === '/red-social' ||
+        pathname === '/redsocial' ||
+        pathname === '/murocosmico' ||
+        pathname === '/muro-cosmico' ||
+        pathname === '/comunidad' ||
+        pathname === '/feed'
+      ) {
+        setActiveTab('muro');
+        return;
+      }
+
+      // 0.2. Ruta directa para la Energía del Día (ej: /energia, /energiadeldia, /sincronia)
       if (
         pathname === '/energia' ||
         pathname === '/energiadeldia' ||
@@ -173,6 +189,10 @@ export default function App() {
       } else if (activeTab === 'antena') {
         if (window.location.pathname !== '/noalaantena') {
           window.history.replaceState(null, '', '/noalaantena');
+        }
+      } else if (activeTab === 'muro') {
+        if (window.location.pathname !== '/muro') {
+          window.history.replaceState(null, '', '/muro');
         }
       } else if (activeTab === 'energia') {
         if (window.location.pathname !== '/energia') {
@@ -472,6 +492,20 @@ export default function App() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           />
+        )}
+
+        {activeTab === 'muro' && (
+          <div className="py-6">
+            <MuroSocialSection
+              config={config}
+              isAdmin={isAdmin}
+              adminKey={adminKey}
+              onBackToHome={() => {
+                setActiveTab('inicio');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          </div>
         )}
 
         {activeTab === 'energia' && (

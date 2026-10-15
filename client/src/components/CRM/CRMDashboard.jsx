@@ -67,6 +67,20 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
   // New Noticia form
   const [newNoticia, setNewNoticia] = useState({ titulo: '', texto: '', img: '' });
 
+  // Muro post form
+  const [showAddMuroModal, setShowAddMuroModal] = useState(false);
+  const [newMuroForm, setNewMuroForm] = useState({
+    titulo: '',
+    contenido: '',
+    autor: 'Loma Verde Lunar',
+    redOrigen: 'mi_arte',
+    urlOriginal: '',
+    imagenUrl: '',
+    videoUrl: '',
+    tags: '#Arte, #LomaVerde',
+    fijado: false
+  });
+
   // Config form
   const [configForm, setConfigForm] = useState(null);
 
@@ -89,7 +103,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         notRes,
         mapaRes,
         papeleraRes,
-        antenaRes
+        antenaRes,
+        muroRes
       ] = await Promise.all([
         fetch('/api/admin/dashboard', { headers }).then(r => r.json()),
         fetch('/api/admin/feriantes', { headers }).then(r => r.json()),
@@ -103,7 +118,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         fetch('/api/noticias').then(r => r.json()),
         fetch('/api/mapa/puntos').then(r => r.json()),
         fetch('/api/admin/feriantes/papelera', { headers }).then(r => r.json()),
-        fetch('/api/admin/antena/firmas', { headers }).then(r => r.json()).catch(() => [])
+        fetch('/api/admin/antena/firmas', { headers }).then(r => r.json()).catch(() => []),
+        fetch('/api/admin/muro', { headers }).then(r => r.json()).catch(() => [])
       ]);
 
       setData({
@@ -119,7 +135,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         noticias: notRes || [],
         puntosMapa: Array.isArray(mapaRes) ? mapaRes : [],
         papeleraFeriantes: Array.isArray(papeleraRes) ? papeleraRes : [],
-        firmasAntena: Array.isArray(antenaRes) ? antenaRes : []
+        firmasAntena: Array.isArray(antenaRes) ? antenaRes : [],
+        publicacionesMuro: Array.isArray(muroRes) ? muroRes : []
       });
 
       if (!configForm && confRes) {
@@ -403,8 +420,72 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       alert('Esta firma no cuenta con teléfono registrado.');
       return;
     }
-    const msg = `Hola ${firma.nombre || ''}, te escribimos desde la Coordinación Vecinal de Loma Verde en relación a la adhesión contra la antena de Telmex. ¡Muchas gracias por sumar tu firma y apoyar la fibra óptica! Te compartimos novedades de la causa:`;
-    window.open(`https://wa.me/${telLimpio}?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
+  // --- ACTIONS: MURO & RED SOCIAL ---
+  const handleCreateMuroPost = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/admin/muro', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey
+        },
+        body: JSON.stringify(newMuroForm)
+      });
+      if (!res.ok) throw new Error('Error al crear publicación');
+      alert('¡Publicación creada con éxito en el Muro!');
+      setShowAddMuroModal(false);
+      setNewMuroForm({
+        titulo: '',
+        contenido: '',
+        autor: 'Loma Verde Lunar',
+        redOrigen: 'mi_arte',
+        urlOriginal: '',
+        imagenUrl: '',
+        videoUrl: '',
+        tags: '#Arte, #LomaVerde',
+        fijado: false
+      });
+      fetchAllData();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleToggleFijarMuroPost = async (post) => {
+    try {
+      const res = await fetch(`/api/admin/muro/${post.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey
+        },
+        body: JSON.stringify({ fijado: !post.fijado })
+      });
+      if (!res.ok) throw new Error('Error al actualizar estado fijado');
+      fetchAllData();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleDeleteMuroPost = async (id) => {
+    if (!confirm('¿Eliminar esta publicación del Muro Cósmico?')) return;
+    try {
+      const res = await fetch(`/api/admin/muro/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-key': adminKey }
+      });
+      if (!res.ok) throw new Error('Error al eliminar publicación');
+      setData(prev => ({
+        ...prev,
+        publicacionesMuro: (prev.publicacionesMuro || []).filter(p => p.id !== id)
+      }));
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const metricas = data.dashboard?.metricas || {};
@@ -463,6 +544,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       <div className="flex overflow-x-auto gap-2 pb-4 mb-6 no-scrollbar">
         {[
           { id: 'resumen', label: '📊 Resumen & KPIs' },
+          { id: 'muro', label: `🎨 Muro & Red (${data.publicacionesMuro?.length || 0})` },
           { id: 'antena', label: `🛡️ No a la Antena (${data.firmasAntena?.length || 0})`, isAlert: true },
           { id: 'mapa', label: `🗺️ Mapa Vecinal (${data.puntosMapa?.length || 0})` },
           { id: 'feriantes', label: `👥 Feriantes (${metricas.totalFeriantes || 0})` },
@@ -605,6 +687,270 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
             </div>
 
           </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* PESTAÑA CRM MURO & RED SOCIAL */}
+      {/* ========================================================= */}
+      {crmTab === 'muro' && (
+        <div className="bg-white p-6 rounded-3xl border border-loma-wood/30 shadow-sm space-y-6 animate-fadeIn">
+          
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-gray-200 pb-5">
+            <div>
+              <h2 className="font-serif text-xl font-bold text-loma-green flex items-center gap-2">
+                <span>Gestión del Muro Cósmico & Red Social 🎨</span>
+                <span className="text-xs bg-amber-100 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-full">
+                  {data.publicacionesMuro?.length || 0} publicaciones
+                </span>
+              </h2>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Publicá arte propio, poesías y contenidos rescatados de WhatsApp, Instagram, Facebook y el mundo.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href="/muro"
+                target="_blank"
+                rel="noreferrer"
+                className="bg-stone-100 hover:bg-stone-200 text-stone-700 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Ver Muro en Vivo</span>
+              </a>
+
+              <button
+                onClick={() => setShowAddMuroModal(true)}
+                className="bg-loma-green hover:bg-loma-wood text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all active:scale-95 shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Nueva Publicación</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Listado de Publicaciones */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(data.publicacionesMuro || []).map((p) => {
+              const totalReacciones = Object.values(p.reacciones || {}).reduce((a, b) => a + b, 0);
+              return (
+                <div
+                  key={p.id}
+                  className={`p-5 rounded-2xl border transition-all flex flex-col justify-between space-y-3 ${
+                    p.fijado ? 'border-amber-400 bg-amber-50/20 shadow-xs' : 'border-gray-200 bg-[#faf9f5]'
+                  }`}
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white border border-gray-200">
+                        {p.redEtiqueta || p.redOrigen}
+                      </span>
+                      {p.fijado && (
+                        <span className="text-[10px] font-black uppercase text-amber-900 bg-amber-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <Pin className="w-2.5 h-2.5" /> Fijado
+                        </span>
+                      )}
+                    </div>
+
+                    <h4 className="font-serif font-bold text-base text-stone-900 leading-snug">
+                      {p.titulo}
+                    </h4>
+
+                    <span className="text-xs text-stone-500 font-medium block">
+                      Por: <strong>{p.autor}</strong> • {p.fechaTexto || 'Reciente'}
+                    </span>
+
+                    <p className="text-xs text-stone-600 line-clamp-3 leading-relaxed">
+                      {p.contenido}
+                    </p>
+
+                    {p.imagenUrl && (
+                      <div className="rounded-xl overflow-hidden h-28 bg-stone-200 border">
+                        <img src={p.imagenUrl} alt={p.titulo} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-3 border-t border-gray-200 flex items-center justify-between text-xs">
+                    <span className="text-stone-500 font-semibold flex items-center gap-1">
+                      ❤️ {totalReacciones} reacciones
+                    </span>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => handleToggleFijarMuroPost(p)}
+                        className={`p-1.5 rounded-lg border transition-colors ${
+                          p.fijado ? 'bg-amber-400 text-amber-950 border-amber-500' : 'bg-white text-stone-600 hover:bg-stone-100'
+                        }`}
+                        title={p.fijado ? 'Desfijar de la cabecera' : 'Fijar en cabecera'}
+                      >
+                        <Pin className="w-3.5 h-3.5" />
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteMuroPost(p.id)}
+                        className="p-1.5 rounded-lg bg-white hover:bg-red-50 text-stone-400 hover:text-red-600 border border-gray-200 transition-colors"
+                        title="Eliminar publicación"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Modal Crear Publicación */}
+          {showAddMuroModal && (
+            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border-2 border-loma-green shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center border-b pb-3">
+                  <h3 className="font-serif text-lg font-bold text-loma-green">
+                    Nueva Publicación para el Muro Cósmico 🎨
+                  </h3>
+                  <button onClick={() => setShowAddMuroModal(false)} className="text-gray-400 hover:text-gray-600">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleCreateMuroPost} className="space-y-3 text-xs">
+                  <div>
+                    <label className="block font-bold text-loma-wood uppercase mb-1">Título *</label>
+                    <input
+                      type="text"
+                      required
+                      value={newMuroForm.titulo}
+                      onChange={(e) => setNewMuroForm({ ...newMuroForm, titulo: e.target.value })}
+                      placeholder="Ej: El Fuego de la Creatividad"
+                      className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">Red de Origen *</label>
+                      <select
+                        value={newMuroForm.redOrigen}
+                        onChange={(e) => setNewMuroForm({ ...newMuroForm, redOrigen: e.target.value })}
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-semibold"
+                      >
+                        <option value="mi_arte">🎨 Mi Arte & Cosmovisión</option>
+                        <option value="whatsapp">💬 Desde WhatsApp</option>
+                        <option value="instagram">📸 Visto en Instagram</option>
+                        <option value="facebook">👥 Visto en Facebook</option>
+                        <option value="mundo">🌍 El Arte del Mundo</option>
+                        <option value="video">🎥 Cápsula de Video</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">Autor / Fuente *</label>
+                      <input
+                        type="text"
+                        required
+                        value={newMuroForm.autor}
+                        onChange={(e) => setNewMuroForm({ ...newMuroForm, autor: e.target.value })}
+                        placeholder="Ej: Loma Verde Lunar o @usuario"
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-loma-wood uppercase mb-1">Contenido / Poesía / Noticia *</label>
+                    <textarea
+                      rows={4}
+                      required
+                      value={newMuroForm.contenido}
+                      onChange={(e) => setNewMuroForm({ ...newMuroForm, contenido: e.target.value })}
+                      placeholder="Escribí aquí el texto..."
+                      className="w-full p-2.5 rounded-xl border border-gray-300 text-xs leading-relaxed"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">URL Imagen (Opcional)</label>
+                      <input
+                        type="url"
+                        value={newMuroForm.imagenUrl}
+                        onChange={(e) => setNewMuroForm({ ...newMuroForm, imagenUrl: e.target.value })}
+                        placeholder="https://..."
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">URL Video (Opcional)</label>
+                      <input
+                        type="url"
+                        value={newMuroForm.videoUrl}
+                        onChange={(e) => setNewMuroForm({ ...newMuroForm, videoUrl: e.target.value })}
+                        placeholder="https://youtube.com/embed/..."
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">Enlace Original</label>
+                      <input
+                        type="url"
+                        value={newMuroForm.urlOriginal}
+                        onChange={(e) => setNewMuroForm({ ...newMuroForm, urlOriginal: e.target.value })}
+                        placeholder="https://instagram.com/..."
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-loma-wood uppercase mb-1">Tags (coma)</label>
+                      <input
+                        type="text"
+                        value={newMuroForm.tags}
+                        onChange={(e) => setNewMuroForm({ ...newMuroForm, tags: e.target.value })}
+                        placeholder="#Arte, #Poesia"
+                        className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <input
+                      type="checkbox"
+                      id="chk-crm-fijado"
+                      checked={newMuroForm.fijado}
+                      onChange={(e) => setNewMuroForm({ ...newMuroForm, fijado: e.target.checked })}
+                      className="rounded text-amber-600 w-4 h-4"
+                    />
+                    <label htmlFor="chk-crm-fijado" className="font-bold text-stone-800 cursor-pointer">
+                      Fijar publicación en la cabecera del Muro
+                    </label>
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-3 border-t">
+                    <button
+                      type="button"
+                      onClick={() => setShowAddMuroModal(false)}
+                      className="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-bold"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-loma-green hover:bg-loma-wood text-white px-5 py-2 rounded-xl font-bold uppercase tracking-wider shadow"
+                    >
+                      Publicar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
         </div>
       )}
 

@@ -99,6 +99,34 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
         </div>
+
+        {/* BANNER INTERACTIVO: MURO CÓSMICO & RED SOCIAL (DONDE CONVERGE MI ARTE Y EL ARTE DEL MUNDO) */}
+        <div 
+          onClick={() => setActiveTab('muro')}
+          className="mb-6 max-w-2xl mx-auto bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 text-white p-3.5 sm:p-4 rounded-2xl shadow-lg border-2 border-purple-400/70 cursor-pointer hover:scale-[1.01] transition-transform text-left flex items-center justify-between gap-3 group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/30 border border-purple-400/40 text-purple-200 flex items-center justify-center font-black text-lg flex-shrink-0 shadow-xs">
+              🎨
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-black uppercase tracking-wider text-purple-300">
+                <span>Muro Cósmico • Red Social Comunitaria</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping" />
+              </div>
+              <h3 className="font-serif font-bold text-sm sm:text-base text-purple-100 leading-tight">
+                Donde converge mi arte y el arte del mundo ✨
+              </h3>
+              <p className="text-[11px] sm:text-xs text-stone-300 line-clamp-1 font-light">
+                Poesía, fotos, música y saberes compartidos desde WhatsApp, Instagram, Facebook y el barrio.
+              </p>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-1 bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors flex-shrink-0 shadow-xs">
+            <span>Ver Muro</span>
+            <ArrowRight className="w-3 h-3" />
+          </div>
+        </div>
         
         {/* LUNA DORADA RADIANTE CON LAURELES BOTÁNICOS */}
         <div className="relative inline-flex flex-col items-center mb-4 group cursor-pointer" onClick={() => setShowFlyerModal(true)}>
