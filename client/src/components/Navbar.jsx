@@ -15,7 +15,8 @@ import {
   UserPlus,
   MapPin,
   Video,
-  ShieldAlert
+  ShieldAlert,
+  Sun
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModal, openTroquelModal, config }) {
@@ -24,8 +25,9 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
   // Menú público principal: limpio, esencial y directo
   const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
+    { id: 'energia', label: 'Energía de Hoy ✨', icon: Sun, highlight: true },
     { id: 'antena', label: 'No a la Antena 🚨', icon: ShieldAlert, alertStyle: true },
-    { id: 'sumate_al_encuentro', label: 'Sumate 🌿', icon: UserPlus, highlight: true },
+    { id: 'sumate_al_encuentro', label: 'Sumate 🌿', icon: UserPlus },
     { id: 'lunas', label: 'Ciclos Lunares', icon: Moon },
     { id: 'mapa', label: 'Mapa Vecinal', icon: MapPin },
     { id: 'feria', label: 'La Feria', icon: Store },

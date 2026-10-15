@@ -41,6 +41,16 @@ app.get('/api/config', async (req, res) => {
   }
 });
 
+// Energía del Día (Astrología y Sincronario Maya 13:20)
+app.get('/api/energia', async (req, res) => {
+  try {
+    const config = await db.getConfig();
+    res.json(config.energiaDelDia || {});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Noticias de la cartelera
 app.get('/api/noticias', async (req, res) => {
   try {

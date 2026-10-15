@@ -17,6 +17,7 @@ import CiclosLunaresSection from './components/CiclosLunaresSection';
 import SumateLandingView from './components/SumateLandingView';
 import MediaKitLandingView from './components/MediaKitLandingView';
 import AntenaAlertaView from './components/AntenaAlertaView';
+import EnergiaDelDiaSection from './components/EnergiaDelDiaSection';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -83,6 +84,19 @@ export default function App() {
         return;
       }
 
+      // 0.1. Ruta directa para la Energía del Día (ej: /energia, /energiadeldia, /sincronia)
+      if (
+        pathname === '/energia' ||
+        pathname === '/energiadeldia' ||
+        pathname === '/energia-del-dia' ||
+        pathname === '/sincronia' ||
+        pathname === '/kin' ||
+        pathname === '/tzolkin'
+      ) {
+        setActiveTab('energia');
+        return;
+      }
+
       // 1. Ruta directa para landing de inscripción (ej: /sumate_al_encuentro o /sumate)
       if (
         pathname === '/sumate_al_encuentro' ||
@@ -141,6 +155,8 @@ export default function App() {
         setActiveTab('contabilidad');
       } else if (hostname.startsWith('mercado') || params.get('mercado') === 'true' || params.get('troquel') !== null) {
         setActiveTab('virtudes');
+      } else if (hostname.startsWith('energia')) {
+        setActiveTab('energia');
       }
     } catch (err) {
       console.error('Error en enrutamiento:', err);
@@ -157,6 +173,10 @@ export default function App() {
       } else if (activeTab === 'antena') {
         if (window.location.pathname !== '/noalaantena') {
           window.history.replaceState(null, '', '/noalaantena');
+        }
+      } else if (activeTab === 'energia') {
+        if (window.location.pathname !== '/energia') {
+          window.history.replaceState(null, '', '/energia');
         }
       } else if (activeTab === 'sumate_al_encuentro') {
         if (window.location.pathname !== '/sumate_al_encuentro') {
@@ -362,6 +382,10 @@ export default function App() {
           <div className="py-8">
             <CiclosLunaresSection
               config={config}
+              onGoToEnergia={() => {
+                setActiveTab('energia');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               onOpenInscripcion={() => {
                 setActiveTab('inicio');
                 setTimeout(() => {
@@ -448,6 +472,26 @@ export default function App() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           />
+        )}
+
+        {activeTab === 'energia' && (
+          <div className="py-6">
+            <EnergiaDelDiaSection
+              config={config}
+              onGoToInscripcion={() => {
+                setActiveTab('sumate_al_encuentro');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onGoToLunas={() => {
+                setActiveTab('lunas');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onBackToHome={() => {
+                setActiveTab('inicio');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          </div>
         )}
 
         {activeTab === 'crm' && (

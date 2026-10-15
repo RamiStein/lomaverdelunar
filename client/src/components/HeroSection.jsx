@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Calendar, MapPin, Sparkles, Moon, Sun, ArrowRight, Newspaper, HeartHandshake, Download, Eye, X, Compass, Feather, BookOpen, Vote, Palette, Store, Music } from 'lucide-react';
 import { getLunarPhase } from '../utils/lunarCalc';
+import { getEnergiaDelDia } from '../utils/energiaCalc';
 
 export default function HeroSection({ config, noticias, setActiveTab, openTroquelModal, showMercado }) {
   const moon = getLunarPhase();
+  const energiaHoy = getEnergiaDelDia(config);
   const [showFlyerModal, setShowFlyerModal] = useState(false);
 
   const signoSimbolo = config?.simboloZodiacal || '🌙';
@@ -48,27 +50,52 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
         {/* BANNER DESTACADO DE ALERTA VECINAL: NO A LA ANTENA 5G */}
         <div 
           onClick={() => setActiveTab('antena')}
-          className="mb-6 max-w-2xl mx-auto bg-gradient-to-r from-red-700 via-red-800 to-stone-900 text-white p-3.5 sm:p-4 rounded-2xl shadow-lg border-2 border-amber-400 cursor-pointer hover:scale-[1.01] transition-transform text-left flex items-center justify-between gap-3 group"
+          className="mb-4 max-w-2xl mx-auto bg-gradient-to-r from-red-700 via-red-800 to-stone-900 text-white p-3 sm:p-3.5 rounded-2xl shadow-md border-2 border-amber-400 cursor-pointer hover:scale-[1.01] transition-transform text-left flex items-center justify-between gap-3 group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-400 text-stone-950 flex items-center justify-center font-black text-lg flex-shrink-0 animate-bounce">
+            <div className="w-9 h-9 rounded-xl bg-amber-400 text-stone-950 flex items-center justify-center font-black text-base flex-shrink-0 animate-bounce">
               ⚠️
             </div>
             <div>
-              <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-amber-300">
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-black uppercase tracking-wider text-amber-300">
                 <span>Alerta Vecinal en Loma Verde</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping" />
               </div>
-              <h3 className="font-serif font-bold text-sm sm:text-base text-white leading-tight">
+              <h3 className="font-serif font-bold text-xs sm:text-sm text-white leading-tight">
                 No a la Antena 5G de Telmex • Exigimos Fibra Óptica Limpia
               </h3>
-              <p className="text-[11px] sm:text-xs text-stone-300 line-clamp-1">
-                Defendamos la salud de nuestras familias y el entorno natural. Sumá tu firma y conocé la verdad.
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-1 bg-white/20 group-hover:bg-white/30 text-white px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors flex-shrink-0">
+            <span>Ver Alerta</span>
+            <ArrowRight className="w-3 h-3" />
+          </div>
+        </div>
+
+        {/* TARJETA INTERACTIVA: LA ENERGÍA DE HOY (SOL EN LIBRA • LUNA EN SAGITARIO • KIN PERRO ESPECTRAL) */}
+        <div 
+          onClick={() => setActiveTab('energia')}
+          className="mb-6 max-w-2xl mx-auto bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 text-stone-950 p-3.5 sm:p-4 rounded-2xl shadow-lg border-2 border-white cursor-pointer hover:scale-[1.01] transition-transform text-left flex items-center justify-between gap-3 group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-stone-900 text-amber-300 flex items-center justify-center font-black text-lg flex-shrink-0 shadow-xs">
+              ☀️
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-black uppercase tracking-wider text-stone-900">
+                <span>La Energía de Hoy • Sincronía 13:20</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-stone-900 animate-ping" />
+              </div>
+              <h3 className="font-serif font-bold text-sm sm:text-base text-stone-950 leading-tight">
+                Sol en {energiaHoy.sol.signo} {energiaHoy.sol.simbolo} • Luna en {energiaHoy.luna.signo} {energiaHoy.luna.simbolo} • {energiaHoy.maya.kinNombre} 🐾
+              </h3>
+              <p className="text-[11px] sm:text-xs text-stone-900/80 line-clamp-1 font-medium">
+                {energiaHoy.maya.ondaEncantada} • {energiaHoy.maya.selloPoder} y liberación del corazón.
               </p>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-1 bg-white/20 group-hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors flex-shrink-0">
-            <span>Ver Alerta</span>
+          <div className="hidden sm:flex items-center gap-1 bg-stone-900 text-amber-300 group-hover:bg-stone-800 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors flex-shrink-0 shadow-xs">
+            <span>Ver Sintonía</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
         </div>

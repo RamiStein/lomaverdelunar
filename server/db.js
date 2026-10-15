@@ -434,6 +434,7 @@ class Database {
     if (savedConfig.modoAutomatico !== false) {
       const autoCycle = lunarCalendar.getAutoLunarCycle();
       const proximasLunas = lunarCalendar.getUpcomingMoons();
+      const energiaDelDia = lunarCalendar.getEnergiaDelDia(savedConfig.energiaDelDia);
       return {
         ...savedConfig,
         // En modo automático continuo 13:20, la fecha actual determina la luna activa y próxima:
@@ -452,14 +453,17 @@ class Database {
         fondoUrl: savedConfig.fondoUrl || '/fondo-loma-verde.jpg',
         modoAutomatico: true,
         proximasLunas,
-        ciclosDisponibles: lunarCalendar.getAllLunarCycles()
+        ciclosDisponibles: lunarCalendar.getAllLunarCycles(),
+        energiaDelDia
       };
     }
 
+    const energiaDelDia = lunarCalendar.getEnergiaDelDia(savedConfig.energiaDelDia);
     return {
       ...savedConfig,
       proximasLunas: lunarCalendar.getUpcomingMoons(),
-      ciclosDisponibles: lunarCalendar.getAllLunarCycles()
+      ciclosDisponibles: lunarCalendar.getAllLunarCycles(),
+      energiaDelDia
     };
   }
 

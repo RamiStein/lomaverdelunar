@@ -12,11 +12,12 @@ import {
   Droplets, 
   Wind, 
   Mountain,
-  CheckCircle2
+  CheckCircle2,
+  Sun
 } from 'lucide-react';
 import { getLunarPhase } from '../utils/lunarCalc';
 
-export default function CiclosLunaresSection({ config, onOpenInscripcion }) {
+export default function CiclosLunaresSection({ config, onOpenInscripcion, onGoToEnergia }) {
   const moon = getLunarPhase();
   const proximasLunas = config?.proximasLunas || [];
   const lunaActiva = proximasLunas[0] || {
@@ -59,6 +60,18 @@ export default function CiclosLunaresSection({ config, onOpenInscripcion }) {
         <p className="text-xs sm:text-sm text-gray-600 mt-1">
           La rueda del tiempo natural avanza. Conoce el ciclo que estamos transitando y el sendero de las próximas lunas llenas.
         </p>
+
+        {onGoToEnergia && (
+          <div className="pt-3">
+            <button
+              onClick={onGoToEnergia}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-stone-950 font-bold px-4 py-2 rounded-xl text-xs shadow-xs hover:shadow-md transition-all active:scale-95"
+            >
+              <Sun className="w-4 h-4 text-stone-900" />
+              <span>Ver la Energía de Hoy (Sol en Libra, Luna en Sagitario, Kin Perro Espectral) →</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ========================================================================= */}
