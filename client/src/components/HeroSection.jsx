@@ -163,12 +163,12 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
           </span>
         </div>
 
-        {/* TÍTULO PRINCIPAL: LUNA LLENA EN PISCIS */}
+        {/* TÍTULO PRINCIPAL: LUNA LLENA EN TAURO */}
         <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-extrabold text-loma-green tracking-tight drop-shadow-sm uppercase">
           LUNA LLENA
         </h1>
         <p className="font-serif italic text-2xl sm:text-4xl text-loma-wood font-normal -mt-1 sm:-mt-2 mb-6 flex items-center justify-center gap-2">
-          <span>en {config?.signo || 'Piscis'}</span>
+          <span>en {config?.signo || 'Tauro'}</span>
           <span className="text-3xl text-loma-accent font-bold not-italic">{signoSimbolo}</span>
         </p>
 
@@ -178,19 +178,19 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
           {/* DÍA DE LA SEMANA */}
           <div className="text-xs sm:text-sm font-black uppercase tracking-[0.3em] text-loma-accent flex items-center justify-center gap-2 mb-1">
             <span>🌾</span>
-            <span>{config?.diaSemanaTexto || 'SÁBADO'}</span>
+            <span>{config?.diaSemanaTexto || 'DOMINGO'}</span>
             <span>🌾</span>
           </div>
 
           {/* FECHA DEL EVENTO */}
           <div className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-loma-green tracking-tight my-1 uppercase">
-            {config?.fechaEventoTexto || '5 DE SEPTIEMBRE'}
+            {config?.fechaEventoTexto || '8 DE NOVIEMBRE'}
           </div>
 
           {/* HORARIO */}
           <div className="font-serif text-lg sm:text-2xl font-bold text-loma-wood tracking-wide mt-1 mb-4 flex items-center justify-center gap-2">
             <span>✦</span>
-            <span>{config?.horarioTexto || 'DE 13 A 19 HS'}</span>
+            <span>{config?.horarioTexto || 'HORARIO A DEFINIR'}</span>
             <span>✦</span>
           </div>
 

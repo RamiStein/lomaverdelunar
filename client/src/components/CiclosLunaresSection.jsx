@@ -21,18 +21,18 @@ export default function CiclosLunaresSection({ config, onOpenInscripcion, onGoTo
   const moon = getLunarPhase();
   const proximasLunas = config?.proximasLunas || [];
   const lunaActiva = proximasLunas[0] || {
-    lunaActiva: config?.lunaActiva || 'Luna Aries',
-    signo: config?.signo || 'Aries',
-    simboloZodiacal: config?.simboloZodiacal || '♈',
-    elemento: config?.elemento || 'Fuego Cardinal 🔥',
-    fechaEventoTexto: config?.fechaEventoTexto || '3 DE OCTUBRE',
-    diaSemanaTexto: config?.diaSemanaTexto || 'SÁBADO',
-    horarioTexto: config?.horarioTexto || 'DE 13 A 19 HS',
+    lunaActiva: config?.lunaActiva || 'Luna Tauro',
+    signo: config?.signo || 'Tauro',
+    simboloZodiacal: config?.simboloZodiacal || '♉',
+    elemento: config?.elemento || 'Tierra Fija 🌿🐂',
+    fechaEventoTexto: config?.fechaEventoTexto || '8 DE NOVIEMBRE',
+    diaSemanaTexto: config?.diaSemanaTexto || 'DOMINGO',
+    horarioTexto: config?.horarioTexto || 'HORARIO A DEFINIR',
     lugarTexto: config?.lugarTexto || 'Plaza La Misión y Nigromante • Loma Verde',
-    lema: config?.lema || 'Impulso, vitalidad, coraje emprendedor y nuevos comienzos bajo el sol de primavera.',
-    mistica: config?.mistica || 'La Luna Llena en Aries despierta el fuego creador y la chispa pionera. Es el momento de dar el primer paso, activar nuevos proyectos en el barrio y expresar la fuerza viva de nuestra comunidad.',
-    diasFaltantes: 15,
-    tags: config?.tags || ['Fuego Creador', 'Iniciativa', 'Primavera']
+    lema: config?.lema || 'Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.',
+    mistica: config?.mistica || 'La Luna Llena en Tauro nos enraíza en la belleza y fertilidad de la tierra. Momento de honrar los frutos de la huerta, las manos hacedoras, la economía fraterna y el cuidado paciente de lo que amamos. Conectamos con el valor genuino de la materia viva y la reciprocidad comunitaria. ♉🌿🐂🌾',
+    diasFaltantes: 24,
+    tags: config?.tags || ['Abundancia', 'Frutos de la Tierra', 'Soberanía Alimentaria', 'Enraizamiento']
   };
 
   const [selectedLunaDetalle, setSelectedLunaDetalle] = useState(null);

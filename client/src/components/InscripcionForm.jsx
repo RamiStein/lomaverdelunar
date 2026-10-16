@@ -107,8 +107,8 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
 
     try {
       const payload = {
-        lunaId: config?.lunaActiva || 'Luna Aries',
-        origen: config?.lunaActiva || 'Luna Aries',
+        lunaId: config?.lunaActiva || 'Luna Tauro',
+        origen: config?.lunaActiva || 'Luna Tauro',
         nombre: (formData.nombre || '').trim(),
         nombrePersonal: (formData.nombrePersonal || '').trim(),
         contacto: (formData.contacto || '').trim(),
@@ -210,8 +210,8 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
     <div className="max-w-xl mx-auto my-8 bg-white/95 backdrop-blur-sm p-6 sm:p-8 rounded-3xl border-2 border-loma-green shadow-[6px_6px_0px_rgba(43,83,41,0.1)]">
       <div className="text-center mb-6 border-b border-loma-wood/20 pb-4">
         <span className="bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-[11px] uppercase px-3.5 py-1 rounded-full tracking-wider inline-flex items-center gap-1.5 mb-2 shadow-2xs">
-          <span>{config?.simboloZodiacal || '♈'}</span>
-          <span>Inscripción Abierta: {config?.lunaActiva || 'Luna Aries'} • {config?.fechaEventoTexto || '3 DE OCTUBRE'}</span>
+          <span>{config?.simboloZodiacal || '♉'}</span>
+          <span>Inscripción Abierta: {config?.lunaActiva || 'Luna Tauro'} • {config?.fechaEventoTexto || '8 DE NOVIEMBRE'}</span>
         </span>
         <h3 className="font-serif text-2xl font-bold text-loma-green">
           Sumate a la Red y Feria Lunar 🌿

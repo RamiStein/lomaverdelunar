@@ -57,7 +57,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
     tipo: 'Artesanías',
     descripcion: '',
     instagram: '',
-    lunaId: 'Luna Piscis',
+    lunaId: 'Luna Tauro',
     puestoAsignado: ''
   });
 
@@ -197,7 +197,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         tipo: 'Artesanías',
         descripcion: '',
         instagram: '',
-        lunaId: data.config?.lunaActiva || 'Luna Piscis',
+        lunaId: data.config?.lunaActiva || 'Luna Tauro',
         puestoAsignado: ''
       });
       fetchAllData();
@@ -958,7 +958,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       {/* 2. PESTAÑA CRM FERIANTES */}
       {/* ========================================================= */}
       {crmTab === 'feriantes' && (() => {
-        const lunasBase = ['Luna Piscis', 'Luna Acuario', 'Luna Capricornio', 'Luna Sagitario', 'Luna Escorpio'];
+        const lunasBase = ['Luna Tauro', 'Luna Aries', 'Luna Piscis', 'Luna Acuario', 'Luna Capricornio', 'Luna Sagitario', 'Luna Escorpio'];
         const lunasEnFeriantes = [...new Set((data.feriantes || []).map(f => f.lunaId || f.origen || '').flatMap(s => s.split(' / ').map(x => x.trim())).filter(Boolean))];
         const lunasDisponibles = Array.from(new Set([...lunasBase, ...lunasEnFeriantes]));
 

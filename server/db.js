@@ -21,15 +21,20 @@ try {
 
 const SEED_DATA = {
   config: {
-    lunaActiva: "Luna Acuario",
+    lunaActiva: "Luna Tauro",
     nombreEvento: "Encuentro Vecinal",
-    subtitulo: "Luna Llena en Acuario ♒",
-    signo: "Aries",
-    fechaEvento: "Sábado 3 de Octubre de 13 a 19hs",
-    horarioTexto: "DE 13 A 19 HS",
-    motto: "Impulso, vitalidad, coraje emprendedor y nuevos comienzos bajo el sol de primavera.",
+    subtitulo: "Luna Llena en Tauro ♉",
+    signo: "Tauro",
+    simboloZodiacal: "♉",
+    elemento: "Tierra Fija 🌿🐂",
+    regente: "Venus 🌸",
+    fechaEvento: "Domingo 8 de Noviembre (Horario a definir)",
+    fechaEventoTexto: "8 DE NOVIEMBRE",
+    diaSemanaTexto: "DOMINGO",
+    horarioTexto: "HORARIO A DEFINIR",
+    motto: "Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.",
     lugar: "Loma Verde - Escobar | Plaza La Misión y Nigromante",
-    mistica: "Acuario nos invita a la innovación, al poder de la red y a pensar en el futuro de nuestra comunidad. En este encuentro, unimos esa energía visionaria de aire con nuestras raíces en la tierra, celebrando juntos el Día de la Pachamama. Agradecemos a la tierra que nos sostiene y proyectamos colectivamente el mañana. ♒🌬️🌍",
+    mistica: "La Luna Llena en Tauro nos enraíza en la belleza y fertilidad de la tierra. Momento de honrar los frutos de la huerta, las manos hacedoras, la economía fraterna y el cuidado paciente de lo que amamos. Conectamos con el valor genuino de la materia viva y la reciprocidad comunitaria. ♉🌿🐂🌾",
     quienesSomos: {
       titulo: "Loma Verde Lunar",
       texto: "Tejiendo redes comunitarias, economía fraterna y soberanía barrial en armonía con los ciclos de la naturaleza y la frecuencia 13:20."

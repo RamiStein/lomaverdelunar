@@ -278,7 +278,7 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Signo y tema activo
-  const activeSignName = config?.signo || config?.lunaActiva || 'Aries';
+  const activeSignName = config?.signo || config?.lunaActiva || 'Tauro';
   const theme = resolveZodiacTheme(activeSignName);
 
   // Lista de categorías
@@ -521,11 +521,11 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold">
           <div className="bg-stone-900/80 border border-stone-700/80 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-stone-200 backdrop-blur-xs">
             <Calendar className="w-3.5 h-3.5 text-amber-400" />
-            <span>{config?.fechaEventoTexto || 'SÁBADO 3 DE OCTUBRE'}</span>
+            <span>{config?.fechaEventoTexto || 'DOMINGO 8 DE NOVIEMBRE'}</span>
           </div>
           <div className="bg-stone-900/80 border border-stone-700/80 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-stone-200 backdrop-blur-xs">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
-            <span>{config?.horarioTexto || 'DE 13 A 19 HS'}</span>
+            <span>{config?.horarioTexto || 'HORARIO A DEFINIR'}</span>
           </div>
           <div className="bg-stone-900/80 border border-stone-700/80 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-stone-200 backdrop-blur-xs">
             <MapPin className="w-3.5 h-3.5 text-amber-400" />

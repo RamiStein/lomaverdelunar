@@ -107,23 +107,23 @@ const LUNAR_CALENDAR = [
     mistica: 'La Luna Llena en Aries despierta el fuego creador y la chispa pionera. Es el momento de dar el primer paso, activar nuevos proyectos en el barrio y expresar la fuerza viva de nuestra comunidad.',
     tags: ['Fuego Creador', 'Iniciativa', 'Primavera'],
     fechaInicio: '2026-09-13',
-    fechaFin: '2026-10-10'
+    fechaFin: '2026-10-03'
   },
   {
     id: 'luna-tauro-2026',
     lunaActiva: 'Luna Tauro',
     signo: 'Tauro',
     simboloZodiacal: '♉',
-    elemento: 'Tierra Fija 🌸',
-    fechaEvento: '2026-10-31',
-    diaSemanaTexto: 'SÁBADO',
-    fechaEventoTexto: '31 DE OCTUBRE',
-    horarioTexto: 'DE 13 A 19 HS',
+    elemento: 'Tierra Fija 🌿🐂',
+    fechaEvento: '2026-11-08',
+    diaSemanaTexto: 'DOMINGO',
+    fechaEventoTexto: '8 DE NOVIEMBRE',
+    horarioTexto: 'HORARIO A DEFINIR',
     lugarTexto: 'Plaza La Misión y Nigromante • Loma Verde',
-    lema: 'Celebrando la abundancia de la tierra, la soberanía alimentaria y el goce consciente.',
-    mistica: 'La Luna Llena en Tauro nos arraiga en la belleza de lo simple: los frutos de la huerta, los aromas naturales, el trabajo manual con amor y el valor genuino de lo que producimos con nuestras manos.',
-    tags: ['Abundancia', 'Frutos de la Tierra', 'Soberanía Alimentaria'],
-    fechaInicio: '2026-10-11',
+    lema: 'Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.',
+    mistica: 'La Luna Llena en Tauro nos enraíza en la belleza y fertilidad de la tierra. Momento de honrar los frutos de la huerta, las manos hacedoras, la economía fraterna y el cuidado paciente de lo que amamos. Conectamos con el valor genuino de la materia viva y la reciprocidad comunitaria. ♉🌿🐂🌾',
+    tags: ['Abundancia', 'Frutos de la Tierra', 'Soberanía Alimentaria', 'Enraizamiento'],
+    fechaInicio: '2026-10-04',
     fechaFin: '2026-11-08'
   },
   {
@@ -223,7 +223,7 @@ function getAutoLunarCycle(targetDate = new Date()) {
   const future = LUNAR_CALENDAR.find(luna => nowIso <= luna.fechaFin);
   if (future) return future;
 
-  return LUNAR_CALENDAR[5] || LUNAR_CALENDAR[0];
+  return LUNAR_CALENDAR[6] || LUNAR_CALENDAR[0];
 }
 
 function getUpcomingMoons(targetDate = new Date()) {
