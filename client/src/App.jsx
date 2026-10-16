@@ -31,7 +31,22 @@ export default function App() {
   const [flyerData, setFlyerData] = useState(null);
 
   // App Data
-  const [config, setConfig] = useState(null);
+  const [config, setConfig] = useState({
+    lunaActiva: "Luna Tauro",
+    subtitulo: "Luna Llena en Tauro ♉",
+    signo: "Tauro",
+    simboloZodiacal: "♉",
+    elemento: "Tierra Fija 🌿🐂",
+    regente: "Venus 🌸",
+    fechaEvento: "Domingo 8 de Noviembre (Horario a definir)",
+    fechaEventoTexto: "8 DE NOVIEMBRE",
+    diaSemanaTexto: "DOMINGO",
+    horarioTexto: "HORARIO A DEFINIR",
+    lugarTexto: "Plaza La Misión y Nigromante • Loma Verde",
+    motto: "Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.",
+    lema: "Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.",
+    mistica: "La Luna Llena en Tauro nos enraíza en la belleza y fertilidad de la tierra. Momento de honrar los frutos de la huerta, las manos hacedoras, la economía fraterna y el cuidado paciente de lo que amamos. Conectamos con el valor genuino de la materia viva y la reciprocidad comunitaria. ♉🌿🐂🌾"
+  });
   const [noticias, setNoticias] = useState([]);
   const [directorio, setDirectorio] = useState({});
   const [presupuesto, setPresupuesto] = useState(null);

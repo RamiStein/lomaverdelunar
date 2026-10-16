@@ -8,7 +8,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
   const energiaHoy = getEnergiaDelDia(config);
   const [showFlyerModal, setShowFlyerModal] = useState(false);
 
-  const signoSimbolo = config?.simboloZodiacal || '🌙';
+  const signoSimbolo = config?.simboloZodiacal || '♉';
 
   return (
     <div className="relative overflow-hidden pb-16">
@@ -263,15 +263,15 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
             <div className="lg:col-span-2">
               <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-200 border border-amber-300/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Mística del Ciclo Sincrónico • {config?.elemento || 'Frecuencia 13:20'}</span>
+                <span>Mística del Ciclo Sincrónico • {config?.elemento || 'Tierra Fija 🌿🐂'}</span>
               </div>
               
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-amber-100 mb-3">
-                La Magia de la Luna Llena en {config?.signo || 'Piscis'} {config?.simboloZodiacal || signoSimbolo}
+                La Magia de la Luna Llena en {config?.signo || 'Tauro'} {config?.simboloZodiacal || signoSimbolo}
               </h2>
               
               <p className="text-emerald-100 text-sm sm:text-base leading-relaxed mb-4">
-                {config?.mistica || 'Un encuentro comunitario para integrar el sentir colectivo, la economía solidaria y el arte bajo el brillo de la Luna Llena.'}
+                {config?.mistica || 'La Luna Llena en Tauro nos enraíza en la belleza y fertilidad de la tierra. Momento de honrar los frutos de la huerta, las manos hacedoras, la economía fraterna y el cuidado paciente de lo que amamos. Conectamos con el valor genuino de la materia viva y la reciprocidad comunitaria. ♉🌿🐂🌾'}
               </p>
 
               <div className="flex flex-wrap gap-4 text-xs font-semibold text-amber-200/90 pt-2 border-t border-emerald-700/50">
@@ -400,7 +400,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
                     </p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-loma-wood font-semibold">
-                    <span>{n.fecha || 'Ciclo Piscis'}</span>
+                    <span>{n.fecha || 'Ciclo Tauro'}</span>
                     <span className="text-loma-accent uppercase tracking-wider">Loma Verde Lunar</span>
                   </div>
                 </div>
@@ -424,7 +424,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
           >
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-serif font-bold text-lg text-loma-green">
-                Flyer Oficial • Luna Llena en Piscis ♓
+                Flyer Oficial • Luna Llena en {config?.signo || 'Tauro'} {config?.simboloZodiacal || '♉'}
               </h3>
               <button 
                 onClick={() => setShowFlyerModal(false)}
@@ -436,19 +436,19 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
 
             <div className="rounded-2xl overflow-hidden shadow-md border border-gray-200">
               <img 
-                src="/flyer-piscis.jpg" 
-                alt="Flyer Oficial Luna Llena en Piscis" 
+                src="/fondo-loma-verde.jpg" 
+                alt="Flyer Oficial Luna Llena en Tauro" 
                 className="w-full h-auto object-contain max-h-[70vh] mx-auto"
               />
             </div>
 
             <div className="mt-4 flex justify-between items-center gap-2">
               <span className="text-xs text-gray-500">
-                Sábado 5 de Septiembre • 12 a 18 hs
+                {config?.diaSemanaTexto || 'Domingo'} {config?.fechaEventoTexto || '8 de Noviembre'} • {config?.horarioTexto || 'Horario a definir'}
               </span>
               <a 
-                href="/flyer-piscis.jpg" 
-                download="Flyer_Loma_Verde_Luna_Piscis.jpg"
+                href="/fondo-loma-verde.jpg" 
+                download="Flyer_Loma_Verde_Luna_Tauro.jpg"
                 className="bg-loma-green hover:bg-loma-wood text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow transition-all"
               >
                 <Download className="w-4 h-4" />

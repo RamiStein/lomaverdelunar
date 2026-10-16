@@ -689,8 +689,8 @@ class Database {
 
     const nuevo = {
       id,
-      lunaId: f.lunaId || config.lunaActiva || "Luna Piscis",
-      origen: f.lunaId || config.lunaActiva || "Luna Piscis",
+      lunaId: f.lunaId || config.lunaActiva || "Luna Tauro",
+      origen: f.lunaId || config.lunaActiva || "Luna Tauro",
       nombre: String(f.nombre || "").trim(),
       nombrePersonal: String(f.nombrePersonal || "").trim(),
       contacto: String(f.contacto || f.telefono || "").trim(),
@@ -1399,7 +1399,7 @@ class Database {
       this.getFirmasAntena()
     ]);
 
-    const lunasList = ['Luna Piscis', 'Luna Acuario', 'Luna Capricornio', 'Luna Sagitario', 'Luna Escorpio'];
+    const lunasList = ['Luna Tauro', 'Luna Aries', 'Luna Piscis', 'Luna Acuario', 'Luna Capricornio', 'Luna Sagitario', 'Luna Escorpio'];
 
     // 1. Crear hojas individuales por cada Luna (igual que el Excel original)
     lunasList.forEach(lunaName => {

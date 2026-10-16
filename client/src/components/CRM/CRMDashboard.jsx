@@ -183,8 +183,8 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
         headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
         body: JSON.stringify({
           ...newFerianteForm,
-          lunaId: newFerianteForm.lunaId || data.config?.lunaActiva || 'Luna Piscis',
-          origen: newFerianteForm.lunaId || data.config?.lunaActiva || 'Luna Piscis'
+          lunaId: newFerianteForm.lunaId || data.config?.lunaActiva || 'Luna Tauro',
+          origen: newFerianteForm.lunaId || data.config?.lunaActiva || 'Luna Tauro'
         })
       });
       if (!res.ok) throw new Error('Error al registrar feriante.');
@@ -1212,7 +1212,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
                         <td className="p-3 font-semibold text-loma-wood">{f.tipo || f.categoria}</td>
                         <td className="p-3">
                           <select
-                            value={f.lunaId || f.origen?.split(' / ')[0] || data.config?.lunaActiva || 'Luna Piscis'}
+                            value={f.lunaId || f.origen?.split(' / ')[0] || data.config?.lunaActiva || 'Luna Tauro'}
                             onChange={(e) => handleUpdateFeriante(f.id, { lunaId: e.target.value, origen: e.target.value })}
                             className="text-[10px] font-bold rounded-lg px-2 py-1 border border-gray-300 bg-white text-loma-green cursor-pointer shadow-2xs"
                           >

@@ -252,6 +252,16 @@ function getAllLunarCycles() {
   return LUNAR_CALENDAR;
 }
 
+function getLunarCycleByName(name = '') {
+  if (!name) return getAutoLunarCycle();
+  const clean = name.toLowerCase().trim();
+  return LUNAR_CALENDAR.find(l => 
+    l.lunaActiva.toLowerCase().includes(clean) || 
+    l.signo.toLowerCase().includes(clean) || 
+    l.id.toLowerCase().includes(clean)
+  ) || LUNAR_CALENDAR[6];
+}
+
 function getEnergiaDelDia(customData = {}) {
   const defaults = {
     fechaTexto: "Jueves 15 de Octubre de 2026",
