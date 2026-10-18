@@ -1,11 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Sparkles, Moon, Sun, ArrowRight, Newspaper, HeartHandshake, Download, Eye, X, Compass, Feather, BookOpen, Vote, Palette, Store, Music } from 'lucide-react';
 import { getLunarPhase } from '../utils/lunarCalc';
 import { getEnergiaDelDia } from '../utils/energiaCalc';
 
 export default function HeroSection({ config, noticias, setActiveTab, openTroquelModal, showMercado }) {
-  const moon = getLunarPhase();
-  const energiaHoy = getEnergiaDelDia(config);
+  const [currentDate, setCurrentDate] = useState(() => new Date());
+
+  useEffect(() => {
+    const checkDate = () => {
+      const now = new Date();
+      if (now.getDate() !== currentDate.getDate()) {
+        setCurrentDate(now);
+      }
+    };
+    const interval = setInterval(checkDate, 60000);
+    window.addEventListener('focus', checkDate);
+    document.addEventListener('visibilitychange', checkDate);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', checkDate);
+      document.removeEventListener('visibilitychange', checkDate);
+    };
+  }, [currentDate]);
+
+  const moon = getLunarPhase(currentDate);
+  const energiaHoy = getEnergiaDelDia(config, currentDate);
   const [showFlyerModal, setShowFlyerModal] = useState(false);
 
   const signoSimbolo = config?.simboloZodiacal || '♉';

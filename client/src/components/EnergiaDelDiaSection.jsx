@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sun, 
   Moon, 
@@ -28,7 +28,26 @@ import {
 import { getEnergiaDelDia, generarMensajeWhatsAppEnergia } from '../utils/energiaCalc';
 
 export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoToLunas, onBackToHome }) {
-  const energia = getEnergiaDelDia(config);
+  const [currentDate, setCurrentDate] = useState(() => new Date());
+
+  useEffect(() => {
+    const checkDate = () => {
+      const now = new Date();
+      if (now.getDate() !== currentDate.getDate()) {
+        setCurrentDate(now);
+      }
+    };
+    const interval = setInterval(checkDate, 60000);
+    window.addEventListener('focus', checkDate);
+    document.addEventListener('visibilitychange', checkDate);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', checkDate);
+      document.removeEventListener('visibilitychange', checkDate);
+    };
+  }, [currentDate]);
+
+  const energia = getEnergiaDelDia(config, currentDate);
   const [copiedLink, setCopiedLink] = useState(false);
   const [mostrarOraculoDetalle, setMostrarOraculoDetalle] = useState(false);
   const [activeTabDetalle, setActiveTabDetalle] = useState('todo'); // 'todo', 'astrologia', 'maya', 'barrio'
@@ -41,7 +60,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       try {
         await navigator.share({
           title: `Energía de Hoy • ${energia.sol.signo} - ${energia.luna.signo} • Kin ${energia.maya.kinNombre}`,
-          text: `Sol en ${energia.sol.signo}, Luna en ${energia.luna.signo}. Kin Maya: ${energia.maya.kinNombre} (Onda Encantada del Sol). Sintonía comunitaria en Loma Verde:`,
+          text: `Sol en ${energia.sol.signo}, Luna en ${energia.luna.signo}. Kin Maya: ${energia.maya.kinNombre} (${energia.maya.ondaEncantada}). Sintonía comunitaria en Loma Verde:`,
           url: urlCompartir
         });
         return;
