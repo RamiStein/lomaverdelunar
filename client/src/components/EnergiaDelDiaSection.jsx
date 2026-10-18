@@ -51,6 +51,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
   const [copiedLink, setCopiedLink] = useState(false);
   const [mostrarOraculoDetalle, setMostrarOraculoDetalle] = useState(false);
   const [activeTabDetalle, setActiveTabDetalle] = useState('todo'); // 'todo', 'astrologia', 'maya', 'barrio'
+  const [mostrarReferencias, setMostrarReferencias] = useState(false);
 
   const handleShare = async () => {
     const textoWa = generarMensajeWhatsAppEnergia(energia);
@@ -126,6 +127,19 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
           >
             {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-loma-accent" />}
             <span>{copiedLink ? '¡Enlace Copiado!' : 'Copiar Link'}</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setMostrarReferencias(true);
+              const el = document.getElementById('referencias-fuentes');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="bg-amber-100/80 hover:bg-amber-200/80 text-amber-900 border border-amber-300/80 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-2xs transition-colors"
+            title="Conocer las fuentes científicas, astronómicas y mayas de este cálculo"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-amber-700" />
+            <span>Fuentes & Referencias</span>
           </button>
         </div>
 
@@ -509,7 +523,218 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       </section>
 
       {/* ========================================================================= */}
-      {/* 6. NAVEGACIÓN Y ENLACE AL RESTO DE LA EXPERIENCIA LUNAR                   */}
+      {/* 6. BASES METODOLÓGICAS, FUENTES Y REFERENCIAS OFICIALES                  */}
+      {/* ========================================================================= */}
+      <section id="referencias-fuentes" className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-10 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/80 pb-5">
+          <div>
+            <div className="flex items-center gap-2 text-amber-800 font-bold text-xs uppercase tracking-wider">
+              <BookOpen className="w-4 h-4 text-amber-600" />
+              <span>Transparencia y Fundamentos</span>
+            </div>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 mt-1">
+              ¿De dónde surge la información de la Energía del Día?
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl leading-relaxed">
+              Nuestro sistema integra algoritmos astronómicos de alta precisión, la cosmología sagrada del Sincronario Maya 13:20 y la psicología arquetípica para ofrecer una brújula diaria transparente y verificable.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setMostrarReferencias(!mostrarReferencias)}
+            className="inline-flex items-center gap-2 bg-stone-50 hover:bg-amber-50 text-stone-800 font-bold px-4 py-2.5 rounded-xl border border-stone-300 shadow-2xs text-xs transition-all self-start sm:self-auto cursor-pointer"
+          >
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>{mostrarReferencias ? 'Contraer Bibliografía' : 'Explorar Bibliografía y Fuentes'}</span>
+            {mostrarReferencias ? <ChevronUp className="w-4 h-4 text-stone-500" /> : <ChevronDown className="w-4 h-4 text-stone-500" />}
+          </button>
+        </div>
+
+        {/* Grid de 4 Pilares de Fuentes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          {/* 1. Sincronario Maya 13:20 */}
+          <div className="bg-gradient-to-br from-emerald-50/60 to-white rounded-2xl p-5 border border-emerald-200/80 space-y-3 flex flex-col justify-between">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-800 bg-emerald-100/80 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  🌀 Sincronario Maya 13:20
+                </span>
+                <span className="text-xs font-mono text-emerald-700 font-semibold">Tzolkin 260 Kines</span>
+              </div>
+              <h3 className="font-serif font-bold text-base sm:text-lg text-emerald-950">
+                Fundación para la Ley del Tiempo & El Encanto del Sueño
+              </h3>
+              <p className="text-xs text-stone-700 leading-relaxed">
+                Basado en la investigación del <strong>Dr. José Argüelles (Valum Votan)</strong> y <strong>Lloydine Argüelles (Bolon Ik)</strong>. Utiliza la matriz armónica ininterrumpida de 260 kines (13 tonos galácticos de creación × 20 sellos solares), con cálculo del Kin diario, la Onda Encantada y el Oráculo de la Quinta Fuerza alineado al huso horario de Buenos Aires.
+              </p>
+              {mostrarReferencias && (
+                <div className="pt-2 border-t border-emerald-100 text-[11px] text-stone-600 space-y-1.5 font-light">
+                  <p><strong>• Obras canónicas:</strong> <em>El Factor Maya: Un camino más allá de la tecnología</em> (1987); <em>The Dreamspell / El Encanto del Sueño</em> (1991); <em>El Tiempo y la Tecnosfera</em> (2002).</p>
+                  <p><strong>• Custodia:</strong> Foundation for the Law of Time (Ashland, Oregon, EE.UU.).</p>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-emerald-200/60 flex flex-wrap items-center gap-2">
+              <a
+                href="https://lawoftime.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-300 transition-colors"
+              >
+                <span>lawoftime.org</span>
+                <ExternalLink className="w-3 h-3 text-emerald-600" />
+              </a>
+              <a
+                href="https://www.13lunas.net"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 hover:text-emerald-950 bg-white hover:bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-300 transition-colors"
+              >
+                <span>13lunas.net (Sincronario)</span>
+                <ExternalLink className="w-3 h-3 text-emerald-600" />
+              </a>
+            </div>
+          </div>
+
+          {/* 2. Mecánica Celeste y Efemérides */}
+          <div className="bg-gradient-to-br from-blue-50/60 to-white rounded-2xl p-5 border border-blue-200/80 space-y-3 flex flex-col justify-between">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-wider text-blue-800 bg-blue-100/80 px-2.5 py-0.5 rounded-full border border-blue-200">
+                  🔭 Mecánica Celeste & Astrometría
+                </span>
+                <span className="text-xs font-mono text-blue-700 font-semibold">Jean Meeus / NASA</span>
+              </div>
+              <h3 className="font-serif font-bold text-base sm:text-lg text-blue-950">
+                Algoritmos Astronómicos y Fórmulas de Jean Meeus
+              </h3>
+              <p className="text-xs text-stone-700 leading-relaxed">
+                El sistema calcula la posición solar y lunar en tiempo real convirtiendo la fecha a <strong>Día Juliano (Julian Date)</strong> referenciado a la época estándar <strong>J2000.0</strong>. Aplica ecuaciones de perturbación lunar (anomalía, elongación y latitud) y el ciclo sinódico de 29.53 días para obtener grado zodiacal exacto e iluminación de fase.
+              </p>
+              {mostrarReferencias && (
+                <div className="pt-2 border-t border-blue-100 text-[11px] text-stone-600 space-y-1.5 font-light">
+                  <p><strong>• Referencia matemática:</strong> Jean Meeus, <em>Astronomical Algorithms</em>, 2da edición (Willmann-Bell, Inc., Richmond, Virginia).</p>
+                  <p><strong>• Verificación:</strong> Efemérides estándar del U.S. Naval Observatory (USNO) y el sistema NASA JPL Horizons.</p>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-blue-200/60 flex flex-wrap items-center gap-2">
+              <a
+                href="https://ssd.jpl.nasa.gov/horizons/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-800 hover:text-blue-950 bg-white hover:bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-300 transition-colors"
+              >
+                <span>NASA JPL Horizons</span>
+                <ExternalLink className="w-3 h-3 text-blue-600" />
+              </a>
+              <a
+                href="https://aa.usno.navy.mil/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-800 hover:text-blue-950 bg-white hover:bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-300 transition-colors"
+              >
+                <span>US Naval Observatory</span>
+                <ExternalLink className="w-3 h-3 text-blue-600" />
+              </a>
+            </div>
+          </div>
+
+          {/* 3. Astrología Humanística & Psicología Arquetípica */}
+          <div className="bg-gradient-to-br from-amber-50/60 to-white rounded-2xl p-5 border border-amber-200/80 space-y-3 flex flex-col justify-between">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-wider text-amber-900 bg-amber-100/80 px-2.5 py-0.5 rounded-full border border-amber-200">
+                  🔮 Astrología Humanística & Arquetipos
+                </span>
+                <span className="text-xs font-mono text-amber-800 font-semibold">C.G. Jung / D. Rudhyar</span>
+              </div>
+              <h3 className="font-serif font-bold text-base sm:text-lg text-amber-950">
+                Psicología Arquetípica y Sincronicidad
+              </h3>
+              <p className="text-xs text-stone-700 leading-relaxed">
+                Los tránsitos del Sol, la Luna y los planetas no se interpretan como determinismo predictivo o fatalista, sino como <strong>sincronicidad</strong> y arquetipos del inconsciente colectivo según <strong>Carl Gustav Jung</strong> y la astrología humanística y transpersonal formulada por <strong>Dane Rudhyar</strong>.
+              </p>
+              {mostrarReferencias && (
+                <div className="pt-2 border-t border-amber-100 text-[11px] text-stone-600 space-y-1.5 font-light">
+                  <p><strong>• C. G. Jung:</strong> <em>Sincronicidad como principio de conexiones acausales</em> (1952) y teoría de los arquetipos psicológicos.</p>
+                  <p><strong>• Dane Rudhyar:</strong> <em>The Lunation Cycle: A Key to the Understanding of Personality</em> (1967) y <em>The Astrology of Personality</em> (1936).</p>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-amber-200/60 flex flex-wrap items-center gap-2">
+              <a
+                href="https://www.rudhyar.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-900 hover:text-amber-950 bg-white hover:bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-300 transition-colors"
+              >
+                <span>Archivos Dane Rudhyar</span>
+                <ExternalLink className="w-3 h-3 text-amber-700" />
+              </a>
+              <span className="text-[11px] text-stone-500 font-medium px-2">
+                Enfoque evolutivo y no determinista
+              </span>
+            </div>
+          </div>
+
+          {/* 4. Filosofía Comunitaria y Biodinámica Loma Verde */}
+          <div className="bg-gradient-to-br from-stone-50 to-white rounded-2xl p-5 border border-stone-200 space-y-3 flex flex-col justify-between">
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-wider text-stone-800 bg-stone-200/80 px-2.5 py-0.5 rounded-full border border-stone-300">
+                  🌿 Sintonía Comunitaria & Biodinámica
+                </span>
+                <span className="text-xs font-mono text-stone-600 font-semibold">Loma Verde / Steiner</span>
+              </div>
+              <h3 className="font-serif font-bold text-base sm:text-lg text-stone-900">
+                Biodinámica, Carta de la Tierra y Soberanía Barrial
+              </h3>
+              <p className="text-xs text-stone-700 leading-relaxed">
+                Integra los principios de agricultura biodinámica de <strong>Rudolf Steiner</strong> (ritmos de siembra y labores según los ciclos celestes) y la <strong>Carta de la Tierra</strong>, orientando la energía cósmica hacia consejos prácticos de huerta, compostaje, arte comunitario y economía fraterna para el pueblo de Loma Verde.
+              </p>
+              {mostrarReferencias && (
+                <div className="pt-2 border-t border-stone-100 text-[11px] text-stone-600 space-y-1.5 font-light">
+                  <p><strong>• Rudolf Steiner:</strong> <em>Curso sobre agricultura biológico-dinámica</em> (Koberwitz, 1924).</p>
+                  <p><strong>• Valores locales:</strong> Soberanía alimentaria, cooperación comunitaria, reciprocidad sin lucro abusivo y cuidado del arbolado de Loma Verde.</p>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-stone-200/60 flex flex-wrap items-center gap-2">
+              <a
+                href="https://earthcharter.org/lea-la-carta-de-la-tierra/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold text-stone-800 hover:text-stone-950 bg-white hover:bg-stone-50 px-2.5 py-1.5 rounded-lg border border-stone-300 transition-colors"
+              >
+                <span>Carta de la Tierra</span>
+                <ExternalLink className="w-3 h-3 text-stone-600" />
+              </a>
+              <span className="text-[11px] text-emerald-800 font-semibold px-2">
+                🌱 Comunidad Loma Verde
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Nota de pie sobre rigor e independencia */}
+        <div className="bg-stone-50 border border-stone-200/80 rounded-2xl p-4 text-xs text-stone-600 leading-relaxed flex items-start gap-3">
+          <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-stone-900">Transparencia y Verificabilidad:</strong> Los cálculos de posición planetaria y del Sincronario Maya se ejecutan localmente en tu navegador sin intermediarios opacos, utilizando fórmulas matemáticas estandarizadas internacionalmente. Cada día a las 00:00 hs el motor actualiza la bóveda celeste y el Kin correspondiente de forma automática y precisa.
+          </div>
+        </div>
+
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 7. NAVEGACIÓN Y ENLACE AL RESTO DE LA EXPERIENCIA LUNAR                   */}
       {/* ========================================================================= */}
       <div className="bg-gradient-to-r from-loma-bg via-amber-50 to-emerald-50 rounded-3xl p-6 sm:p-8 border border-loma-wood/30 text-center space-y-4">
         <h3 className="font-serif text-xl sm:text-2xl font-bold text-loma-green">
