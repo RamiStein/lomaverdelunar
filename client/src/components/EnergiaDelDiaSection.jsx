@@ -217,7 +217,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
 
             <div className="flex items-center gap-3">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-700 via-loma-green to-teal-800 text-amber-300 flex items-center justify-center font-serif text-2xl shadow-inner font-black flex-shrink-0">
-                50
+                {energia.maya.kinNumero}
               </div>
               <div>
                 <h3 className="font-serif text-lg sm:text-xl font-bold text-emerald-950 leading-tight">
@@ -267,13 +267,13 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       {/* ========================================================================= */}
       <div className="relative overflow-hidden bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border-2 border-amber-400/80">
         <div className="absolute -right-10 -bottom-10 opacity-10 text-9xl select-none pointer-events-none font-serif">
-          🐾
+          {energia.maya.selloIcono || '✨'}
         </div>
 
         <div className="max-w-3xl mx-auto space-y-6 text-center">
           <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-300/40 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
             <Feather className="w-3.5 h-3.5" />
-            <span>Afirmación Sagrada del Kin 50</span>
+            <span>Afirmación Sagrada del Kin {energia.maya.kinNumero}</span>
           </div>
 
           <div className="font-serif italic text-lg sm:text-2xl text-amber-100 leading-relaxed whitespace-pre-line tracking-wide drop-shadow-sm">
@@ -281,8 +281,8 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
           </div>
 
           <p className="text-stone-300 text-xs sm:text-sm max-w-xl mx-auto font-light leading-relaxed">
-            El tono <strong>Espectral (11)</strong> nos pregunta: <em>"{energia.maya.tonoPregunta}"</em>. 
-            El <strong>Perro Blanco</strong> nos recuerda que la verdadera lealtad comienza en ser fieles a la pureza del propio corazón.
+            El tono <strong>{energia.maya.tonoNombre}</strong> nos pregunta: <em>"{energia.maya.tonoPregunta}"</em>. 
+            El sello <strong>{energia.maya.selloNombre}</strong> nos recuerda que su poder sagrado es <strong>{energia.maya.selloPoder.toLowerCase()}</strong>.
           </p>
 
           <button

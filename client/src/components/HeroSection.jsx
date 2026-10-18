@@ -87,10 +87,10 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
                 <span className="w-1.5 h-1.5 rounded-full bg-stone-900 animate-ping" />
               </div>
               <h3 className="font-serif font-bold text-sm sm:text-base text-stone-950 leading-tight">
-                Sol en {energiaHoy.sol.signo} {energiaHoy.sol.simbolo} • Luna en {energiaHoy.luna.signo} {energiaHoy.luna.simbolo} • {energiaHoy.maya.kinNombre} 🐾
+                Sol en {energiaHoy.sol.signo} {energiaHoy.sol.simbolo} • Luna en {energiaHoy.luna.signo} {energiaHoy.luna.simbolo} • {energiaHoy.maya.kinNombre} {energiaHoy.maya.selloIcono || '✨'}
               </h3>
               <p className="text-[11px] sm:text-xs text-stone-900/80 line-clamp-1 font-medium">
-                {energiaHoy.maya.ondaEncantada} • {energiaHoy.maya.selloPoder} y liberación del corazón.
+                {energiaHoy.maya.ondaEncantada} • {energiaHoy.maya.selloPoder}.
               </p>
             </div>
           </div>
