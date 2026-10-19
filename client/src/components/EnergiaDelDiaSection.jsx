@@ -27,6 +27,20 @@ import {
 } from 'lucide-react';
 import { getEnergiaDelDia, generarMensajeWhatsAppEnergia } from '../utils/energiaCalc';
 
+const getAspectoBadgeClass = (tipo) => {
+  const t = (tipo || '').toUpperCase();
+  if (t.includes('ARMÓNICO') || t.includes('FLUIDO') || t.includes('TRÍGONO') || t.includes('SEXTIL')) {
+    return 'bg-emerald-100 text-emerald-950 border-emerald-300';
+  }
+  if (t.includes('REVISIÓN') || t.includes('TENSIÓN') || t.includes('CUADRATURA') || t.includes('OPOSICIÓN')) {
+    return 'bg-amber-100 text-amber-950 border-amber-300';
+  }
+  if (t.includes('DIRECTO') || t.includes('EVOLUCIÓN') || t.includes('CONJUNCIÓN')) {
+    return 'bg-blue-100 text-blue-950 border-blue-300';
+  }
+  return 'bg-stone-100 text-stone-900 border-stone-300';
+};
+
 export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoToLunas, onBackToHome }) {
   const [currentDate, setCurrentDate] = useState(() => new Date());
 
@@ -90,24 +104,24 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       {/* ========================================================================= */}
       {/* 1. CABECERA MÍSTICA VINTAGE LOMA VERDE                                    */}
       {/* ========================================================================= */}
-      <header className="relative text-center max-w-3xl mx-auto space-y-4 pt-4">
+      <header className="relative text-center max-w-3xl mx-auto space-y-4 pt-6 pb-6 px-6 sm:px-10 bg-white/95 backdrop-blur-md rounded-3xl border border-amber-200/80 shadow-md">
         
         {/* Badge Sincronario */}
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-100 via-amber-200 to-yellow-100 text-amber-900 border border-amber-400/60 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-xs">
-          <Sparkles className="w-3.5 h-3.5 text-amber-600 animate-spin" style={{ animationDuration: '6s' }} />
+        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-100 via-amber-200 to-yellow-100 text-amber-950 border border-amber-400/80 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-2xs">
+          <Sparkles className="w-3.5 h-3.5 text-amber-700 animate-spin" style={{ animationDuration: '6s' }} />
           <span>Frecuencia 13:20 • Sincronía Cotidiana</span>
         </div>
 
-        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-extrabold text-loma-green tracking-tight leading-tight">
+        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-black text-loma-green tracking-tight leading-tight filter drop-shadow-2xs">
           La Energía del Día
         </h1>
 
-        <p className="font-serif italic text-lg sm:text-xl text-loma-wood">
+        <p className="font-serif italic text-lg sm:text-2xl text-loma-wood font-extrabold">
           {energia.fechaTexto}
         </p>
 
-        <p className="text-stone-600 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-          El cosmos y la tierra laten en sincronía. Conectamos con el tránsito del <strong>Sol</strong>, la emoción de la <strong>Luna</strong> y el oráculo del <strong>Sincronario Maya Tzolkin</strong> para habitar Loma Verde en armonía comunitaria.
+        <p className="text-stone-700 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-medium">
+          El cosmos y la tierra laten en sincronía. Conectamos con el tránsito del <strong className="text-stone-950">Sol</strong>, la emoción de la <strong className="text-stone-950">Luna</strong> y el oráculo del <strong className="text-stone-950">Sincronario Maya Tzolkin</strong> para habitar Loma Verde en armonía comunitaria.
         </p>
 
         {/* Botones rápidos de interacción */}
@@ -165,16 +179,16 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
                 {energia.sol.simbolo}
               </div>
               <div>
-                <h3 className="font-serif text-xl sm:text-2xl font-bold text-amber-950 leading-tight">
+                <h3 className="font-serif text-xl sm:text-2xl font-black text-amber-950 leading-tight tracking-tight">
                   Sol en {energia.sol.signo}
                 </h3>
-                <span className="text-xs font-semibold text-amber-800 block">
+                <span className="text-xs font-bold text-amber-900 block">
                   {energia.sol.elemento}
                 </span>
               </div>
             </div>
 
-            <p className="text-xs text-stone-700 leading-relaxed">
+            <p className="text-xs sm:text-[13px] text-stone-700 leading-relaxed font-normal">
               {energia.sol.descripcion}
             </p>
 
@@ -209,16 +223,16 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
                 {energia.luna.simbolo}
               </div>
               <div>
-                <h3 className="font-serif text-xl sm:text-2xl font-bold text-blue-950 leading-tight">
+                <h3 className="font-serif text-xl sm:text-2xl font-black text-blue-950 leading-tight tracking-tight">
                   Luna en {energia.luna.signo}
                 </h3>
-                <span className="text-xs font-semibold text-blue-800 block">
+                <span className="text-xs font-bold text-blue-900 block">
                   {energia.luna.elemento}
                 </span>
               </div>
             </div>
 
-            <p className="text-xs text-stone-700 leading-relaxed">
+            <p className="text-xs sm:text-[13px] text-stone-700 leading-relaxed font-normal">
               {energia.luna.descripcion}
             </p>
 
@@ -253,10 +267,10 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
                 {energia.maya.kinNumero}
               </div>
               <div>
-                <h3 className="font-serif text-lg sm:text-xl font-bold text-emerald-950 leading-tight">
+                <h3 className="font-serif text-xl sm:text-2xl font-black text-emerald-950 leading-tight tracking-tight">
                   {energia.maya.kinNombre}
                 </h3>
-                <span className="text-[11px] font-bold text-emerald-700 block">
+                <span className="text-xs font-bold text-emerald-800 block">
                   {energia.maya.ondaEncantada}
                 </span>
               </div>
@@ -432,18 +446,21 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
             </div>
           </div>
 
-          {/* Grid de Otros Tránsitos Planetarios Activos */}
-          <div className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          {/* Grid de Otros Tránsitos Planetarios Activos dentro de Card Contenedora de Alto Contraste */}
+          <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200/80 pb-4">
               <div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-stone-500 block">
-                  Bóveda Celeste
-                </span>
-                <h3 className="font-serif text-xl sm:text-2xl font-bold text-stone-900">
+                <div className="inline-flex items-center gap-1.5 bg-stone-900 text-amber-300 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-2xs mb-2">
+                  <span>🌌 Bóveda Celeste</span>
+                </div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-black text-stone-950 tracking-tight">
                   Aspectos Planetarios del Día
                 </h3>
+                <p className="text-xs sm:text-sm text-stone-600 mt-1 font-medium">
+                  Tránsitos y ángulos armónicos activos que modulan el clima colectivo
+                </p>
               </div>
-              <span className="text-xs font-semibold text-stone-600 bg-stone-100 border border-stone-200 px-3 py-1 rounded-full self-start sm:self-auto">
+              <span className="text-xs font-black text-stone-800 bg-amber-100/90 border border-amber-300 px-3.5 py-1.5 rounded-full self-start sm:self-auto shadow-2xs">
                 {energia.transitosPlanetarios.aspectos?.length || 6} tránsitos activos hoy
               </span>
             </div>
@@ -452,32 +469,32 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
               {energia.transitosPlanetarios.aspectos?.map((aspecto) => (
                 <div
                   key={aspecto.id}
-                  className="bg-white rounded-2xl p-5 border border-stone-200/90 shadow-2xs hover:shadow-md hover:border-amber-400/60 transition-all flex flex-col justify-between space-y-3"
+                  className="bg-stone-50/80 hover:bg-white rounded-2xl p-5 border-2 border-stone-200/90 shadow-2xs hover:shadow-md hover:border-amber-400/80 transition-all flex flex-col justify-between space-y-3.5"
                 >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xl">{aspecto.icono}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 bg-stone-100 px-2.5 py-0.5 rounded-full border border-stone-200/60">
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-2xl filter drop-shadow-xs">{aspecto.icono}</span>
+                      <span className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border shadow-2xs ${getAspectoBadgeClass(aspecto.aspecto)}`}>
                         {aspecto.aspecto}
                       </span>
                     </div>
 
-                    <h4 className="font-serif font-bold text-sm sm:text-base text-stone-900 leading-snug">
+                    <h4 className="font-serif font-black text-base sm:text-lg text-stone-950 leading-snug tracking-tight">
                       {aspecto.titulo}
                     </h4>
 
-                    <span className="text-[11px] font-semibold text-amber-800 block">
+                    <span className="inline-block text-xs font-bold text-amber-950 bg-amber-100/80 px-2.5 py-0.5 rounded-md border border-amber-300/60">
                       {aspecto.categoria}
                     </span>
 
-                    <p className="text-xs text-stone-600 leading-relaxed">
+                    <p className="text-xs sm:text-[13px] text-stone-700 leading-relaxed font-normal">
                       {aspecto.descripcion}
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-stone-100 text-[11px] font-mono text-stone-500 flex items-center justify-between">
-                    <span>Tránsito:</span>
-                    <span className="font-semibold text-stone-700">{aspecto.planetas}</span>
+                  <div className="pt-3 border-t border-stone-200/70 bg-white/70 p-2.5 rounded-xl border border-stone-200/60 text-xs font-mono flex items-center justify-between">
+                    <span className="font-bold text-stone-500">Tránsito:</span>
+                    <span className="font-black text-stone-900">{aspecto.planetas}</span>
                   </div>
                 </div>
               ))}
