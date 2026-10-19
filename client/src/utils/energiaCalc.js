@@ -218,6 +218,297 @@ function calculateMoonPosition(date) {
   };
 }
 
+export const CASTILLOS = [
+  {
+    numero: 1,
+    nombre: "Castillo Rojo del Girar",
+    corte: "Corte del Nacimiento",
+    direccion: "Este",
+    color: "Rojo",
+    colorTexto: "text-rose-950",
+    colorBadge: "bg-rose-100 text-rose-900 border-rose-300",
+    colorGrad: "from-rose-500 via-red-600 to-amber-600",
+    proposito: "Inicia el Ser a través del nacimiento",
+    kinInicio: 1,
+    kinFin: 52,
+    ondas: [
+      { numero: 1, nombre: "Dragón Rojo", kinInicio: 1, kinFin: 13 },
+      { numero: 2, nombre: "Viento Blanco", kinInicio: 14, kinFin: 26 },
+      { numero: 3, nombre: "Noche Azul", kinInicio: 27, kinFin: 39 },
+      { numero: 4, nombre: "Semilla Amarilla", kinInicio: 40, kinFin: 52 }
+    ]
+  },
+  {
+    numero: 2,
+    nombre: "Castillo Blanco del Cruzar",
+    corte: "Corte de la Muerte / Refinamiento",
+    direccion: "Norte",
+    color: "Blanco",
+    colorTexto: "text-slate-900",
+    colorBadge: "bg-slate-100 text-slate-900 border-slate-300",
+    colorGrad: "from-slate-400 via-stone-500 to-zinc-600",
+    proposito: "Refina el Sentir y purifica el Espíritu",
+    kinInicio: 53,
+    kinFin: 104,
+    ondas: [
+      { numero: 5, nombre: "Caminante del Cielo Rojo", kinInicio: 53, kinFin: 65 },
+      { numero: 6, nombre: "Enlazador de Mundos Blanco", kinInicio: 66, kinFin: 78 },
+      { numero: 7, nombre: "Tormenta Azul", kinInicio: 79, kinFin: 91 },
+      { numero: 8, nombre: "Humano Amarillo", kinInicio: 92, kinFin: 104 }
+    ]
+  },
+  {
+    numero: 3,
+    nombre: "Castillo Azul del Quemar",
+    corte: "Corte de la Magia / Transformación",
+    direccion: "Oeste",
+    color: "Azul",
+    colorTexto: "text-blue-950",
+    colorBadge: "bg-blue-100 text-blue-900 border-blue-300",
+    colorGrad: "from-blue-600 via-indigo-600 to-slate-800",
+    proposito: "Transforma la Ilusión a través de la magia",
+    kinInicio: 105,
+    kinFin: 156,
+    ondas: [
+      { numero: 9, nombre: "Serpiente Roja", kinInicio: 105, kinFin: 117 },
+      { numero: 10, nombre: "Espejo Blanco", kinInicio: 118, kinFin: 130 },
+      { numero: 11, nombre: "Mono Azul", kinInicio: 131, kinFin: 143 },
+      { numero: 12, nombre: "Semilla Amarilla", kinInicio: 144, kinFin: 156 }
+    ]
+  },
+  {
+    numero: 4,
+    nombre: "Castillo Amarillo del Dar",
+    corte: "Corte de la Inteligencia / Maduración",
+    direccion: "Sur",
+    color: "Amarillo",
+    colorTexto: "text-amber-950",
+    colorBadge: "bg-amber-100 text-amber-900 border-amber-300",
+    colorGrad: "from-amber-500 via-yellow-500 to-amber-700",
+    proposito: "Madura el Fruto a través de la inteligencia",
+    kinInicio: 157,
+    kinFin: 208,
+    ondas: [
+      { numero: 13, nombre: "Tierra Roja", kinInicio: 157, kinFin: 169 },
+      { numero: 14, nombre: "Perro Blanco", kinInicio: 170, kinFin: 182 },
+      { numero: 15, nombre: "Noche Azul", kinInicio: 183, kinFin: 195 },
+      { numero: 16, nombre: "Guerrero Amarillo", kinInicio: 196, kinFin: 208 }
+    ]
+  },
+  {
+    numero: 5,
+    nombre: "Castillo Verde del Encantar",
+    corte: "Corte de la Sincronización",
+    direccion: "Centro",
+    color: "Verde",
+    colorTexto: "text-emerald-950",
+    colorBadge: "bg-emerald-100 text-emerald-900 border-emerald-300",
+    colorGrad: "from-emerald-600 via-teal-600 to-emerald-800",
+    proposito: "Sincroniza y trasciende en el Tiempo Natural 13:20",
+    kinInicio: 209,
+    kinFin: 260,
+    ondas: [
+      { numero: 17, nombre: "Luna Roja", kinInicio: 209, kinFin: 221 },
+      { numero: 18, nombre: "Viento Blanco", kinInicio: 222, kinFin: 234 },
+      { numero: 19, nombre: "Águila Azul", kinInicio: 235, kinFin: 247 },
+      { numero: 20, nombre: "Estrella Amarilla", kinInicio: 248, kinFin: 260 }
+    ]
+  }
+];
+
+export const PALABRAS_CLAVE_TONOS = [
+  "Propósito",
+  "Desafío",
+  "Servicio",
+  "Forma",
+  "Poder",
+  "Equilibrio",
+  "Resonancia",
+  "Congruencia",
+  "Acción",
+  "Manifestación",
+  "Liberación",
+  "Cooperación",
+  "Trascendencia"
+];
+
+export function getKinDataByNumber(kinNumero, kinDiaActual = null) {
+  const kin = ((kinNumero - 1) % 260 + 260) % 260 + 1;
+  const tonoIdx = (kin - 1) % 13;
+  const selloIdx = (kin - 1) % 20;
+
+  const tono = MAYA_TONOS[tonoIdx];
+  const sello = MAYA_SELLOS[selloIdx];
+
+  const ondaNumero = Math.floor((kin - 1) / 13) + 1;
+  const kinInicioOnda = (ondaNumero - 1) * 13 + 1;
+  const kinFinOnda = ondaNumero * 13;
+  const selloOnda = MAYA_SELLOS[(kinInicioOnda - 1) % 20];
+  const diaDeOnda = tonoIdx + 1;
+
+  const kinNombre = `${sello.raiz} ${tono.nombreCorto} ${sello.color}`;
+  const kinCodigo = `Kin ${kin} • ${sello.maya} • Tono ${tono.numero}`;
+
+  // Castillo
+  const castilloNumero = Math.floor((kin - 1) / 52) + 1;
+  const castilloInfo = CASTILLOS[castilloNumero - 1];
+  const diaEnCastillo = ((kin - 1) % 52) + 1;
+
+  // Pasos de la Onda Encantada (13 escalones)
+  const kinesOnda = [];
+  for (let i = 0; i < 13; i++) {
+    const stepKin = kinInicioOnda + i;
+    const stepSelloIdx = (stepKin - 1) % 20;
+    const stepSello = MAYA_SELLOS[stepSelloIdx];
+    const stepTono = MAYA_TONOS[i];
+    kinesOnda.push({
+      paso: i + 1,
+      tonoNumero: i + 1,
+      tonoNombre: stepTono.nombreCorto,
+      palabraClave: PALABRAS_CLAVE_TONOS[i],
+      kinNumero: stepKin,
+      kinNombre: `${stepSello.raiz} ${stepTono.nombreCorto} ${stepSello.color}`,
+      sello: stepSello,
+      esKinActual: kinDiaActual ? stepKin === kinDiaActual : stepKin === kin
+    });
+  }
+
+  function getKinNumber(sIdx, tIdx) {
+    for (let k = 1; k <= 260; k++) {
+      if ((k - 1) % 20 === sIdx && (k - 1) % 13 === tIdx) return k;
+    }
+    return 1;
+  }
+
+  // Oráculo de la 5ta Fuerza:
+  let guiaSello = sello;
+  let guiaEsPoderDuplicado = false;
+  if (tono.numero === 1 || tono.numero === 6 || tono.numero === 11) {
+    guiaEsPoderDuplicado = true;
+  } else if (tono.numero === 2 || tono.numero === 7 || tono.numero === 12) {
+    guiaSello = MAYA_SELLOS[(selloIdx + 12) % 20];
+  } else if (tono.numero === 3 || tono.numero === 8 || tono.numero === 13) {
+    guiaSello = MAYA_SELLOS[(selloIdx + 4) % 20];
+  } else if (tono.numero === 4 || tono.numero === 9) {
+    guiaSello = MAYA_SELLOS[(selloIdx + 16) % 20];
+  } else if (tono.numero === 5 || tono.numero === 10) {
+    guiaSello = MAYA_SELLOS[(selloIdx + 8) % 20];
+  }
+  const guiaSelloIdx = guiaSello.id - 1;
+  const guiaKinNumero = getKinNumber(guiaSelloIdx, tonoIdx);
+  const guiaNombre = guiaEsPoderDuplicado ? kinNombre : `${guiaSello.raiz} ${tono.nombreCorto} ${guiaSello.color}`;
+  const guiaPoderTexto = guiaEsPoderDuplicado ? 'mi propio poder duplicado' : `el poder de ${guiaSello.poder}`;
+
+  const analogoIdx = (17 - selloIdx + 20) % 20;
+  const analogoSello = MAYA_SELLOS[analogoIdx];
+  const analogoKinNumero = getKinNumber(analogoIdx, tonoIdx);
+
+  const antipodaIdx = (selloIdx + 10) % 20;
+  const antipodaSello = MAYA_SELLOS[antipodaIdx];
+  const antipodaKinNumero = getKinNumber(antipodaIdx, tonoIdx);
+
+  const kinOcultoNum = 261 - kin;
+  const ocultoSelloIdx = (kinOcultoNum - 1) % 20;
+  const ocultoSello = MAYA_SELLOS[ocultoSelloIdx];
+  const ocultoTonoIdx = (kinOcultoNum - 1) % 13;
+  const ocultoTono = MAYA_TONOS[ocultoTonoIdx];
+
+  const afirmacion = `${tono.accionVerbo} con el fin de ${sello.accion},\n` +
+    `${tono.funcionVerbo} ${sello.esencia}.\n` +
+    `Sello la matriz de ${sello.poder}\n` +
+    `con el tono ${tono.nombreCorto.toLowerCase()} de ${tono.cualidad}.\n` +
+    `Me guía ${guiaPoderTexto}.`;
+
+  return {
+    kinNumero: kin,
+    kinNombre,
+    kinCodigo,
+    selloNombre: sello.nombre,
+    selloIcono: sello.icono,
+    selloColor: `${sello.color} (${sello.raza})`,
+    selloColorSolo: sello.color,
+    selloPoder: `El Poder de ${sello.poder}`,
+    selloAccion: `${sello.accion.charAt(0).toUpperCase() + sello.accion.slice(1)} ${sello.esencia}`,
+    sello,
+    tonoNombre: tono.nombre,
+    tonoNumero: tono.numero,
+    tonoIcono: "✨",
+    tonoPoder: tono.poder,
+    tonoAccion: tono.accion,
+    tonoPregunta: tono.pregunta,
+    tonoPalabraClave: PALABRAS_CLAVE_TONOS[tonoIdx],
+    tono,
+
+    castillo: {
+      ...castilloInfo,
+      diaEnCastillo,
+      totalDias: 52,
+      progresoPorcentaje: Math.round((diaEnCastillo / 52) * 100)
+    },
+
+    ondaEncantada: `Onda Encantada de ${selloOnda.nombre}`,
+    ondaSelloRaiz: selloOnda.raiz,
+    ondaNumero,
+    ondaKinInicio: kinInicioOnda,
+    ondaKinFin: kinFinOnda,
+    diaDeOnda,
+    posicionEnOnda: `Día ${diaDeOnda} de 13 (${PALABRAS_CLAVE_TONOS[tonoIdx]})`,
+    kinesOnda,
+
+    afirmacion,
+
+    oraculo: {
+      destino: {
+        kinNumero: kin,
+        nombre: kinNombre,
+        sello,
+        tono,
+        tonoNumero: tono.numero,
+        rol: "Kin Destino • Frecuencia Central",
+        descripcion: `Esencia principal: ${sello.raiz} bajo la vibración del tono ${tono.nombreCorto}. Su misión es ${sello.accion} ${sello.esencia}.`
+      },
+      guia: {
+        kinNumero: guiaKinNumero,
+        nombre: guiaNombre,
+        sello: guiaSello,
+        tono,
+        tonoNumero: tono.numero,
+        rol: guiaEsPoderDuplicado ? "5ta Fuerza • Poder Duplicado" : "5ta Fuerza • Poder Guía",
+        descripcion: guiaEsPoderDuplicado 
+          ? `Tu propia esencia de ${sello.raiz} es la brújula inquebrantable hoy. Confía en tu propia intuición.`
+          : `Te guía la sabiduría de ${guiaSello.raiz} para orientar tus acciones con ${guiaSello.esencia}.`
+      },
+      analogo: {
+        kinNumero: analogoKinNumero,
+        nombre: `${analogoSello.raiz} ${tono.nombreCorto} ${analogoSello.color}`,
+        sello: analogoSello,
+        tono,
+        tonoNumero: tono.numero,
+        rol: "Sostén Análogo • Fuerza Gemela",
+        descripcion: `Fuerza gemela de soporte: ${analogoSello.raiz} aporta ${analogoSello.esencia} para nutrir el propósito compartido.`
+      },
+      antipoda: {
+        kinNumero: antipodaKinNumero,
+        nombre: `${antipodaSello.raiz} ${tono.nombreCorto} ${antipodaSello.color}`,
+        sello: antipodaSello,
+        tono,
+        tonoNumero: tono.numero,
+        rol: "Desafío Antípoda • El Espejo",
+        descripcion: `El reto evolutivo: ${antipodaSello.raiz} te desafía a integrar ${antipodaSello.poder} para no caer en la rigidez.`
+      },
+      oculto: {
+        kinNumero: kinOcultoNum,
+        nombre: `${ocultoSello.raiz} ${ocultoTono.nombreCorto} ${ocultoSello.color}`,
+        sello: ocultoSello,
+        tono: ocultoTono,
+        tonoNumero: ocultoTono.numero,
+        rol: "Poder Oculto • Tesoro Subconsciente",
+        descripcion: `Regalo subconsciente: desde las profundidades despierta ${ocultoSello.poder} para iluminar tu camino.`
+      }
+    }
+  };
+}
+
 function calculateMayaKin(date) {
   const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Argentina/Buenos_Aires',
@@ -234,97 +525,7 @@ function calculateMayaKin(date) {
   const diffDays = Math.round((targetUtc - baseUtc) / 86400000);
   
   const kinNumero = ((50 - 1 + diffDays) % 260 + 260) % 260 + 1;
-  const tonoIdx = (kinNumero - 1) % 13;
-  const selloIdx = (kinNumero - 1) % 20;
-
-  const tono = MAYA_TONOS[tonoIdx];
-  const sello = MAYA_SELLOS[selloIdx];
-
-  const ondaNumero = Math.floor((kinNumero - 1) / 13) + 1;
-  const kinInicioOnda = (ondaNumero - 1) * 13 + 1;
-  const selloOnda = MAYA_SELLOS[(kinInicioOnda - 1) % 20];
-  const diaDeOnda = tonoIdx + 1;
-
-  const kinNombre = `${sello.raiz} ${tono.nombreCorto} ${sello.color}`;
-  const kinCodigo = `Kin ${kinNumero} • ${sello.maya} • Tono ${tono.numero}`;
-
-  // Oráculo de la 5ta Fuerza:
-  const analogoIdx = (17 - selloIdx + 20) % 20;
-  const analogoSello = MAYA_SELLOS[analogoIdx];
-  
-  const antipodaIdx = (selloIdx + 10) % 20;
-  const antipodaSello = MAYA_SELLOS[antipodaIdx];
-
-  const kinOcultoNum = 261 - kinNumero;
-  const ocultoSello = MAYA_SELLOS[(kinOcultoNum - 1) % 20];
-  const ocultoTono = MAYA_TONOS[(kinOcultoNum - 1) % 13];
-
-  let guiaSello = sello;
-  let guiaEsPoderDuplicado = false;
-  if (tono.numero === 1 || tono.numero === 6 || tono.numero === 11) {
-    guiaEsPoderDuplicado = true;
-  } else if (tono.numero === 2 || tono.numero === 7 || tono.numero === 12) {
-    guiaSello = MAYA_SELLOS[(selloIdx + 12) % 20];
-  } else if (tono.numero === 3 || tono.numero === 8 || tono.numero === 13) {
-    guiaSello = MAYA_SELLOS[(selloIdx + 4) % 20];
-  } else if (tono.numero === 4 || tono.numero === 9) {
-    guiaSello = MAYA_SELLOS[(selloIdx + 16) % 20];
-  } else if (tono.numero === 5 || tono.numero === 10) {
-    guiaSello = MAYA_SELLOS[(selloIdx + 8) % 20];
-  }
-
-  const guiaNombre = guiaEsPoderDuplicado ? kinNombre : `${guiaSello.raiz} ${tono.nombreCorto} ${guiaSello.color}`;
-  const guiaPoderTexto = guiaEsPoderDuplicado ? 'mi propio poder duplicado' : `el poder de ${guiaSello.poder}`;
-
-  const afirmacion = `${tono.accionVerbo} con el fin de ${sello.accion},\n` +
-    `${tono.funcionVerbo} ${sello.esencia}.\n` +
-    `Sello la matriz de ${sello.poder}\n` +
-    `con el tono ${tono.nombreCorto.toLowerCase()} de ${tono.cualidad}.\n` +
-    `Me guía ${guiaPoderTexto}.`;
-
-  return {
-    kinNumero,
-    kinNombre,
-    kinCodigo,
-    selloNombre: sello.nombre,
-    selloIcono: sello.icono,
-    selloColor: `${sello.color} (${sello.raza})`,
-    selloPoder: `El Poder de ${sello.poder}`,
-    selloAccion: `${sello.accion.charAt(0).toUpperCase() + sello.accion.slice(1)} ${sello.esencia}`,
-    tonoNombre: tono.nombre,
-    tonoIcono: "✨",
-    tonoPoder: tono.poder,
-    tonoAccion: tono.accion,
-    tonoPregunta: tono.pregunta,
-    ondaEncantada: `Onda Encantada de ${selloOnda.nombre}`,
-    ondaNumero,
-    posicionEnOnda: `Día ${diaDeOnda} de 13 (${tono.rolOnda})`,
-    afirmacion,
-    oraculo: {
-      guia: {
-        nombre: guiaNombre,
-        rol: guiaEsPoderDuplicado ? "Guía por poder duplicado" : "Poder Guía",
-        descripcion: guiaEsPoderDuplicado 
-          ? `Tu propia esencia de ${sello.raiz} es la brújula inquebrantable hoy. Confía en tu propia intuición.`
-          : `Te guía la sabiduría de ${guiaSello.raiz} para orientar tus acciones con ${guiaSello.esencia}.`
-      },
-      analogo: {
-        nombre: `${analogoSello.raiz} ${tono.nombreCorto} ${analogoSello.color}`,
-        rol: "Sostén Análogo",
-        descripcion: `Fuerza gemela de soporte: ${analogoSello.raiz} aporta ${analogoSello.esencia} para nutrir el propósito compartido.`
-      },
-      antipoda: {
-        nombre: `${antipodaSello.raiz} ${tono.nombreCorto} ${antipodaSello.color}`,
-        rol: "Desafío y Espejo",
-        descripcion: `El reto evolutivo: ${antipodaSello.raiz} te desafía a integrar ${antipodaSello.poder} para no caer en la rigidez.`
-      },
-      oculto: {
-        nombre: `${ocultoSello.raiz} ${ocultoTono.nombreCorto} ${ocultoSello.color}`,
-        rol: "Poder Oculto Inesperado",
-        descripcion: `Regalo subconsciente: desde las profundidades despierta ${ocultoSello.poder} para iluminar tu camino.`
-      }
-    }
-  };
+  return getKinDataByNumber(kinNumero, kinNumero);
 }
 
 function getFormattedFechaTexto(date) {

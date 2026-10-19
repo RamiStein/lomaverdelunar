@@ -25,7 +25,60 @@ import {
   Radio,
   Globe
 } from 'lucide-react';
-import { getEnergiaDelDia, generarMensajeWhatsAppEnergia } from '../utils/energiaCalc';
+import { 
+  getEnergiaDelDia, 
+  generarMensajeWhatsAppEnergia, 
+  getKinDataByNumber, 
+  CASTILLOS 
+} from '../utils/energiaCalc';
+
+function MayaToneGlyph({ tono, className = "", dark = false }) {
+  const num = parseInt(tono, 10) || 1;
+  const bars = Math.floor(num / 5);
+  const dots = num % 5;
+  const dotColor = dark ? "bg-amber-300 border-amber-400" : "bg-stone-900 border-stone-800";
+  const barColor = dark ? "bg-amber-300 border-amber-400" : "bg-stone-900 border-stone-800";
+
+  return (
+    <div className={`flex flex-col items-center justify-center gap-1 ${className}`}>
+      {/* Puntos (dots) */}
+      {dots > 0 && (
+        <div className="flex items-center justify-center gap-1">
+          {Array.from({ length: dots }).map((_, i) => (
+            <span
+              key={i}
+              className={`w-2 h-2 rounded-full border shadow-2xs ${dotColor}`}
+            />
+          ))}
+        </div>
+      )}
+      {/* Barras (bars) */}
+      {Array.from({ length: bars }).map((_, i) => (
+        <span
+          key={i}
+          className={`w-8 h-1.5 rounded-full border shadow-2xs ${barColor}`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function getSelloCardStyle(color) {
+  const c = (color || '').toLowerCase();
+  if (c.includes('rojo')) {
+    return 'bg-gradient-to-b from-rose-50/90 to-white border-rose-300 text-rose-950';
+  }
+  if (c.includes('blanco')) {
+    return 'bg-gradient-to-b from-slate-50/90 to-white border-slate-300 text-slate-900';
+  }
+  if (c.includes('azul')) {
+    return 'bg-gradient-to-b from-blue-50/90 to-white border-blue-300 text-blue-950';
+  }
+  if (c.includes('amarillo')) {
+    return 'bg-gradient-to-b from-amber-50/90 to-white border-amber-300 text-amber-950';
+  }
+  return 'bg-white border-stone-300 text-stone-900';
+}
 
 const getAspectoBadgeClass = (tipo) => {
   const t = (tipo || '').toUpperCase();
@@ -62,6 +115,8 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
   }, [currentDate]);
 
   const energia = getEnergiaDelDia(config, currentDate);
+  const [selectedKinNumero, setSelectedKinNumero] = useState(null);
+  const kinActivo = selectedKinNumero ? getKinDataByNumber(selectedKinNumero, energia.maya.kinNumero) : energia.maya;
   const [copiedLink, setCopiedLink] = useState(false);
   const [mostrarOraculoDetalle, setMostrarOraculoDetalle] = useState(false);
   const [activeTabDetalle, setActiveTabDetalle] = useState('todo'); // 'todo', 'astrologia', 'maya', 'barrio'
@@ -310,96 +365,341 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. PERGAMINO ORACULAR DEL KIN (POEMA Y AFIRMACIÓN)                       */}
+      {/* 3. SINCRONARIO MAYA 13:20 • CASTILLO, ONDA ENCANTADA Y QUINTA FUERZA       */}
       {/* ========================================================================= */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border-2 border-amber-400/80">
-        <div className="absolute -right-10 -bottom-10 opacity-10 text-9xl select-none pointer-events-none font-serif">
-          {energia.maya.selloIcono || '✨'}
-        </div>
+      <section className="space-y-6">
 
-        <div className="max-w-3xl mx-auto space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-300/40 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-            <Feather className="w-3.5 h-3.5" />
-            <span>Afirmación Sagrada del Kin {energia.maya.kinNumero}</span>
-          </div>
-
-          <div className="font-serif italic text-lg sm:text-2xl text-amber-100 leading-relaxed whitespace-pre-line tracking-wide drop-shadow-sm">
-            "{energia.maya.afirmacion}"
-          </div>
-
-          <p className="text-stone-300 text-xs sm:text-sm max-w-xl mx-auto font-light leading-relaxed">
-            El tono <strong>{energia.maya.tonoNombre}</strong> nos pregunta: <em>"{energia.maya.tonoPregunta}"</em>. 
-            El sello <strong>{energia.maya.selloNombre}</strong> nos recuerda que su poder sagrado es <strong>{energia.maya.selloPoder.toLowerCase()}</strong>.
-          </p>
-
-          <button
-            onClick={() => setMostrarOraculoDetalle(!mostrarOraculoDetalle)}
-            className="inline-flex items-center gap-2 bg-stone-800 hover:bg-stone-700 text-amber-300 border border-amber-400/40 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all"
-          >
-            <span>{mostrarOraculoDetalle ? 'Ocultar Oráculo de la Quinta Fuerza' : 'Ver Oráculo de la Quinta Fuerza (4 Puntos)'}</span>
-            {mostrarOraculoDetalle ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-        </div>
-
-        {/* ORÁCULO DE LA QUINTA FUERZA DESPLEGABLE */}
-        {mostrarOraculoDetalle && (
-          <div className="mt-8 pt-6 border-t border-stone-700 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left animate-in slide-in-from-top-3">
-            
-            {/* GUÍA */}
-            <div className="bg-stone-800/80 p-4 rounded-2xl border border-amber-400/30 space-y-1.5">
-              <span className="text-[10px] font-black uppercase text-amber-300 tracking-wider block">
-                👑 PODER GUÍA
+        {/* 3.1 BANNER DEL CASTILLO ACTUAL (52 DÍAS) */}
+        {kinActivo.castillo && (
+          <div className="bg-gradient-to-r from-stone-900 via-stone-800 to-slate-900 text-white p-6 sm:p-8 rounded-3xl border-2 border-slate-300/80 shadow-lg space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">🏰</span>
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-300 block">
+                    Castillo Activo del Sincronario (52 Días)
+                  </span>
+                  <h3 className="font-serif text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    {kinActivo.castillo.nombre}
+                  </h3>
+                </div>
+              </div>
+              <span className="bg-white/10 text-white border border-white/20 text-xs font-mono font-bold px-3.5 py-1.5 rounded-full self-start sm:self-auto">
+                {kinActivo.castillo.corte} • {kinActivo.castillo.direccion}
               </span>
-              <h4 className="font-bold text-sm text-white">
-                {energia.maya.oraculo.guia.nombre}
-              </h4>
-              <p className="text-xs text-stone-300 leading-normal">
-                {energia.maya.oraculo.guia.descripcion}
-              </p>
             </div>
 
-            {/* ANÁLOGO */}
-            <div className="bg-stone-800/80 p-4 rounded-2xl border border-red-400/30 space-y-1.5">
-              <span className="text-[10px] font-black uppercase text-red-300 tracking-wider block">
-                🤝 PODER ANÁLOGO
-              </span>
-              <h4 className="font-bold text-sm text-white">
-                {energia.maya.oraculo.analogo.nombre}
-              </h4>
-              <p className="text-xs text-stone-300 leading-normal">
-                {energia.maya.oraculo.analogo.descripcion}
-              </p>
+            <p className="text-xs sm:text-sm text-stone-300 font-light leading-relaxed">
+              {kinActivo.castillo.proposito}. Este castillo abarca 4 Ondas Encantadas (52 kines) orientadas a purificar y refinar la energía viva.
+            </p>
+
+            {/* Barra de progreso */}
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center justify-between text-xs font-mono text-stone-300">
+                <span>Día {kinActivo.castillo.diaEnCastillo} de 52</span>
+                <span>{kinActivo.castillo.progresoPorcentaje}% del Castillo</span>
+              </div>
+              <div className="w-full h-2.5 bg-stone-700/80 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-slate-200 to-white rounded-full transition-all duration-500" 
+                  style={{ width: `${kinActivo.castillo.progresoPorcentaje}%` }} 
+                />
+              </div>
             </div>
 
-            {/* ANTÍPODA */}
-            <div className="bg-stone-800/80 p-4 rounded-2xl border border-blue-400/30 space-y-1.5">
-              <span className="text-[10px] font-black uppercase text-blue-300 tracking-wider block">
-                ⚡ PODER ANTÍPODA
-              </span>
-              <h4 className="font-bold text-sm text-white">
-                {energia.maya.oraculo.antipoda.nombre}
-              </h4>
-              <p className="text-xs text-stone-300 leading-normal">
-                {energia.maya.oraculo.antipoda.descripcion}
-              </p>
+            {/* 4 Ondas del Castillo */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+              {kinActivo.castillo.ondas?.map((o) => {
+                const esActiva = o.numero === kinActivo.ondaNumero;
+                return (
+                  <div
+                    key={o.numero}
+                    className={`p-3 rounded-xl border text-center transition-all ${
+                      esActiva 
+                        ? 'bg-amber-400/20 border-amber-400 text-amber-200 shadow-sm font-bold ring-2 ring-amber-400/30' 
+                        : 'bg-white/5 border-white/10 text-stone-400 hover:border-white/20'
+                    }`}
+                  >
+                    <span className="text-[10px] uppercase tracking-wider block font-black">
+                      {esActiva ? '⭐ Onda Activa' : `Onda #${o.numero}`}
+                    </span>
+                    <span className="text-xs font-serif font-bold text-white block mt-0.5">
+                      {o.nombre}
+                    </span>
+                    <span className="text-[10px] font-mono text-stone-400 block mt-0.5">
+                      Kines {o.kinInicio} a {o.kinFin}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
-
-            {/* OCULTO */}
-            <div className="bg-stone-800/80 p-4 rounded-2xl border border-yellow-400/30 space-y-1.5">
-              <span className="text-[10px] font-black uppercase text-yellow-300 tracking-wider block">
-                ✨ PODER OCULTO
-              </span>
-              <h4 className="font-bold text-sm text-white">
-                {energia.maya.oraculo.oculto.nombre}
-              </h4>
-              <p className="text-xs text-stone-300 leading-normal">
-                {energia.maya.oraculo.oculto.descripcion}
-              </p>
-            </div>
-
           </div>
         )}
-      </div>
+
+        {/* 3.2 ONDA ENCANTADA ACTUAL (LAYOUT DE 13 TONOS IDÉNTICO A IMAGEN 2) */}
+        {kinActivo.kinesOnda && (
+          <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200/80 pb-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-emerald-950 text-amber-300 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-2xs mb-2">
+                  <span>🌀 Frecuencia 13:20</span>
+                </div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-black text-stone-950 tracking-tight">
+                  {kinActivo.ondaEncantada}
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-600 mt-1 font-medium">
+                  Ciclo de 13 días del {kinActivo.castillo?.nombre || 'Castillo'}. Escalones de evolución y sintonía cósmica.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-3 py-1.5 rounded-full shadow-2xs">
+                  Día {kinActivo.diaDeOnda} de 13 • {kinActivo.tonoPalabraClave}
+                </span>
+              </div>
+            </div>
+
+            {/* Grid interactivo de los 13 pasos de la Onda Encantada */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+              {kinActivo.kinesOnda.map((paso) => {
+                const esHoy = paso.kinNumero === energia.maya.kinNumero;
+                const esSeleccionado = paso.kinNumero === kinActivo.kinNumero;
+                return (
+                  <button
+                    key={paso.kinNumero}
+                    onClick={() => setSelectedKinNumero(paso.kinNumero)}
+                    className={`p-3 rounded-2xl border-2 text-center transition-all flex flex-col justify-between items-center space-y-2 cursor-pointer relative group ${
+                      esSeleccionado
+                        ? 'bg-amber-50 border-amber-500 shadow-md ring-2 ring-amber-400/50'
+                        : esHoy
+                        ? 'bg-emerald-50/70 border-emerald-400 shadow-sm'
+                        : 'bg-stone-50/70 hover:bg-white border-stone-200/80 hover:border-amber-300'
+                    }`}
+                  >
+                    {esHoy && (
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-emerald-700 text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-2xs animate-pulse">
+                        ¡Hoy!
+                      </span>
+                    )}
+
+                    <div className="space-y-1 w-full">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-stone-500 block">
+                        Tono {paso.tonoNumero}
+                      </span>
+                      <MayaToneGlyph tono={paso.tonoNumero} className="py-1" />
+                    </div>
+
+                    <div className="text-2xl filter drop-shadow-xs group-hover:scale-110 transition-transform">
+                      {paso.sello.icono}
+                    </div>
+
+                    <div className="w-full">
+                      <span className="font-serif font-black text-xs sm:text-sm text-stone-900 block leading-tight">
+                        {paso.palabraClave}
+                      </span>
+                      <span className="text-[10px] font-bold text-stone-600 block truncate mt-0.5">
+                        {paso.sello.raiz} {paso.sello.color}
+                      </span>
+                      <span className="text-[9px] font-mono text-stone-400 block">
+                        Kin {paso.kinNumero}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            
+            <p className="text-[11px] text-stone-500 text-center font-medium">
+              💡 Tocá cualquier escalón de la Onda para ver su Oráculo de la 5ta Fuerza correspondiente.
+            </p>
+          </div>
+        )}
+
+        {/* 3.3 BARRA DE CONTROL Y SELECTOR RÁPIDO DE LA 5TA FUERZA */}
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-stone-200/90 shadow-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black uppercase text-stone-600 tracking-wider">
+              Oráculo Activo:
+            </span>
+            <span className="text-xs font-bold font-serif text-stone-900 bg-amber-100/80 text-amber-950 px-3 py-1 rounded-xl border border-amber-300 shadow-2xs">
+              Kin {kinActivo.kinNumero}: {kinActivo.kinNombre}
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {selectedKinNumero !== null && (
+              <button
+                onClick={() => setSelectedKinNumero(null)}
+                className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-2xs transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>📅 Volver al Kin de Hoy ({energia.maya.kinNumero})</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => setSelectedKinNumero(176)}
+              className={`text-xs font-black px-3.5 py-2 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer ${
+                kinActivo.kinNumero === 176
+                  ? 'bg-amber-400 text-amber-950 border-amber-500 shadow-xs'
+                  : 'bg-stone-50 hover:bg-amber-100/70 text-amber-950 border-amber-300 shadow-2xs'
+              }`}
+              title="Ver el glifo de Guerrero Resonante (Kin 176) con su 5ta fuerza exactamente como en el gráfico adjunto"
+            >
+              <span>👑 Ver 5ta Fuerza: Guerrero Resonante (Kin 176)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 3.4 ORÁCULO DE LA QUINTA FUERZA (LA CRUZ MAYA SAGRADA - FORMATO IMAGEN 1) */}
+        <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 border border-stone-200/90 shadow-sm space-y-6">
+          <div className="text-center space-y-1">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-100 via-amber-200 to-yellow-100 text-amber-950 border border-amber-400/80 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-2xs">
+              <span>Cruz Sagrada 13:20</span>
+            </div>
+            <h3 className="font-serif text-2xl sm:text-3xl font-black text-stone-950 tracking-tight">
+              Oráculo de la Quinta Fuerza
+            </h3>
+            <p className="text-xs sm:text-sm text-stone-600 max-w-xl mx-auto">
+              La matriz sagrada de 5 energías cósmicas: Centro (Destino), Arriba (5ta Fuerza / Guía), Derecha (Análogo), Izquierda (Antípoda) y Abajo (Oculto).
+            </p>
+          </div>
+
+          {/* Cruz Geométrica */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto items-center pt-2">
+            
+            {/* COLUMNA 1: ANTÍPODA (OESTE / IZQUIERDA) */}
+            <div className="space-y-4 order-2 md:order-1">
+              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo.oraculo.antipoda.sello.color)}`}>
+                <span className="text-[10px] font-black uppercase tracking-wider text-purple-950 bg-purple-100 px-3 py-1 rounded-full border border-purple-300 block w-fit mx-auto shadow-2xs">
+                  ⚡ Antípoda • El Desafío
+                </span>
+                <MayaToneGlyph tono={kinActivo.oraculo.antipoda.tonoNumero} />
+                <div className="text-4xl filter drop-shadow-xs">{kinActivo.oraculo.antipoda.sello.icono}</div>
+                <div>
+                  <h4 className="font-serif font-black text-base text-stone-950">
+                    {kinActivo.oraculo.antipoda.nombre}
+                  </h4>
+                  <span className="text-xs font-mono font-bold text-stone-600">
+                    Kin {kinActivo.oraculo.antipoda.kinNumero}
+                  </span>
+                </div>
+                <p className="text-xs text-stone-700 leading-relaxed font-normal">
+                  {kinActivo.oraculo.antipoda.descripcion}
+                </p>
+              </div>
+            </div>
+
+            {/* COLUMNA 2: GUÍA (ARRIBA) + DESTINO (CENTRO) + OCULTO (ABAJO) */}
+            <div className="space-y-5 order-1 md:order-2">
+              
+              {/* 1. GUÍA • 5TA FUERZA (ARRIBA - ESTILO IDÉNTICO A IMAGEN 1) */}
+              <div className="bg-gradient-to-b from-amber-50 via-yellow-50 to-white rounded-3xl p-6 border-3 border-amber-400 shadow-md text-center space-y-3 relative overflow-hidden ring-2 ring-amber-300/50">
+                <div className="absolute top-2.5 right-2.5 text-[10px] font-mono font-black bg-amber-400/30 text-amber-950 px-2.5 py-0.5 rounded-full">
+                  Norte
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider text-amber-950 bg-amber-200/90 px-3.5 py-1 rounded-full border border-amber-400 block w-fit mx-auto shadow-2xs">
+                  👑 5ta fuerza • Poder Guía
+                </span>
+                <MayaToneGlyph tono={kinActivo.oraculo.guia.tonoNumero} className="py-1" />
+                <div className="text-5xl filter drop-shadow-xs">{kinActivo.oraculo.guia.sello.icono}</div>
+                <div>
+                  <h4 className="font-serif font-black text-lg sm:text-xl text-amber-950">
+                    {kinActivo.oraculo.guia.nombre}
+                  </h4>
+                  <span className="text-xs font-mono font-black text-amber-900 block mt-0.5">
+                    Kin {kinActivo.oraculo.guia.kinNumero} • {kinActivo.oraculo.guia.sello.maya}
+                  </span>
+                </div>
+                <p className="text-xs text-stone-700 leading-relaxed font-normal">
+                  {kinActivo.oraculo.guia.descripcion}
+                </p>
+              </div>
+
+              {/* 2. KIN DESTINO (CENTRO) */}
+              <div className="bg-gradient-to-b from-stone-900 via-stone-850 to-stone-950 text-white rounded-3xl p-7 border-3 border-amber-400 shadow-2xl text-center space-y-3.5">
+                <span className="text-[10px] font-black uppercase tracking-widest text-amber-300 bg-amber-400/20 px-3.5 py-1 rounded-full border border-amber-400/40 block w-fit mx-auto">
+                  🌀 Frecuencia Central • Kin Destino
+                </span>
+                <MayaToneGlyph tono={kinActivo.tonoNumero} dark={true} className="py-1" />
+                <div className="text-6xl filter drop-shadow-md">{kinActivo.selloIcono}</div>
+                <div>
+                  <h4 className="font-serif font-black text-2xl text-amber-200 tracking-tight">
+                    {kinActivo.kinNombre}
+                  </h4>
+                  <span className="text-xs font-mono text-amber-300/80 block mt-0.5">
+                    Kin {kinActivo.kinNumero} • {kinActivo.ondaEncantada}
+                  </span>
+                </div>
+                <div className="pt-2 border-t border-stone-800 text-xs text-stone-300 italic font-serif">
+                  "{kinActivo.afirmacion.split('\n')[0]}"
+                </div>
+              </div>
+
+              {/* 3. OCULTO (ABAJO / SUR) */}
+              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo.oraculo.oculto.sello.color)}`}>
+                <span className="text-[10px] font-black uppercase tracking-wider text-teal-950 bg-teal-100 px-3 py-1 rounded-full border border-teal-300 block w-fit mx-auto shadow-2xs">
+                  ✨ Poder Oculto • Tesoro Subconsciente
+                </span>
+                <MayaToneGlyph tono={kinActivo.oraculo.oculto.tonoNumero} />
+                <div className="text-4xl filter drop-shadow-xs">{kinActivo.oraculo.oculto.sello.icono}</div>
+                <div>
+                  <h4 className="font-serif font-black text-base text-stone-950">
+                    {kinActivo.oraculo.oculto.nombre}
+                  </h4>
+                  <span className="text-xs font-mono font-bold text-stone-600">
+                    Kin {kinActivo.oraculo.oculto.kinNumero}
+                  </span>
+                </div>
+                <p className="text-xs text-stone-700 leading-relaxed font-normal">
+                  {kinActivo.oraculo.oculto.descripcion}
+                </p>
+              </div>
+
+            </div>
+
+            {/* COLUMNA 3: ANÁLOGO (ESTE / DERECHA) */}
+            <div className="space-y-4 order-3">
+              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo.oraculo.analogo.sello.color)}`}>
+                <span className="text-[10px] font-black uppercase tracking-wider text-rose-950 bg-rose-100 px-3 py-1 rounded-full border border-rose-300 block w-fit mx-auto shadow-2xs">
+                  🤝 Sostén Análogo • Fuerza Gemela
+                </span>
+                <MayaToneGlyph tono={kinActivo.oraculo.analogo.tonoNumero} />
+                <div className="text-4xl filter drop-shadow-xs">{kinActivo.oraculo.analogo.sello.icono}</div>
+                <div>
+                  <h4 className="font-serif font-black text-base text-stone-950">
+                    {kinActivo.oraculo.analogo.nombre}
+                  </h4>
+                  <span className="text-xs font-mono font-bold text-stone-600">
+                    Kin {kinActivo.oraculo.analogo.kinNumero}
+                  </span>
+                </div>
+                <p className="text-xs text-stone-700 leading-relaxed font-normal">
+                  {kinActivo.oraculo.analogo.descripcion}
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* 3.5 PERGAMINO CON LA AFIRMACIÓN DEL KIN */}
+          <div className="bg-stone-900 text-white rounded-3xl p-6 sm:p-8 border border-amber-400/50 text-center space-y-4 mt-6">
+            <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-300/40 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
+              <Feather className="w-3.5 h-3.5" />
+              <span>Afirmación Sagrada • Kin {kinActivo.kinNumero}</span>
+            </div>
+
+            <div className="font-serif italic text-lg sm:text-2xl text-amber-100 leading-relaxed whitespace-pre-line tracking-wide drop-shadow-sm max-w-2xl mx-auto">
+              "{kinActivo.afirmacion}"
+            </div>
+
+            <p className="text-stone-300 text-xs sm:text-sm max-w-xl mx-auto font-light leading-relaxed">
+              El tono <strong>{kinActivo.tonoNombre}</strong> nos pregunta: <em>"{kinActivo.tonoPregunta}"</em>. 
+              El sello <strong>{kinActivo.selloNombre}</strong> nos recuerda que su poder sagrado es <strong>{kinActivo.selloPoder.toLowerCase()}</strong>.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
 
       {/* ========================================================================= */}
       {/* 4. CLIMA CÓSMICO & TRÁNSITOS MAYORES: PLUTÓN DIRECTO EN ACUARIO ♒        */}
