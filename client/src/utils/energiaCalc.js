@@ -549,7 +549,51 @@ export function getEnergiaDelDia(config, targetDate = new Date()) {
   const fechaTexto = customData.fechaTexto || getFormattedFechaTexto(targetDate);
   const sol = { ...calculateSunPosition(targetDate), ...(customData.sol || {}) };
   const luna = { ...calculateMoonPosition(targetDate), ...(customData.luna || {}) };
-  const maya = { ...calculateMayaKin(targetDate), ...(customData.maya || {}) };
+
+  const customMaya = customData.maya || {};
+  const baseMaya = customMaya.kinNumero 
+    ? getKinDataByNumber(customMaya.kinNumero, customMaya.kinNumero) 
+    : calculateMayaKin(targetDate);
+
+  const customOraculo = customMaya.oraculo || {};
+  const oraculo = {
+    destino: { ...(baseMaya.oraculo?.destino || {}), ...(customOraculo.destino || {}) },
+    guia: { ...(baseMaya.oraculo?.guia || {}), ...(customOraculo.guia || {}) },
+    analogo: { ...(baseMaya.oraculo?.analogo || {}), ...(customOraculo.analogo || {}) },
+    antipoda: { ...(baseMaya.oraculo?.antipoda || {}), ...(customOraculo.antipoda || {}) },
+    oculto: { ...(baseMaya.oraculo?.oculto || {}), ...(customOraculo.oculto || {}) }
+  };
+
+  ['destino', 'guia', 'analogo', 'antipoda', 'oculto'].forEach((pos) => {
+    if (baseMaya.oraculo?.[pos]) {
+      if (!oraculo[pos].sello || !oraculo[pos].sello.icono) {
+        oraculo[pos].sello = baseMaya.oraculo[pos].sello;
+      }
+      if (!oraculo[pos].tono) {
+        oraculo[pos].tono = baseMaya.oraculo[pos].tono;
+      }
+      if (typeof oraculo[pos].tonoNumero !== 'number') {
+        oraculo[pos].tonoNumero = baseMaya.oraculo[pos].tonoNumero;
+      }
+      if (!oraculo[pos].kinNumero) {
+        oraculo[pos].kinNumero = baseMaya.oraculo[pos].kinNumero;
+      }
+      if (!oraculo[pos].nombre) {
+        oraculo[pos].nombre = baseMaya.oraculo[pos].nombre;
+      }
+      if (!oraculo[pos].descripcion) {
+        oraculo[pos].descripcion = baseMaya.oraculo[pos].descripcion;
+      }
+    }
+  });
+
+  const maya = {
+    ...baseMaya,
+    ...customMaya,
+    castillo: baseMaya.castillo,
+    kinesOnda: baseMaya.kinesOnda,
+    oraculo
+  };
 
   const sintoniaLomaVerde = {
     titulo: "Sintonía Comunitaria para Hoy en Loma Verde",

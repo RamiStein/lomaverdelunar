@@ -116,7 +116,12 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
 
   const energia = getEnergiaDelDia(config, currentDate);
   const [selectedKinNumero, setSelectedKinNumero] = useState(null);
-  const kinActivo = selectedKinNumero ? getKinDataByNumber(selectedKinNumero, energia.maya.kinNumero) : energia.maya;
+  const baseKin = selectedKinNumero 
+    ? getKinDataByNumber(selectedKinNumero, energia?.maya?.kinNumero || 50) 
+    : (energia?.maya || getKinDataByNumber(50, 50));
+  const kinActivo = (baseKin?.oraculo?.guia?.sello) 
+    ? baseKin 
+    : { ...getKinDataByNumber(baseKin?.kinNumero || 50, energia?.maya?.kinNumero || 50), ...baseKin };
   const [copiedLink, setCopiedLink] = useState(false);
   const [mostrarOraculoDetalle, setMostrarOraculoDetalle] = useState(false);
   const [activeTabDetalle, setActiveTabDetalle] = useState('todo'); // 'todo', 'astrologia', 'maya', 'barrio'
@@ -370,7 +375,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
       <section className="space-y-6">
 
         {/* 3.1 BANNER DEL CASTILLO ACTUAL (52 DÍAS) */}
-        {kinActivo.castillo && (
+        {kinActivo?.castillo && (
           <div className="bg-gradient-to-r from-stone-900 via-stone-800 to-slate-900 text-white p-6 sm:p-8 rounded-3xl border-2 border-slate-300/80 shadow-lg space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -402,7 +407,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
               <div className="w-full h-2.5 bg-stone-700/80 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-slate-200 to-white rounded-full transition-all duration-500" 
-                  style={{ width: `${kinActivo.castillo.progresoPorcentaje}%` }} 
+                  style={{ width: `${kinActivo.castillo.progresoPorcentaje || 0}%` }} 
                 />
               </div>
             </div>
@@ -437,7 +442,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
         )}
 
         {/* 3.2 ONDA ENCANTADA ACTUAL (LAYOUT DE 13 TONOS IDÉNTICO A IMAGEN 2) */}
-        {kinActivo.kinesOnda && (
+        {kinActivo?.kinesOnda && (
           <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-200/80 pb-4">
               <div>
@@ -460,9 +465,9 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
 
             {/* Grid interactivo de los 13 pasos de la Onda Encantada */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-              {kinActivo.kinesOnda.map((paso) => {
-                const esHoy = paso.kinNumero === energia.maya.kinNumero;
-                const esSeleccionado = paso.kinNumero === kinActivo.kinNumero;
+              {kinActivo.kinesOnda?.map((paso) => {
+                const esHoy = paso.kinNumero === energia?.maya?.kinNumero;
+                const esSeleccionado = paso.kinNumero === kinActivo?.kinNumero;
                 return (
                   <button
                     key={paso.kinNumero}
@@ -489,7 +494,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
                     </div>
 
                     <div className="text-2xl filter drop-shadow-xs group-hover:scale-110 transition-transform">
-                      {paso.sello.icono}
+                      {paso.sello?.icono || '✨'}
                     </div>
 
                     <div className="w-full">
@@ -497,7 +502,7 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
                         {paso.palabraClave}
                       </span>
                       <span className="text-[10px] font-bold text-stone-600 block truncate mt-0.5">
-                        {paso.sello.raiz} {paso.sello.color}
+                        {paso.sello?.raiz} {paso.sello?.color}
                       </span>
                       <span className="text-[9px] font-mono text-stone-400 block">
                         Kin {paso.kinNumero}
@@ -568,22 +573,22 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
             
             {/* COLUMNA 1: ANTÍPODA (OESTE / IZQUIERDA) */}
             <div className="space-y-4 order-2 md:order-1">
-              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo.oraculo.antipoda.sello.color)}`}>
+              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo?.oraculo?.antipoda?.sello?.color)}`}>
                 <span className="text-[10px] font-black uppercase tracking-wider text-purple-950 bg-purple-100 px-3 py-1 rounded-full border border-purple-300 block w-fit mx-auto shadow-2xs">
                   ⚡ Antípoda • El Desafío
                 </span>
-                <MayaToneGlyph tono={kinActivo.oraculo.antipoda.tonoNumero} />
-                <div className="text-4xl filter drop-shadow-xs">{kinActivo.oraculo.antipoda.sello.icono}</div>
+                <MayaToneGlyph tono={kinActivo?.oraculo?.antipoda?.tonoNumero || kinActivo?.tonoNumero || 1} />
+                <div className="text-4xl filter drop-shadow-xs">{kinActivo?.oraculo?.antipoda?.sello?.icono || '⚡'}</div>
                 <div>
                   <h4 className="font-serif font-black text-base text-stone-950">
-                    {kinActivo.oraculo.antipoda.nombre}
+                    {kinActivo?.oraculo?.antipoda?.nombre || 'Antípoda'}
                   </h4>
                   <span className="text-xs font-mono font-bold text-stone-600">
-                    Kin {kinActivo.oraculo.antipoda.kinNumero}
+                    Kin {kinActivo?.oraculo?.antipoda?.kinNumero || ''}
                   </span>
                 </div>
                 <p className="text-xs text-stone-700 leading-relaxed font-normal">
-                  {kinActivo.oraculo.antipoda.descripcion}
+                  {kinActivo?.oraculo?.antipoda?.descripcion || ''}
                 </p>
               </div>
             </div>
@@ -599,18 +604,18 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
                 <span className="text-xs font-black uppercase tracking-wider text-amber-950 bg-amber-200/90 px-3.5 py-1 rounded-full border border-amber-400 block w-fit mx-auto shadow-2xs">
                   👑 5ta fuerza • Poder Guía
                 </span>
-                <MayaToneGlyph tono={kinActivo.oraculo.guia.tonoNumero} className="py-1" />
-                <div className="text-5xl filter drop-shadow-xs">{kinActivo.oraculo.guia.sello.icono}</div>
+                <MayaToneGlyph tono={kinActivo?.oraculo?.guia?.tonoNumero || kinActivo?.tonoNumero || 1} className="py-1" />
+                <div className="text-5xl filter drop-shadow-xs">{kinActivo?.oraculo?.guia?.sello?.icono || '👑'}</div>
                 <div>
                   <h4 className="font-serif font-black text-lg sm:text-xl text-amber-950">
-                    {kinActivo.oraculo.guia.nombre}
+                    {kinActivo?.oraculo?.guia?.nombre || 'Poder Guía'}
                   </h4>
                   <span className="text-xs font-mono font-black text-amber-900 block mt-0.5">
-                    Kin {kinActivo.oraculo.guia.kinNumero} • {kinActivo.oraculo.guia.sello.maya}
+                    Kin {kinActivo?.oraculo?.guia?.kinNumero || ''} • {kinActivo?.oraculo?.guia?.sello?.maya || kinActivo?.oraculo?.guia?.nombre || ''}
                   </span>
                 </div>
                 <p className="text-xs text-stone-700 leading-relaxed font-normal">
-                  {kinActivo.oraculo.guia.descripcion}
+                  {kinActivo?.oraculo?.guia?.descripcion || ''}
                 </p>
               </div>
 
@@ -619,38 +624,38 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
                 <span className="text-[10px] font-black uppercase tracking-widest text-amber-300 bg-amber-400/20 px-3.5 py-1 rounded-full border border-amber-400/40 block w-fit mx-auto">
                   🌀 Frecuencia Central • Kin Destino
                 </span>
-                <MayaToneGlyph tono={kinActivo.tonoNumero} dark={true} className="py-1" />
-                <div className="text-6xl filter drop-shadow-md">{kinActivo.selloIcono}</div>
+                <MayaToneGlyph tono={kinActivo?.tonoNumero || 1} dark={true} className="py-1" />
+                <div className="text-6xl filter drop-shadow-md">{kinActivo?.selloIcono || '🌀'}</div>
                 <div>
                   <h4 className="font-serif font-black text-2xl text-amber-200 tracking-tight">
-                    {kinActivo.kinNombre}
+                    {kinActivo?.kinNombre}
                   </h4>
                   <span className="text-xs font-mono text-amber-300/80 block mt-0.5">
-                    Kin {kinActivo.kinNumero} • {kinActivo.ondaEncantada}
+                    Kin {kinActivo?.kinNumero} • {kinActivo?.ondaEncantada}
                   </span>
                 </div>
                 <div className="pt-2 border-t border-stone-800 text-xs text-stone-300 italic font-serif">
-                  "{kinActivo.afirmacion.split('\n')[0]}"
+                  "{kinActivo?.afirmacion ? kinActivo.afirmacion.split('\n')[0] : ''}"
                 </div>
               </div>
 
               {/* 3. OCULTO (ABAJO / SUR) */}
-              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo.oraculo.oculto.sello.color)}`}>
+              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo?.oraculo?.oculto?.sello?.color)}`}>
                 <span className="text-[10px] font-black uppercase tracking-wider text-teal-950 bg-teal-100 px-3 py-1 rounded-full border border-teal-300 block w-fit mx-auto shadow-2xs">
                   ✨ Poder Oculto • Tesoro Subconsciente
                 </span>
-                <MayaToneGlyph tono={kinActivo.oraculo.oculto.tonoNumero} />
-                <div className="text-4xl filter drop-shadow-xs">{kinActivo.oraculo.oculto.sello.icono}</div>
+                <MayaToneGlyph tono={kinActivo?.oraculo?.oculto?.tonoNumero || kinActivo?.tonoNumero || 1} />
+                <div className="text-4xl filter drop-shadow-xs">{kinActivo?.oraculo?.oculto?.sello?.icono || '✨'}</div>
                 <div>
                   <h4 className="font-serif font-black text-base text-stone-950">
-                    {kinActivo.oraculo.oculto.nombre}
+                    {kinActivo?.oraculo?.oculto?.nombre || 'Poder Oculto'}
                   </h4>
                   <span className="text-xs font-mono font-bold text-stone-600">
-                    Kin {kinActivo.oraculo.oculto.kinNumero}
+                    Kin {kinActivo?.oraculo?.oculto?.kinNumero || ''}
                   </span>
                 </div>
                 <p className="text-xs text-stone-700 leading-relaxed font-normal">
-                  {kinActivo.oraculo.oculto.descripcion}
+                  {kinActivo?.oraculo?.oculto?.descripcion || ''}
                 </p>
               </div>
 
@@ -658,22 +663,22 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
 
             {/* COLUMNA 3: ANÁLOGO (ESTE / DERECHA) */}
             <div className="space-y-4 order-3">
-              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo.oraculo.analogo.sello.color)}`}>
+              <div className={`rounded-3xl p-6 border-2 shadow-sm text-center space-y-3.5 transition-all ${getSelloCardStyle(kinActivo?.oraculo?.analogo?.sello?.color)}`}>
                 <span className="text-[10px] font-black uppercase tracking-wider text-rose-950 bg-rose-100 px-3 py-1 rounded-full border border-rose-300 block w-fit mx-auto shadow-2xs">
                   🤝 Sostén Análogo • Fuerza Gemela
                 </span>
-                <MayaToneGlyph tono={kinActivo.oraculo.analogo.tonoNumero} />
-                <div className="text-4xl filter drop-shadow-xs">{kinActivo.oraculo.analogo.sello.icono}</div>
+                <MayaToneGlyph tono={kinActivo?.oraculo?.analogo?.tonoNumero || kinActivo?.tonoNumero || 1} />
+                <div className="text-4xl filter drop-shadow-xs">{kinActivo?.oraculo?.analogo?.sello?.icono || '🤝'}</div>
                 <div>
                   <h4 className="font-serif font-black text-base text-stone-950">
-                    {kinActivo.oraculo.analogo.nombre}
+                    {kinActivo?.oraculo?.analogo?.nombre || 'Sostén Análogo'}
                   </h4>
                   <span className="text-xs font-mono font-bold text-stone-600">
-                    Kin {kinActivo.oraculo.analogo.kinNumero}
+                    Kin {kinActivo?.oraculo?.analogo?.kinNumero || ''}
                   </span>
                 </div>
                 <p className="text-xs text-stone-700 leading-relaxed font-normal">
-                  {kinActivo.oraculo.analogo.descripcion}
+                  {kinActivo?.oraculo?.analogo?.descripcion || ''}
                 </p>
               </div>
             </div>
@@ -684,16 +689,16 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
           <div className="bg-stone-900 text-white rounded-3xl p-6 sm:p-8 border border-amber-400/50 text-center space-y-4 mt-6">
             <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-300/40 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
               <Feather className="w-3.5 h-3.5" />
-              <span>Afirmación Sagrada • Kin {kinActivo.kinNumero}</span>
+              <span>Afirmación Sagrada • Kin {kinActivo?.kinNumero}</span>
             </div>
 
             <div className="font-serif italic text-lg sm:text-2xl text-amber-100 leading-relaxed whitespace-pre-line tracking-wide drop-shadow-sm max-w-2xl mx-auto">
-              "{kinActivo.afirmacion}"
+              "{kinActivo?.afirmacion}"
             </div>
 
             <p className="text-stone-300 text-xs sm:text-sm max-w-xl mx-auto font-light leading-relaxed">
-              El tono <strong>{kinActivo.tonoNombre}</strong> nos pregunta: <em>"{kinActivo.tonoPregunta}"</em>. 
-              El sello <strong>{kinActivo.selloNombre}</strong> nos recuerda que su poder sagrado es <strong>{kinActivo.selloPoder.toLowerCase()}</strong>.
+              El tono <strong>{kinActivo?.tonoNombre}</strong> nos pregunta: <em>"{kinActivo?.tonoPregunta}"</em>. 
+              El sello <strong>{kinActivo?.selloNombre}</strong> nos recuerda que su poder sagrado es <strong>{kinActivo?.selloPoder?.toLowerCase()}</strong>.
             </p>
           </div>
 
