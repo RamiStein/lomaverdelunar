@@ -19,6 +19,7 @@ import MediaKitLandingView from './components/MediaKitLandingView';
 import AntenaAlertaView from './components/AntenaAlertaView';
 import EnergiaDelDiaSection from './components/EnergiaDelDiaSection';
 import MuroSocialSection from './components/MuroSocialSection';
+import DiarioLunarSection from './components/DiarioLunarSection';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -29,6 +30,7 @@ export default function App() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [troquelModalOpen, setTroquelModalOpen] = useState(false);
   const [flyerData, setFlyerData] = useState(null);
+  const [initialNotaId, setInitialNotaId] = useState(null);
 
   // App Data
   const [config, setConfig] = useState({
@@ -97,6 +99,22 @@ export default function App() {
         pathname === '/noantena'
       ) {
         setActiveTab('antena');
+        return;
+      }
+
+      // 0.05. Ruta directa para El Diario Lunar (ej: /diario, /diariolunar, /diario-lunar, /noticias, /periodico, /prensa)
+      if (
+        pathname === '/diario' ||
+        pathname === '/diariolunar' ||
+        pathname === '/diario-lunar' ||
+        pathname === '/noticias' ||
+        pathname === '/periodico' ||
+        pathname === '/prensa' ||
+        params.get('nota') !== null
+      ) {
+        const notaParam = params.get('nota');
+        if (notaParam) setInitialNotaId(notaParam);
+        setActiveTab('diario');
         return;
       }
 
@@ -188,6 +206,8 @@ export default function App() {
         setActiveTab('virtudes');
       } else if (hostname.startsWith('energia')) {
         setActiveTab('energia');
+      } else if (hostname.startsWith('diario') || hostname.startsWith('noticias') || hostname.startsWith('prensa')) {
+        setActiveTab('diario');
       }
     } catch (err) {
       console.error('Error en enrutamiento:', err);
@@ -200,6 +220,10 @@ export default function App() {
       if (activeTab === 'mapa') {
         if (window.location.pathname !== '/mapalomaverdelunar') {
           window.history.replaceState(null, '', '/mapalomaverdelunar');
+        }
+      } else if (activeTab === 'diario') {
+        if (window.location.pathname !== '/diario') {
+          window.history.replaceState(null, '', '/diario');
         }
       } else if (activeTab === 'antena') {
         if (window.location.pathname !== '/noalaantena') {
@@ -507,6 +531,35 @@ export default function App() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           />
+        )}
+
+        {activeTab === 'diario' && (
+          <div>
+            <DiarioLunarSection
+              config={config}
+              initialNotaId={initialNotaId}
+              onBackToHome={() => {
+                setActiveTab('inicio');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onGoToInscripcion={() => {
+                setActiveTab('sumate_al_encuentro');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onGoToAntena={() => {
+                setActiveTab('antena');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onGoToMuro={() => {
+                setActiveTab('muro');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onGoToLunas={() => {
+                setActiveTab('lunas');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          </div>
         )}
 
         {activeTab === 'muro' && (

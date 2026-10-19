@@ -51,11 +51,34 @@ app.get('/api/energia', async (req, res) => {
   }
 });
 
-// Noticias de la cartelera
+// Noticias de la cartelera y El Diario Lunar
 app.get('/api/noticias', async (req, res) => {
   try {
-    const noticias = await db.getNoticias();
+    const noticias = await db.getNoticias(req.query);
     res.json(noticias);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Noticia individual por ID
+app.get('/api/noticias/:id', async (req, res) => {
+  try {
+    const noticia = await db.getNoticiaById(req.params.id);
+    if (!noticia) {
+      return res.status(404).json({ error: 'Nota no encontrada' });
+    }
+    res.json(noticia);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Registrar lectura / vista de una nota
+app.post('/api/noticias/:id/vista', async (req, res) => {
+  try {
+    const vistas = await db.incrementarVistasNoticia(req.params.id);
+    res.json({ vistas });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -643,6 +666,18 @@ app.post('/api/admin/noticias', verifyAdmin, async (req, res) => {
   try {
     const nueva = await db.addNoticia(req.body);
     res.status(201).json(nueva);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/noticias/:id', verifyAdmin, async (req, res) => {
+  try {
+    const updated = await db.updateNoticia(req.params.id, req.body);
+    if (!updated) {
+      return res.status(404).json({ error: 'Noticia no encontrada' });
+    }
+    res.json(updated);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

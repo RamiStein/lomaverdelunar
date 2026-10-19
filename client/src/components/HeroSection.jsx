@@ -146,6 +146,34 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
             <ArrowRight className="w-3 h-3" />
           </div>
         </div>
+
+        {/* BANNER INTERACTIVO: EL DIARIO LUNAR (NOTICIAS Y CRÓNICAS DE CADA LUNA) */}
+        <div 
+          onClick={() => setActiveTab('diario')}
+          className="mb-6 max-w-2xl mx-auto bg-white/95 text-stone-900 p-3.5 sm:p-4 rounded-2xl shadow-md border-2 border-stone-900 cursor-pointer hover:scale-[1.01] transition-transform text-left flex items-center justify-between gap-3 group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-stone-900 text-amber-300 flex items-center justify-center font-black text-lg flex-shrink-0 shadow-xs">
+              📰
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-black uppercase tracking-wider text-red-700">
+                <span>El Diario Lunar • Crónicas de Cada Luna</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-ping" />
+              </div>
+              <h3 className="font-serif font-black text-sm sm:text-base text-stone-950 leading-tight">
+                Noticias comunitarias, asambleas y memorias vivas
+              </h3>
+              <p className="text-[11px] sm:text-xs text-stone-600 line-clamp-1 font-normal">
+                Leé la edición de la Luna Llena en Tauro, la lucha vecinal contra la antena y la economía en virtudes.
+              </p>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-1 bg-stone-900 group-hover:bg-amber-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors flex-shrink-0 shadow-xs">
+            <span>Leer Diario</span>
+            <ArrowRight className="w-3 h-3" />
+          </div>
+        </div>
         
         {/* LUNA DORADA RADIANTE CON LAURELES BOTÁNICOS */}
         <div className="relative inline-flex flex-col items-center mb-4 group cursor-pointer" onClick={() => setShowFlyerModal(true)}>
@@ -385,47 +413,83 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
       </div>
 
       {/* ========================================================================= */}
-      {/* 4. CARTELERA DE NOTICIAS */}
+      {/* 4. EL DIARIO LUNAR • CRÓNICAS Y NOTICIAS                                  */}
       {/* ========================================================================= */}
       {noticias && noticias.length > 0 && (
-        <div className="max-w-5xl mx-auto px-4 mt-12">
-          <div className="flex items-center gap-2 mb-6 justify-center">
-            <Newspaper className="w-6 h-6 text-loma-accent" />
-            <h2 className="font-serif text-2xl sm:text-3xl text-loma-green font-bold text-center">
-              Cartelera del Encuentro 📝
+        <div className="max-w-6xl mx-auto px-4 mt-14">
+          
+          <div className="text-center space-y-2 mb-8">
+            <div className="inline-flex items-center gap-1.5 bg-stone-900 text-amber-300 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-2xs">
+              <Newspaper className="w-3.5 h-3.5" />
+              <span>El Diario Lunar • Crónicas de Cada Luna</span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl text-stone-950 font-black tracking-tight">
+              Noticias & Voces de Nuestra Comunidad 📰
             </h2>
+            <p className="text-xs sm:text-sm text-stone-600 max-w-xl mx-auto font-medium">
+              Crónicas periodísticas, defensa de la tierra, huertas, feria y memorias de cada plenilunio.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {noticias.map((n) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {noticias.slice(0, 3).map((n) => (
               <div 
-                key={n.id} 
-                className="bg-white rounded-3xl border border-loma-wood overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
+                key={n.id}
+                onClick={() => {
+                  setActiveTab('diario');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="bg-white rounded-3xl border-2 border-stone-200 overflow-hidden shadow-2xs hover:shadow-xl transition-all flex flex-col justify-between cursor-pointer group hover:-translate-y-1"
               >
                 {n.img && (
-                  <img 
-                    src={n.img} 
-                    alt={n.titulo} 
-                    className="w-full h-48 sm:h-56 object-cover"
-                  />
+                  <div className="relative overflow-hidden aspect-video bg-stone-100">
+                    <img 
+                      src={n.img} 
+                      alt={n.titulo} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="absolute top-3 left-3 bg-stone-900 text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded shadow-xs">
+                      {n.volanta || n.seccionEtiqueta || 'Actualidad'}
+                    </span>
+                  </div>
                 )}
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-serif font-bold text-lg sm:text-xl text-loma-green mb-2">
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-bold text-amber-900 uppercase tracking-wider block">
+                      {n.lunaNombre || 'Luna Llena'}
+                    </span>
+                    <h3 className="font-serif font-black text-base sm:text-lg text-stone-950 leading-snug group-hover:text-amber-900 transition-colors">
                       {n.titulo}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {n.texto}
+                    <p className="text-stone-600 text-xs line-clamp-3 leading-relaxed">
+                      {n.copete || n.bajada || n.texto}
                     </p>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-loma-wood font-semibold">
-                    <span>{n.fecha || 'Ciclo Tauro'}</span>
-                    <span className="text-loma-accent uppercase tracking-wider">Loma Verde Lunar</span>
+                  <div className="pt-3 border-t border-stone-100 flex justify-between items-center text-[11px] text-stone-500 font-semibold">
+                    <span>{n.fechaTexto || n.fecha || 'Edición Activa'}</span>
+                    <span className="text-amber-900 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>Leer nota</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
+
+          <div className="text-center mt-8">
+            <button
+              onClick={() => {
+                setActiveTab('diario');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 bg-stone-900 hover:bg-stone-800 text-amber-300 font-bold px-6 py-3 rounded-2xl text-xs uppercase tracking-wider shadow-md transition-all active:scale-95 cursor-pointer"
+            >
+              <Newspaper className="w-4 h-4" />
+              <span>Abrir Portada Completa de El Diario Lunar →</span>
+            </button>
+          </div>
+
         </div>
       )}
 

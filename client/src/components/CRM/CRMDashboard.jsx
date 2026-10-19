@@ -21,7 +21,10 @@ import {
   ShieldAlert,
   FileText,
   ExternalLink,
-  AlertTriangle
+  AlertTriangle,
+  Newspaper,
+  Star,
+  Eye
 } from 'lucide-react';
 
 export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) {
@@ -64,8 +67,21 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
   // New Expense form
   const [newGasto, setNewGasto] = useState({ detalle: '', monto: '', categoria: 'General', comprobante: '' });
   
-  // New Noticia form
-  const [newNoticia, setNewNoticia] = useState({ titulo: '', texto: '', img: '' });
+  // New Noticia form (Diario Lunar & Cartelera)
+  const [newNoticia, setNewNoticia] = useState({
+    titulo: '',
+    volanta: '',
+    copete: '',
+    texto: '',
+    img: '',
+    epigrafe: '',
+    lunaId: 'luna-tauro-2026',
+    seccion: 'Comunidad',
+    autor: 'Redacción Loma Verde',
+    destacada: false,
+    tiempoLectura: '3 min',
+    etiquetas: ''
+  });
 
   // Muro post form
   const [showAddMuroModal, setShowAddMuroModal] = useState(false);
@@ -328,12 +344,49 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
   const handleAddNoticia = async (e) => {
     e.preventDefault();
     try {
-      await fetch('/api/admin/noticias', {
+      const payload = {
+        ...newNoticia,
+        lunaId: newNoticia.lunaId || 'luna-tauro-2026',
+        etiquetas: typeof newNoticia.etiquetas === 'string'
+          ? newNoticia.etiquetas.split(',').map(s => s.trim()).filter(Boolean)
+          : (newNoticia.etiquetas || [])
+      };
+      const res = await fetch('/api/admin/noticias', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
-        body: JSON.stringify(newNoticia)
+        body: JSON.stringify(payload)
       });
-      setNewNoticia({ titulo: '', texto: '', img: '' });
+      if (!res.ok) throw new Error('Error al publicar la nota');
+      setNewNoticia({
+        titulo: '',
+        volanta: '',
+        copete: '',
+        texto: '',
+        img: '',
+        epigrafe: '',
+        lunaId: 'luna-tauro-2026',
+        seccion: 'Comunidad',
+        autor: 'Redacción Loma Verde',
+        destacada: false,
+        tiempoLectura: '3 min',
+        etiquetas: ''
+      });
+      alert('¡Noticia publicada con éxito en El Diario Lunar y Cartelera!');
+      fetchAllData();
+      if (refreshGlobalData) refreshGlobalData();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleToggleDestacadaNoticia = async (noticia) => {
+    try {
+      const res = await fetch(`/api/admin/noticias/${noticia.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+        body: JSON.stringify({ destacada: !noticia.destacada })
+      });
+      if (!res.ok) throw new Error('Error al actualizar destaque');
       fetchAllData();
       if (refreshGlobalData) refreshGlobalData();
     } catch (err) {
@@ -2223,63 +2276,275 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
             </form>
           </div>
 
-          {/* Administrador de Noticias de la Cartelera */}
+          {/* Administrador de El Diario Lunar & Cartelera */}
           <div className="bg-white p-6 sm:p-8 rounded-3xl border border-loma-wood/30 shadow-sm">
-            <h3 className="font-serif text-xl font-bold text-loma-green mb-4">
-              Noticias de la Cartelera Comunitaria 📝
-            </h3>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-gray-100">
+              <div>
+                <h3 className="font-serif text-xl font-bold text-loma-green flex items-center gap-2">
+                  <Newspaper className="w-5 h-5 text-loma-terracotta" />
+                  <span>El Diario Lunar & Cartelera Comunitaria</span>
+                </h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Redactá y administrá las notas periodísticas de cada ciclo lunar y los avisos comunitarios con estilo editorial.
+                </p>
+              </div>
+              <span className="text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200 px-3 py-1 rounded-full self-start sm:self-auto">
+                {data.noticias.length} notas publicadas
+              </span>
+            </div>
 
             {/* Crear Noticia */}
-            <form onSubmit={handleAddNoticia} className="bg-[#faf9f5] p-4 rounded-2xl border border-gray-200 mb-6 space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <form onSubmit={handleAddNoticia} className="bg-[#faf9f5] p-5 rounded-2xl border border-gray-200 mb-6 space-y-4">
+              <div className="text-xs font-bold text-loma-wood uppercase tracking-wider flex items-center gap-2">
+                <Plus className="w-4 h-4 text-loma-green" />
+                <span>Nueva Nota Editorial</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Volanta / Tema</label>
+                  <input
+                    type="text"
+                    placeholder="Ej: DEFENSA AMBIENTAL, AGROECOLOGÍA..."
+                    value={newNoticia.volanta}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, volanta: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs tracking-wider"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Título Principal *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Título impactante de la noticia..."
+                    value={newNoticia.titulo}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, titulo: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-bold font-serif"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Copete / Bajada (Resumen destacado)</label>
                 <input
                   type="text"
-                  required
-                  placeholder="Título de la noticia..."
-                  value={newNoticia.titulo}
-                  onChange={(e) => setNewNoticia({ ...newNoticia, titulo: e.target.value })}
-                  className="p-2 rounded-xl border border-gray-300 text-xs font-bold"
-                />
-                <input
-                  type="text"
-                  placeholder="URL Imagen (opcional)..."
-                  value={newNoticia.img}
-                  onChange={(e) => setNewNoticia({ ...newNoticia, img: e.target.value })}
-                  className="p-2 rounded-xl border border-gray-300 text-xs"
+                  placeholder="Síntesis de 1 o 2 oraciones que introduce la nota..."
+                  value={newNoticia.copete}
+                  onChange={(e) => setNewNoticia({ ...newNoticia, copete: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-gray-300 text-xs italic"
                 />
               </div>
-              <textarea
-                rows={2}
-                required
-                placeholder="Cuerpo de la noticia..."
-                value={newNoticia.texto}
-                onChange={(e) => setNewNoticia({ ...newNoticia, texto: e.target.value })}
-                className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
-              />
-              <button
-                type="submit"
-                className="bg-loma-wood hover:bg-loma-green text-white px-4 py-2 rounded-xl text-xs font-bold uppercase"
-              >
-                + Publicar Noticia
-              </button>
+
+              <div>
+                <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Cuerpo Completo de la Noticia *</label>
+                <textarea
+                  rows={4}
+                  required
+                  placeholder="Redactá la crónica, nota o entrevista completa aquí..."
+                  value={newNoticia.texto}
+                  onChange={(e) => setNewNoticia({ ...newNoticia, texto: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-gray-300 text-xs leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Edición Lunar</label>
+                  <select
+                    value={newNoticia.lunaId}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, lunaId: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs bg-white font-medium"
+                  >
+                    <option value="luna-tauro-2026">Luna Llena en Tauro ♉ (Actual)</option>
+                    <option value="luna-aries-2026">Luna Llena en Aries ♈</option>
+                    <option value="luna-piscis-2026">Luna Llena en Piscis ♓</option>
+                    <option value="luna-acuario-2026">Luna Llena en Acuario ♒</option>
+                    <option value="todas">Todas las Lunas</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Sección</label>
+                  <select
+                    value={newNoticia.seccion}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, seccion: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs bg-white font-medium"
+                  >
+                    <option value="Comunidad">Comunidad</option>
+                    <option value="Tierra">Tierra & Huertas</option>
+                    <option value="Cultura">Cultura & Arte</option>
+                    <option value="Economía">Economía Fraterna</option>
+                    <option value="Astrología">Astros & Sincronario</option>
+                    <option value="Opinión">Opinión & Voces</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Autor / Firma</label>
+                  <input
+                    type="text"
+                    placeholder="Redacción Loma Verde"
+                    value={newNoticia.autor}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, autor: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Tiempo de Lectura</label>
+                  <input
+                    type="text"
+                    placeholder="Ej: 4 min"
+                    value={newNoticia.tiempoLectura}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, tiempoLectura: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="sm:col-span-2">
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">URL Foto de Portada</label>
+                  <input
+                    type="text"
+                    placeholder="https://images.unsplash.com/..."
+                    value={newNoticia.img}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, img: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Epígrafe de la Foto</label>
+                  <input
+                    type="text"
+                    placeholder="Pie de foto..."
+                    value={newNoticia.epigrafe}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, epigrafe: e.target.value })}
+                    className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-gray-700 uppercase mb-1">Etiquetas (separadas por coma)</label>
+                <input
+                  type="text"
+                  placeholder="Loma Verde, Antena 5G, Vecinos, Salud..."
+                  value={newNoticia.etiquetas}
+                  onChange={(e) => setNewNoticia({ ...newNoticia, etiquetas: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-gray-200">
+                <label className="flex items-center gap-2 text-xs font-bold text-loma-wood cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={newNoticia.destacada}
+                    onChange={(e) => setNewNoticia({ ...newNoticia, destacada: e.target.checked })}
+                    className="w-4 h-4 rounded text-loma-terracotta focus:ring-loma-green"
+                  />
+                  <span>⭐ Destacar como Tapa Principal en El Diario Lunar</span>
+                </label>
+
+                <button
+                  type="submit"
+                  className="bg-loma-wood hover:bg-loma-green text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow transition-all active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Publicar en El Diario Lunar</span>
+                </button>
+              </div>
             </form>
 
             {/* Listado de Noticias */}
             <div className="space-y-3">
-              {data.noticias.map((n) => (
-                <div key={n.id} className="p-4 rounded-xl border border-gray-200 flex justify-between items-start">
-                  <div>
-                    <h4 className="font-serif font-bold text-sm text-loma-green">{n.titulo}</h4>
-                    <p className="text-xs text-gray-600 mt-1">{n.texto}</p>
-                  </div>
-                  <button
-                    onClick={() => handleDeleteNoticia(n.id)}
-                    className="text-gray-400 hover:text-red-600 p-1"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+              <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                Artículos Publicados ({data.noticias.length})
+              </div>
+
+              {data.noticias.length === 0 ? (
+                <div className="p-8 text-center text-xs text-gray-400 border border-dashed rounded-2xl">
+                  No hay noticias publicadas aún.
                 </div>
-              ))}
+              ) : (
+                data.noticias.map((n) => (
+                  <div key={n.id} className="p-4 rounded-2xl border border-gray-200 bg-white hover:border-loma-wood/40 transition-all flex flex-col sm:flex-row gap-4 justify-between items-start">
+                    <div className="flex gap-3 items-start flex-1">
+                      {n.img && (
+                        <img
+                          src={n.img}
+                          alt={n.titulo}
+                          className="w-20 h-20 rounded-xl object-cover border border-gray-200 shrink-0"
+                          onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                      )}
+                      <div className="space-y-1">
+                        <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
+                          {n.volanta && (
+                            <span className="font-bold text-loma-terracotta uppercase">{n.volanta}</span>
+                          )}
+                          <span className="bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+                            {n.seccion || 'Comunidad'}
+                          </span>
+                          <span className="bg-amber-50 text-amber-800 font-medium px-2 py-0.5 rounded-full">
+                            {n.lunaNombre || n.lunaId || 'Edición Lunar'}
+                          </span>
+                          {n.destacada && (
+                            <span className="bg-yellow-100 text-yellow-900 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" /> Tapa
+                            </span>
+                          )}
+                        </div>
+
+                        <h4 className="font-serif font-bold text-sm text-loma-green leading-snug">
+                          {n.titulo}
+                        </h4>
+
+                        {n.copete && (
+                          <p className="text-xs text-gray-600 line-clamp-2 italic">
+                            {n.copete}
+                          </p>
+                        )}
+
+                        <div className="flex items-center gap-3 text-[11px] text-gray-400 pt-1">
+                          <span>{n.autor || 'Redacción'}</span>
+                          <span>•</span>
+                          <span>{n.tiempoLectura || '3 min'}</span>
+                          <span>•</span>
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-3 h-3" /> {n.vistas || 0} lecturas
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex sm:flex-col gap-2 shrink-0 self-end sm:self-center">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleDestacadaNoticia(n)}
+                        title={n.destacada ? 'Quitar destaque de tapa' : 'Destacar en tapa'}
+                        className={`p-2 rounded-xl text-xs font-bold transition-all border ${
+                          n.destacada
+                            ? 'bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200'
+                            : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100'
+                        }`}
+                      >
+                        <Star className={`w-4 h-4 ${n.destacada ? 'fill-amber-600 text-amber-600' : ''}`} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteNoticia(n.id)}
+                        title="Eliminar noticia"
+                        className="p-2 rounded-xl text-xs text-gray-400 hover:text-red-600 border border-gray-200 hover:bg-red-50 transition-all"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 

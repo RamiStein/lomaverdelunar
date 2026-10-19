@@ -54,18 +54,234 @@ const SEED_DATA = {
   },
   noticias: [
     {
-      id: "noticia-1",
-      titulo: "¡Gran Apertura del Mercado de Virtudes!",
-      texto: "Lanzamos el sistema de troqueles comunitarios para fomentar el trueque e intercambio fraterno entre vecinos y productores locales.",
-      img: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80",
-      fecha: "2026-08-01"
+      id: "noticia-tauro-1",
+      titulo: "Loma Verde prepara su gran encuentro de Luna Llena en Tauro: El valor de la materia viva, la tierra fértil y los oficios que conservan el alma humana",
+      volanta: "EDICIÓN ESPECIAL LUNA EN TAURO ♉",
+      copete: "El próximo domingo 8 de noviembre, la Plaza La Misión será el epicentro de una jornada que combina soberanía alimentaria, arte popular, intercambio de semillas y una feria fraterna con más de 60 productores locales.",
+      bajada: "El próximo domingo 8 de noviembre, la Plaza La Misión será el epicentro de una jornada que combina soberanía alimentaria, arte popular, intercambio de semillas y una feria fraterna con más de 60 productores locales.",
+      texto: "Bajo la influencia paciente y nutricia de la Luna Llena en Tauro, Loma Verde se prepara para vivir una de las celebraciones comunitarias más esperadas de la primavera. El evento, que congregará a artesanos, huerteros, músicos y familias de toda la región, propone volver al valor genuino de las manos hacedoras y la reciprocidad comunitaria.\n\n«Tauro nos enseña a valorar lo que la tierra nos regala cuando se la cuida con respeto», expresó Marta Almada, productora agroecológica local. «En tiempos de vértigo y pantallas, este encuentro nos invita a tocar la arcilla, oler el pan recién horneado y mirarnos a los ojos sin intermediarios».\n\nDurante toda la jornada habrá talleres abiertos de compostaje, bioconstrucción y medicina herbal, junto con un escenario acústico alimentado con energía solar donde confluirán artistas de raíz folklórica y ensambles vecinales.",
+      contenido: "Bajo la influencia paciente y nutricia de la Luna Llena en Tauro, Loma Verde se prepara para vivir una de las celebraciones comunitarias más esperadas de la primavera. El evento, que congregará a artesanos, huerteros, músicos y familias de toda la región, propone volver al valor genuino de las manos hacedoras y la reciprocidad comunitaria.\n\n«Tauro nos enseña a valorar lo que la tierra nos regala cuando se la cuida con respeto», expresó Marta Almada, productora agroecológica local. «En tiempos de vértigo y pantallas, este encuentro nos invita a tocar la arcilla, oler el pan recién horneado y mirarnos a los ojos sin intermediarios».\n\nDurante toda la jornada habrá talleres abiertos de compostaje, bioconstrucción y medicina herbal, junto con un escenario acústico alimentado con energía solar donde confluirán artistas de raíz folklórica y ensambles vecinales.",
+      img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "La Plaza La Misión se prepara para recibir a cientos de vecinos en el plenilunio de Tauro.",
+      lunaId: "luna-tauro-2026",
+      lunaNombre: "Luna Llena en Tauro ♉",
+      seccion: "comunidad",
+      seccionEtiqueta: "Comunidad & Vecinal",
+      autor: "Redacción Loma Verde",
+      fecha: "2026-10-18",
+      fechaTexto: "18 de Octubre de 2026",
+      destacada: true,
+      tiempoLectura: "4 min",
+      vistas: 142,
+      etiquetas: ["#LunaEnTauro", "#SoberaniaAlimentaria", "#FeriaLomaVerde", "#Comunidad"]
     },
     {
-      id: "noticia-2",
-      titulo: "Taller de Huerta y Compostaje Comunitario",
-      texto: "A las 15hs nos encontramos en el sector verde para aprender a armar composteras domiciliarias y sembrar plantines de estación.",
-      img: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80",
-      fecha: "2026-08-01"
+      id: "noticia-tauro-2",
+      titulo: "La Asamblea Vecinal define nuevas acciones legales contra la antena 5G: «Nuestra salud y nuestro cielo no se negocian»",
+      volanta: "DEFENSA DEL BARRIO",
+      copete: "Vecinos autoconvocados de Los Aromos y El Cazador ratificaron el estado de alerta comunitaria y presentarán un recurso de amparo ante la justicia bonaerense por la instalación inconsulta de torres de telecomunicaciones.",
+      bajada: "Vecinos autoconvocados de Los Aromos y El Cazador ratificaron el estado de alerta comunitaria y presentarán un recurso de amparo ante la justicia bonaerense por la instalación inconsulta de torres de telecomunicaciones.",
+      texto: "En una concurrida asamblea realizada en la esquina de Los Aromos y Las Palmeras, decenas de familias de Loma Verde acordaron continuar con el plan de lucha en resguardo de la calidad de vida y el arbolado histórico del barrio.\n\n«Ninguna multinacional puede venir a atropellar la voluntad de una comunidad que eligió vivir en calma y en contacto con la naturaleza», sostuvo Jorge Roldán, referente asambleario. Los vecinos recordaron que la ordenanza municipal exige audiencias públicas previas y estudios de impacto ambiental acumulativo.\n\nEn la web comunitaria ya se han superado las 450 adhesiones de apoyo y se coordinarán rondas de vigilia pacífica para evitar trabajos no autorizados.",
+      contenido: "En una concurrida asamblea realizada en la esquina de Los Aromos y Las Palmeras, decenas de familias de Loma Verde acordaron continuar con el plan de lucha en resguardo de la calidad de vida y el arbolado histórico del barrio.\n\n«Ninguna multinacional puede venir a atropellar la voluntad de una comunidad que eligió vivir en calma y en contacto con la naturaleza», sostuvo Jorge Roldán, referente asambleario. Los vecinos recordaron que la ordenanza municipal exige audiencias públicas previas y estudios de impacto ambiental acumulativo.\n\nEn la web comunitaria ya se han superado las 450 adhesiones de apoyo y se coordinarán rondas de vigilia pacífica para evitar trabajos no autorizados.",
+      img: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Vecinos reunidos en asamblea abierta discutiendo los pasos legales en defensa de la tierra.",
+      lunaId: "luna-tauro-2026",
+      lunaNombre: "Luna Llena en Tauro ♉",
+      seccion: "comunidad",
+      seccionEtiqueta: "Comunidad & Vecinal",
+      autor: "Comisión de Prensa Vecinal",
+      fecha: "2026-10-17",
+      fechaTexto: "17 de Octubre de 2026",
+      destacada: false,
+      tiempoLectura: "3 min",
+      vistas: 215,
+      etiquetas: ["#NoAlaAntena", "#SoberaniaVecinal", "#CieloLimpio", "#LomaVerdeDespierta"]
+    },
+    {
+      id: "noticia-tauro-3",
+      titulo: "El Mercado de Virtudes supera los 200 intercambios fraternos: El troquel que desafía la inflación",
+      volanta: "ECONOMÍA POPULAR & SOLIDARIA",
+      copete: "El sistema de troqueles impresos y digitales permite a huerteros, panaderos y artesanos intercambiar bienes sin necesidad de efectivo bancario, fortaleciendo el circuito económico interno.",
+      bajada: "El sistema de troqueles impresos y digitales permite a huerteros, panaderos y artesanos intercambiar bienes sin necesidad de efectivo bancario, fortaleciendo el circuito económico interno.",
+      texto: "A tres meses de su puesta en marcha en Loma Verde, el Mercado de Virtudes ya cuenta con 45 puestos adheridos. Frascos de miel agroecológica, plantines nativos, cerámica gres y clases de yoga se intercambian a través del Troquel Comunitario 13:20.\n\n«La virtud no cotiza en dólares ni depende del FMI: su respaldo es la palabra y el trabajo genuino de nuestros vecinos», explicó Luciana, tejedora y feriante activa. Para la Luna en Tauro se habilitará un punto de canje donde quienes no tengan troqueles podrán sumar horas de voluntariado para obtener sus primeros créditos.",
+      contenido: "A tres meses de su puesta en marcha en Loma Verde, el Mercado de Virtudes ya cuenta con 45 puestos adheridos. Frascos de miel agroecológica, plantines nativos, cerámica gres y clases de yoga se intercambian a través del Troquel Comunitario 13:20.\n\n«La virtud no cotiza en dólares ni depende del FMI: su respaldo es la palabra y el trabajo genuino de nuestros vecinos», explicó Luciana, tejedora y feriante activa. Para la Luna en Tauro se habilitará un punto de canje donde quienes no tengan troqueles podrán sumar horas de voluntariado para obtener sus primeros créditos.",
+      img: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Puestos del mercado intercambiando alimentos agroecológicos bajo el sistema de troqueles.",
+      lunaId: "luna-tauro-2026",
+      lunaNombre: "Luna Llena en Tauro ♉",
+      seccion: "economia",
+      seccionEtiqueta: "Economía Fraterna",
+      autor: "Equipo de Economía Solidaria",
+      fecha: "2026-10-16",
+      fechaTexto: "16 de Octubre de 2026",
+      destacada: false,
+      tiempoLectura: "3 min",
+      vistas: 98,
+      etiquetas: ["#MercadoDeVirtudes", "#TroquelLunar", "#EconomiaSocial", "#TruequeFraterno"]
+    },
+    {
+      id: "noticia-tauro-4",
+      titulo: "Guía práctica de siembra para Tauro: La fertilidad de la tierra en su punto cúspide",
+      volanta: "SOBERANÍA Y HUERTA",
+      copete: "Tomates reliquia, albahaca genovesa, zapallos criollos y aromáticas medicinales: especialistas del vivero comunitario comparten los secretos para sembrar con el ciclo lunar.",
+      bajada: "Tomates reliquia, albahaca genovesa, zapallos criollos y aromáticas medicinales: especialistas del vivero comunitario comparten los secretos para sembrar con el ciclo lunar.",
+      texto: "El signo de tierra fija regido por Venus confiere a los cultivos una fortaleza radicular excepcional. Los huerteros de Loma Verde recomiendan aprovechar los días previos al plenilunio para trasplantar plantines que requieran follaje vigoroso y fruto carnoso.\n\nAdemás, se distribuirán más de 500 sobres de semillas criollas libres de transgénicos para que cada familia inicie su banco de semillas domiciliario.",
+      contenido: "El signo de tierra fija regido por Venus confiere a los cultivos una fortaleza radicular excepcional. Los huerteros de Loma Verde recomiendan aprovechar los días previos al plenilunio para trasplantar plantines que requieran follaje vigoroso y fruto carnoso.\n\nAdemás, se distribuirán más de 500 sobres de semillas criollas libres de transgénicos para que cada familia inicie su banco de semillas domiciliario.",
+      img: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Plantines de estación listos para trasplante en la huerta comunitaria de Loma Verde.",
+      lunaId: "luna-tauro-2026",
+      lunaNombre: "Luna Llena en Tauro ♉",
+      seccion: "tierra",
+      seccionEtiqueta: "Soberanía & Tierra",
+      autor: "Doña Carmen (Huerta Orgánica)",
+      fecha: "2026-10-15",
+      fechaTexto: "15 de Octubre de 2026",
+      destacada: false,
+      tiempoLectura: "2 min",
+      vistas: 160,
+      etiquetas: ["#HuertaEnCasa", "#SemillasCriollas", "#Agroecologia", "#TierraViva"]
+    },
+    {
+      id: "noticia-tauro-5",
+      titulo: "Escenario Lunar: Se confirma la grilla musical del 8 de Noviembre con ensambles locales y cantoras de raíz",
+      volanta: "CULTURA & MÚSICA",
+      copete: "Sonidos acústicos, tambores ancestrales y poesía viva acompañarán el atardecer en la Plaza La Misión.",
+      bajada: "Sonidos acústicos, tambores ancestrales y poesía viva acompañarán el atardecer en la Plaza La Misión.",
+      texto: "La música vuelve a ser el puente que une corazones bajo la luz de la luna. Desde las 14 horas se presentarán ensambles de cuerdas, música andina, charango y cantautoras independientes del corredor norte.\n\nEl cierre estará a cargo del Ensamble de Percusión Comunitaria, donde todos los presentes podrán sumarse con palmas y maracas para celebrar la vida en común.",
+      contenido: "La música vuelve a ser el puente que une corazones bajo la luz de la luna. Desde las 14 horas se presentarán ensambles de cuerdas, música andina, charango y cantautoras independientes del corredor norte.\n\nEl cierre estará a cargo del Ensamble de Percusión Comunitaria, donde todos los presentes podrán sumarse con palmas y maracas para celebrar la vida en común.",
+      img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Artistas locales ensayando al aire libre de cara a la función del domingo 8 de noviembre.",
+      lunaId: "luna-tauro-2026",
+      lunaNombre: "Luna Llena en Tauro ♉",
+      seccion: "cultura",
+      seccionEtiqueta: "Cultura & Música",
+      autor: "Colectivo Escenario Libre",
+      fecha: "2026-10-14",
+      fechaTexto: "14 de Octubre de 2026",
+      destacada: false,
+      tiempoLectura: "3 min",
+      vistas: 112,
+      etiquetas: ["#MusicaEnVivo", "#EscenarioLunar", "#Folklore", "#ArteComunitario"]
+    },
+    {
+      id: "noticia-tauro-6",
+      titulo: "Columna: «Sembrar comunidad en tiempos de incertidumbre: La lección de los árboles añosos»",
+      volanta: "VOCES DE LOMA VERDE",
+      copete: "Una reflexión sobre el valor del tiempo lento, la vecindad cotidiana y el reencuentro con la tierra que pisamos.",
+      bajada: "Una reflexión sobre el valor del tiempo lento, la vecindad cotidiana y el reencuentro con la tierra que pisamos.",
+      texto: "Caminar por las calles de tierra de Loma Verde al caer la tarde es un bálsamo. Los paraísos y las casuarinas no se apuran: crecen hacia el cielo porque sus raíces se abrazan en lo invisible.\n\nAsí debe ser una comunidad. Frente al individualismo del siglo XXI, el secreto no es huir del mundo sino construir un mundo adentro del mundo: una red fraterna donde nadie sobre y donde el dolor de uno sea la preocupación de todos.",
+      contenido: "Caminar por las calles de tierra de Loma Verde al caer la tarde es un bálsamo. Los paraísos y las casuarinas no se apuran: crecen hacia el cielo porque sus raíces se abrazan en lo invisible.\n\nAsí debe ser una comunidad. Frente al individualismo del siglo XXI, el secreto no es huir del mundo sino construir un mundo adentro del mundo: una red fraterna donde nadie sobre y donde el dolor de uno sea la preocupación de todos.",
+      img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Atardecer arbolado en Loma Verde, escenario de serenidad y encuentro vecinal.",
+      lunaId: "luna-tauro-2026",
+      lunaNombre: "Luna Llena en Tauro ♉",
+      seccion: "opinion",
+      seccionEtiqueta: "Opinión & Crónica",
+      autor: "Ignacio Pellegrini (Vecino y carpintero)",
+      fecha: "2026-10-13",
+      fechaTexto: "13 de Octubre de 2026",
+      destacada: false,
+      tiempoLectura: "2 min",
+      vistas: 85,
+      etiquetas: ["#Cronica", "#FilosofiaVecinal", "#LomaVerde", "#VivirMejor"]
+    },
+    {
+      id: "noticia-aries-1",
+      titulo: "El fuego creador de la primavera brilló en la plaza: Crónica del gran encuentro de Luna Llena en Aries",
+      volanta: "MEMORIA LUNAR • ARIES ♈",
+      copete: "Más de 400 personas colmaron la Plaza La Misión en una tarde marcada por el inicio de temporada, nuevos proyectos comunitarios y la fuerza del fuego sagrado.",
+      bajada: "Más de 400 personas colmaron la Plaza La Misión en una tarde marcada por el inicio de temporada, nuevos proyectos comunitarios y la fuerza del fuego sagrado.",
+      texto: "Con el Sol en Libra y la Luna en Aries, el equilibrio y la iniciativa se dieron la mano en Loma Verde. La feria albergó a 50 emprendedores y la participación de jóvenes que presentaron proyectos de reciclaje de plásticos y compostaje barrial.\n\nEl fuego sagrado se encendió al caer la tarde, marcando el compromiso de proteger nuestro territorio ante cualquier intento de invasión inmobiliaria o tecnológica nociva.",
+      contenido: "Con el Sol en Libra y la Luna en Aries, el equilibrio y la iniciativa se dieron la mano en Loma Verde. La feria albergó a 50 emprendedores y la participación de jóvenes que presentaron proyectos de reciclaje de plásticos y compostaje barrial.\n\nEl fuego sagrado se encendió al caer la tarde, marcando el compromiso de proteger nuestro territorio ante cualquier intento de invasión inmobiliaria o tecnológica nociva.",
+      img: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Cientos de vecinos disfrutando de la feria de artesanos durante la Luna en Aries.",
+      lunaId: "luna-aries-2026",
+      lunaNombre: "Luna Llena en Aries ♈",
+      seccion: "comunidad",
+      seccionEtiqueta: "Comunidad & Vecinal",
+      autor: "Redacción Loma Verde",
+      fecha: "2026-10-04",
+      fechaTexto: "4 de Octubre de 2026",
+      destacada: true,
+      tiempoLectura: "3 min",
+      vistas: 320,
+      etiquetas: ["#LunaEnAries", "#Primavera", "#FuegoCreador", "#Feria"]
+    },
+    {
+      id: "noticia-aries-2",
+      titulo: "Hito astronómico: Plutón arrancó directo en Acuario y marca el despertar de la red humana horizontal",
+      volanta: "CLIMA CÓSMICO & CIELO",
+      copete: "Tras cinco meses de retrogradación, el planeta de la alquimia profunda inicia su tránsito directo acelerando la caída de estructuras piramidales y el auge de las redes locales.",
+      bajada: "Tras cinco meses de retrogradación, el planeta de la alquimia profunda inicia su tránsito directo acelerando la caída de estructuras piramidales y el auge de las redes locales.",
+      texto: "Para la cosmovisión astrológica, la estación directa de Plutón a 3 grados de Acuario simboliza la emancipación ciudadana. En Loma Verde, este clima se siente en el fortalecimiento de la asamblea y la articulación vecinal independiente de cualquier partido político.",
+      contenido: "Para la cosmovisión astrológica, la estación directa de Plutón a 3 grados de Acuario simboliza la emancipación ciudadana. En Loma Verde, este clima se siente en el fortalecimiento de la asamblea y la articulación vecinal independiente de cualquier partido político.",
+      img: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Bóveda celeste despejada en una noche de plenilunio en Loma Verde.",
+      lunaId: "luna-aries-2026",
+      lunaNombre: "Luna Llena en Aries ♈",
+      seccion: "astrologia",
+      seccionEtiqueta: "Astros & Sincronía",
+      autor: "Mirada Astrológica 13:20",
+      fecha: "2026-10-02",
+      fechaTexto: "2 de Octubre de 2026",
+      destacada: false,
+      tiempoLectura: "3 min",
+      vistas: 180,
+      etiquetas: ["#PlutonEnAcuario", "#Astrologia", "#Cosmos", "#Transicion"]
+    },
+    {
+      id: "noticia-piscis-1",
+      titulo: "El abrazo del agua viva: Poesía, cantos de sanación y medicina natural en la Luna Llena en Piscis",
+      volanta: "MEMORIA LUNAR • PISCIS ♓",
+      copete: "Una jornada de profunda sensibilidad comunitaria donde la música del corazón y los saberes medicinales de las plantas fueron protagonistas.",
+      bajada: "Una jornada de profunda sensibilidad comunitaria donde la música del corazón y los saberes medicinales de las plantas fueron protagonistas.",
+      texto: "La Luna en Piscis llenó la plaza de flores, aceites esenciales y cantos compartidos. Se brindaron talleres de botiquín natural de invierno y círculos de palabra para tejer lazos afectivos entre familias recién mudadas al barrio.",
+      contenido: "La Luna en Piscis llenó la plaza de flores, aceites esenciales y cantos compartidos. Se brindaron talleres de botiquín natural de invierno y círculos de palabra para tejer lazos afectivos entre familias recién mudadas al barrio.",
+      img: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Ronda de sahumado y música medicinal en la apertura del encuentro de Piscis.",
+      lunaId: "luna-piscis-2026",
+      lunaNombre: "Luna Llena en Piscis ♓",
+      seccion: "cultura",
+      seccionEtiqueta: "Cultura & Música",
+      autor: "Redacción Loma Verde",
+      fecha: "2026-09-06",
+      fechaTexto: "6 de Septiembre de 2026",
+      destacada: true,
+      tiempoLectura: "3 min",
+      vistas: 240,
+      etiquetas: ["#LunaEnPiscis", "#MedicinaNatural", "#Poesia", "#Sanacion"]
+    },
+    {
+      id: "noticia-acuario-1",
+      titulo: "Nace la Red Fraterna 13:20: Loma Verde inaugura su primer sistema de autogestión comunitaria",
+      volanta: "MEMORIA LUNAR • ACUARIO ♒",
+      copete: "En el signo de la vanguardia social, los vecinos dieron inicio formal al mapa de emprendedores, el mercado sin dinero fiat y la cartelera digital libre.",
+      bajada: "En el signo de la vanguardia social, los vecinos dieron inicio formal al mapa de emprendedores, el mercado sin dinero fiat y la cartelera digital libre.",
+      texto: "La Luna en Acuario marcó el puntapié fundacional de este sistema que hoy conecta a feriantes, artistas y asambleístas. Un modelo horizontal que inspira a barrios vecinos de Escobar, Pilar y Campana.",
+      contenido: "La Luna en Acuario marcó el puntapié fundacional de este sistema que hoy conecta a feriantes, artistas y asambleístas. Un modelo horizontal que inspira a barrios vecinos de Escobar, Pilar y Campana.",
+      img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: "Vecinos fundadores de la red celebrando la inauguración del espacio comunitario.",
+      lunaId: "luna-acuario-2026",
+      lunaNombre: "Luna Llena en Acuario ♒",
+      seccion: "comunidad",
+      seccionEtiqueta: "Comunidad & Vecinal",
+      autor: "Redacción Loma Verde",
+      fecha: "2026-08-09",
+      fechaTexto: "9 de Agosto de 2026",
+      destacada: true,
+      tiempoLectura: "4 min",
+      vistas: 390,
+      etiquetas: ["#LunaEnAcuario", "#RedesLibres", "#InnovacionSocial", "#LomaVerde"]
     }
   ],
   publicacionesMuro: [
@@ -474,6 +690,10 @@ class Database {
         if (!this.data.publicacionesMuro || this.data.publicacionesMuro.length === 0) {
           this.data.publicacionesMuro = JSON.parse(JSON.stringify(SEED_DATA.publicacionesMuro || []));
         }
+        if (!this.data.noticias || this.data.noticias.length <= 2 || !this.data.noticias.some(n => n.id === 'noticia-tauro-1')) {
+          this.data.noticias = JSON.parse(JSON.stringify(SEED_DATA.noticias || []));
+          this.save();
+        }
       } else {
         this.data = JSON.parse(JSON.stringify(SEED_DATA));
       }
@@ -573,16 +793,65 @@ class Database {
   }
 
   // ==========================================
-  // 2. NOTICIAS
+  // 2. NOTICIAS Y EL DIARIO LUNAR
   // ==========================================
-  async getNoticias() {
+  async getNoticias(filtro = {}) {
+    let list = [];
     if (firebase.isFirebaseEnabled()) {
       const fdb = firebase.getDb();
       const snap = await fdb.collection('noticias').get();
-      const list = snap.docs.map(d => d.data());
-      return list.sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+      list = snap.docs.map(d => d.data());
+      if (list.length <= 2 || !list.some(n => n.id === 'noticia-tauro-1')) {
+        for (const noti of SEED_DATA.noticias) {
+          if (!list.some(n => n.id === noti.id)) {
+            try {
+              await fdb.collection('noticias').doc(noti.id).set(noti);
+              list.push(noti);
+            } catch (e) {
+              // Si falla Firestore, agregamos en memoria
+              list.push(noti);
+            }
+          }
+        }
+      }
+    } else {
+      list = [...(this.data.noticias || [])];
     }
-    return this.data.noticias || [];
+
+    // Filtros opcionales
+    if (filtro.lunaId && filtro.lunaId !== 'todas') {
+      list = list.filter(n => n.lunaId === filtro.lunaId);
+    }
+    if (filtro.seccion && filtro.seccion !== 'todas') {
+      list = list.filter(n => (n.seccion || '').toLowerCase() === filtro.seccion.toLowerCase());
+    }
+    if (filtro.search) {
+      const q = filtro.search.toLowerCase().trim();
+      list = list.filter(n => 
+        (n.titulo || '').toLowerCase().includes(q) ||
+        (n.copete || '').toLowerCase().includes(q) ||
+        (n.bajada || '').toLowerCase().includes(q) ||
+        (n.texto || '').toLowerCase().includes(q) ||
+        (n.autor || '').toLowerCase().includes(q) ||
+        (Array.isArray(n.etiquetas) && n.etiquetas.some(t => t.toLowerCase().includes(q)))
+      );
+    }
+
+    return list.sort((a, b) => {
+      // Destacadas primero si están en la misma luna o sin filtro, luego por fecha descendente
+      if (b.destacada && !a.destacada) return 1;
+      if (a.destacada && !b.destacada) return -1;
+      return (b.fecha || '').localeCompare(a.fecha || '');
+    });
+  }
+
+  async getNoticiaById(id) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const doc = await fdb.collection('noticias').doc(id).get();
+      return doc.exists ? doc.data() : null;
+    }
+    return (this.data.noticias || []).find(n => n.id === id) || null;
   }
 
   async addNoticia(noticia) {
@@ -590,9 +859,25 @@ class Database {
     const newNoticia = {
       id,
       titulo: noticia.titulo || "",
-      texto: noticia.texto || "",
-      img: noticia.img || "",
-      fecha: new Date().toISOString().split('T')[0]
+      volanta: noticia.volanta || "NOTICIA DEL ENCUENTRO",
+      copete: noticia.copete || noticia.bajada || "",
+      bajada: noticia.bajada || noticia.copete || "",
+      texto: noticia.texto || noticia.contenido || "",
+      contenido: noticia.contenido || noticia.texto || "",
+      img: noticia.img || noticia.imagenUrl || "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      imagenUrl: noticia.imagenUrl || noticia.img || "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      epigrafe: noticia.epigrafe || "",
+      lunaId: noticia.lunaId || "luna-tauro-2026",
+      lunaNombre: noticia.lunaNombre || "Luna Llena en Tauro ♉",
+      seccion: (noticia.seccion || "comunidad").toLowerCase(),
+      seccionEtiqueta: noticia.seccionEtiqueta || "Comunidad & Vecinal",
+      autor: noticia.autor || "Redacción Loma Verde",
+      fecha: noticia.fecha || new Date().toISOString().split('T')[0],
+      fechaTexto: noticia.fechaTexto || "Octubre de 2026",
+      destacada: Boolean(noticia.destacada),
+      tiempoLectura: noticia.tiempoLectura || "3 min",
+      vistas: 1,
+      etiquetas: Array.isArray(noticia.etiquetas) ? noticia.etiquetas : ["#LomaVerde", "#DiarioLunar"]
     };
     if (firebase.isFirebaseEnabled()) {
       const fdb = firebase.getDb();
@@ -602,6 +887,41 @@ class Database {
     this.data.noticias.unshift(newNoticia);
     this.save();
     return newNoticia;
+  }
+
+  async updateNoticia(id, noticia) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      await fdb.collection('noticias').doc(id).set(noticia, { merge: true });
+      return noticia;
+    }
+    const idx = (this.data.noticias || []).findIndex(n => n.id === id);
+    if (idx >= 0) {
+      this.data.noticias[idx] = { ...this.data.noticias[idx], ...noticia };
+      this.save();
+      return this.data.noticias[idx];
+    }
+    return null;
+  }
+
+  async incrementarVistasNoticia(id) {
+    if (firebase.isFirebaseEnabled()) {
+      const fdb = firebase.getDb();
+      const doc = await fdb.collection('noticias').doc(id).get();
+      if (doc.exists) {
+        const cur = doc.data().vistas || 1;
+        await fdb.collection('noticias').doc(id).update({ vistas: cur + 1 });
+        return cur + 1;
+      }
+      return 1;
+    }
+    const item = (this.data.noticias || []).find(n => n.id === id);
+    if (item) {
+      item.vistas = (item.vistas || 0) + 1;
+      this.save();
+      return item.vistas;
+    }
+    return 1;
   }
 
   async deleteNoticia(id) {
