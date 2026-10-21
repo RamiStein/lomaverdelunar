@@ -78,7 +78,7 @@ export default function AntenaAlertaView({ config, onBackToHome }) {
   const handleShare = async () => {
     const shareData = {
       title: 'Alerta Vecinal Loma Verde: No a la Antena 5G de Telmex',
-      text: 'Exigimos la suspensión de la antena de microondas y pedimos conectividad limpia por FIBRA ÓPTICA. Cuidemos la salud de nuestras familias y el entorno natural de Loma Verde.',
+      text: 'Exigimos la suspensión de la antena de Telmex en Loma Verde y su reubicación fuera de zonas residenciales. Cuidemos la salud de nuestras familias y el entorno natural de Loma Verde.',
       url: urlPagina
     };
 
@@ -128,7 +128,7 @@ export default function AntenaAlertaView({ config, onBackToHome }) {
       `📍 *Ubicación / Barrio:* ${formData.barrio || 'Loma Verde'} (Calle: ${formData.calle || 'S/D'})%0A` +
       `📞 *Teléfono:* ${formData.telefono}%0A` +
       (formData.motivo ? `💬 *Observaciones:* ${formData.motivo}%0A` : '') +
-      `%0A🌿 *Exigimos:* Aplicación del Principio Precautorio (Ley 25.675) y tendido de FIBRA ÓPTICA cableada. ¡Cero radiación innecesaria en Loma Verde!`;
+      `%0A🌿 *Exigimos:* Aplicación del Principio Precautorio (Ley 25.675) y REUBICACIÓN INMEDIATA fuera de zonas residenciales (+300m de viviendas y escuelas). ¡Cero radiación invasiva en los hogares de Loma Verde!`;
 
     window.open(`https://wa.me/${whatsappCoordinacion}?text=${mensajeWa}`, '_blank');
   };
@@ -147,17 +147,17 @@ De nuestra mayor consideración:
 Los vecinos, familias y miembros de la comunidad de Loma Verde, Partido de Escobar, nos dirigimos a Uds. con el fin de manifestar nuestra rotunda OPOSICIÓN a la instalación y puesta en funcionamiento de una torre transmisora de telecomunicaciones y microondas (tecnología 4G/5G) proyectada por la empresa TELMEX / CLARO en nuestra localidad, fundando nuestro reclamo en las siguientes consideraciones de hecho y de derecho:
 
 1. FALTA DE LICENCIA SOCIAL Y OMISIÓN DE CONSULTA PÚBLICA:
-La comunidad de Loma Verde no ha sido consultada de manera previa, libre e informada. La empresa pretende instalar una fuente de radiación electromagnética involuntaria y permanente bajo el pretexto comercial de brindar conectividad a sectores que no han solicitado dicha tecnología invasiva.
+La comunidad de Loma Verde no ha sido consultada de manera previa, libre e informada. La empresa pretende instalar una torre transmisora de radiación electromagnética involuntaria y permanente en medio de un sector residencial familiar, sin audiencia pública ni estudio de impacto ambiental previo.
 
-2. EXISTENCIA DE ALTERNATIVA TÉCNICA SUPERIOR Y NO CONTAMINANTE (FIBRA ÓPTICA):
-Es técnicamente innecesario e inaceptable someter a la población a radiación de microondas continuas las 24 horas del día, existiendo la tecnología de FIBRA ÓPTICA CABLEADA (FTTH), la cual es biológicamente 100% inocua, brinda anchos de banda simétricos de mayor velocidad y estabilidad, y no contamina el entorno natural ni la biósfera de Loma Verde.
+2. INCOMPATIBILIDAD CON ZONAS RESIDENCIALES Y EXIGENCIA DE REUBICACIÓN:
+El objetivo de reforzar la cobertura de señal celular o datos para la vía pública y corredores de tránsito no puede realizarse a costa de someter a las familias y viviendas linderas a una emisión de microondas continua las 24 horas del día sobre sus dormitorios. Si la empresa requiere ampliar cobertura móvil, debe emplazar su infraestructura en zonas industriales, predios no residenciales o corredores alejados, respetando distancias mínimas de amortiguación (al menos 300 a 500 metros de cualquier vivienda, escuela o centro de salud), conforme a las ordenanzas de radicación de antenas y al código de zonificación del Municipio de Escobar.
 
 3. EVIDENCIA CIENTÍFICA Y MÉDICA INTERNACIONAL:
 - La Organización Mundial de la Salud (OMS / IARC - Monografía 102) clasificó las radiaciones de radiofrecuencia en el Grupo 2B como posiblemente carcinogénicas para los seres humanos.
 - El estudio del Instituto Ramazzini (Italia, Belpoggi et al., Environmental Research 2018) sobre niveles de exposición equivalentes a antenas de telefonía demostró incremento estadísticamente significativo de schwannomas malignos del corazón.
 - El National Toxicology Program (NTP) de EE.UU. concluyó "clara evidencia" (clear evidence) de carcinogénesis y roturas de cadenas de ADN en exposición a radiofrecuencias celulares.
 - Las investigaciones clínicas del Dr. Lennart Hardell (Instituto de Medicina Ambiental y Oncología de Suecia) y múltiples estudios biomédicos documentan el "Síndrome por Microondas", cefaleas severas, estrés oxidativo celular, alteraciones del sueño y daños neurológicos acumulativos.
-- La Resolución 1815 de la Asamblea Parlamentaria del Consejo de Europa insta a los Estados a aplicar el principio ALARA y a priorizar expresamente el cableado sobre la transmisión inalámbrica.
+- La Resolución 1815 de la Asamblea Parlamentaria del Consejo de Europa insta a los Estados a aplicar el principio ALARA y a proteger de forma prioritaria las zonas residenciales y escolares.
 
 4. FUNDAMENTO LEGAL NACIONAL (PRINCIPIO PRECAUTORIO):
 Conforme al Artículo 4 de la Ley General del Ambiente N° 25.675: "Cuando haya peligro de daño grave o irreversible, la ausencia de información o certeza científica no deberá utilizarse como razón para postergar la adopción de medidas eficaces... para impedir la degradación del medio ambiente".
@@ -166,7 +166,7 @@ Asimismo, nos ampara el Artículo 41 de la Constitución Nacional (derecho a un 
 POR LO EXPUESTO, SOLICITAMOS:
 1. La SUSPENSIÓN PRECAUTORIA INMEDIATA de cualquier obra, excavación, montaje, trámite de factibilidad o habilitación para la instalación de la mencionada antena de Telmex en Loma Verde.
 2. La convocatoria urgente a una AUDIENCIA PÚBLICA VECINAL vinculante en Loma Verde.
-3. La intimación a la empresa prestataria para que brinde el servicio demandado pura y exclusivamente mediante TENDIDO DE FIBRA ÓPTICA CABLEADA / SUBTERRÁNEA.
+3. La intimación a la empresa prestataria para que REUBIQUE OBLIGATORIAMENTE cualquier proyecto de transmisión fuera del ejido residencial de Loma Verde, respetando retiros de seguridad preventivos y el poder de policía urbanístico del Municipio de Escobar.
 
 Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
 
@@ -243,8 +243,8 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
 
   const faqs = [
     {
-      q: '¿Por qué nos oponemos a la antena si Telmex dice que es para "dar internet"?',
-      a: 'Porque existe una solución mil veces mejor, más rápida, estable y 100% libre de radiación: la FIBRA ÓPTICA. Telmex busca el camino de menor costo corporativo para su red celular, a expensas de imponer un foco de microondas electromagnéticas las 24 horas sobre nuestras cabezas, sin que los vecinos hayamos pedido dicha antena.'
+      q: '¿Por qué nos oponemos si Telmex argumenta que la antena es para mejorar la señal celular en la vía pública?',
+      a: 'Porque no se puede mejorar la señal de paso en la vía pública a costa de instalar una mega-torre de microondas en el corazón de un barrio residencial, exponiendo a familias, niños y viviendas a radiación involuntaria continua 24/7. Exigimos que la empresa reubique su infraestructura en zonas no residenciales, predios industriales o corredores viales aislados respetando distancias mínimas de amortiguación (+300m a 500m de viviendas y escuelas).'
     },
     {
       q: '¿Qué es el Principio Precautorio consagrado en la Ley Nacional 25.675?',
@@ -316,7 +316,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
           </h1>
 
           <p className="text-stone-300 text-base sm:text-xl max-w-3xl mx-auto font-light leading-relaxed">
-            La empresa pretende imponer una torre transmisora de microondas de alta radiación para un servicio que el barrio <strong className="text-white font-bold">no solicitó</strong>. Exigimos la aplicación inmediata del <span className="text-amber-300 font-semibold">Principio Precautorio (Ley 25.675)</span> y la alternativa limpia, segura y superior: <strong className="text-emerald-400 font-bold">FIBRA ÓPTICA CABLEADA</strong>.
+            La empresa pretende imponer una torre transmisora de microondas de alta potencia en un área residencial para reforzar señal en la vía pública. Exigimos la aplicación inmediata del <span className="text-amber-300 font-semibold">Principio Precautorio (Ley 25.675)</span> y su <strong className="text-emerald-400 font-bold">REUBICACIÓN OBLIGATORIA FUERA DEL BARRIO</strong> a distancias seguras de las familias.
           </p>
 
           {/* Métricas / Badges Clave */}
@@ -330,7 +330,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
             <div className="bg-stone-800/90 border border-stone-700/80 p-3.5 rounded-xl backdrop-blur-xs">
               <div className="text-2xl sm:text-3xl font-black text-amber-400">24 / 7</div>
               <div className="text-xs text-stone-300 font-medium">Radiación Involuntaria</div>
-              <div className="text-[11px] text-stone-400">Exposición crónica acumulativa</div>
+              <div className="text-[11px] text-stone-400">Exposición crónica sobre casas</div>
             </div>
 
             <div className="bg-stone-800/90 border border-stone-700/80 p-3.5 rounded-xl backdrop-blur-xs">
@@ -340,9 +340,9 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
             </div>
 
             <div className="bg-stone-800/90 border border-stone-700/80 p-3.5 rounded-xl backdrop-blur-xs">
-              <div className="text-2xl sm:text-3xl font-black text-emerald-400">100%</div>
-              <div className="text-xs text-stone-300 font-medium">Fibra Óptica Limpia</div>
-              <div className="text-[11px] text-stone-400">CERO radiación en el aire</div>
+              <div className="text-2xl sm:text-3xl font-black text-emerald-400">+300 m</div>
+              <div className="text-xs text-stone-300 font-medium">Distancia Precautoria</div>
+              <div className="text-[11px] text-stone-400">Reubicación fuera de viviendas</div>
             </div>
           </div>
 
@@ -381,7 +381,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
           <span className="text-stone-400 uppercase tracking-widest text-[10px]">Ir a:</span>
           <a href="#problematica" className="hover:text-red-600 transition-colors">La Problemática</a>
           <span className="text-stone-300">•</span>
-          <a href="#fibra-optica" className="hover:text-emerald-600 transition-colors">Solución: Fibra Óptica</a>
+          <a href="#zonificacion" className="hover:text-emerald-600 transition-colors">Zonificación y Reubicación</a>
           <span className="text-stone-300">•</span>
           <a href="#estudios" className="hover:text-blue-600 transition-colors">Evidencia Científica</a>
           <span className="text-stone-300">•</span>
@@ -422,7 +422,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
                 El argumento corporativo vs. La realidad vecinal
               </h4>
               <p className="text-xs sm:text-sm text-red-800 leading-relaxed">
-                La compañía argumenta que la torre tiene por objeto <em>"llevar internet a un sector de Loma Verde"</em>. Sin embargo, <strong>la comunidad de vecinos de Loma Verde nunca solicitó esta antena ni fue convocada a una audiencia pública</strong>. Se intenta imponer una fuente permanente de electropolución en un entorno semirrural, de quintas familiares y colegios, desconociendo el derecho básico a la salud y a la tranquilidad ambiental.
+                La compañía argumenta que la torre busca reforzar la señal y cobertura celular en la vía pública y arterias de tránsito. Sin embargo, <strong>la comunidad de vecinos de Loma Verde nunca fue convocada a una audiencia pública ni prestó conformidad</strong>. No se puede pretender mejorar la señal móvil de paso sacrificando la salud de las familias linderas, imponiendo una mega-torre de microondas en medio de un barrio residencial de quintas y colegios, desconociendo el derecho a la salud y las distancias precautorias mínimas.
               </p>
             </div>
 
@@ -460,61 +460,61 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
           </div>
         </section>
 
-        {/* 5. SECCIÓN: La Alternativa Limpia (Fibra Óptica vs. Microondas) */}
-        <section id="fibra-optica" className="bg-gradient-to-br from-emerald-950 via-stone-900 to-emerald-900 text-white p-6 sm:p-10 rounded-2xl shadow-xl space-y-6">
+        {/* 5. SECCIÓN: Zonificación y Reubicación Fuera de Áreas Residenciales */}
+        <section id="zonificacion" className="bg-gradient-to-br from-emerald-950 via-stone-900 to-emerald-900 text-white p-6 sm:p-10 rounded-2xl shadow-xl space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-emerald-800/60 pb-5">
             <div>
               <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-400 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4" /> La Solución Racional y Moderna
+                <Sparkles className="w-4 h-4" /> Protección Urbanística y Salud Colectiva
               </span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-1 text-white">
-                FIBRA ÓPTICA: Conectividad Gigabits Sin Radiación
+                ZONIFICACIÓN: La Señal en la Calle No Puede Invadir los Hogares
               </h2>
             </div>
             <div className="bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-xs px-3.5 py-1.5 rounded-full font-bold self-start md:self-auto">
-              Tecnología Inocua para la Salud
+              Reubicación con Retiro (+300m / +500m)
             </div>
           </div>
 
           <p className="text-stone-300 text-sm sm:text-base leading-relaxed max-w-3xl">
-            La comunidad de Loma Verde <strong className="text-white">no se opone al progreso ni al acceso a internet de alta calidad</strong>. Lo que exigimos es que la conectividad se brinde mediante <strong>FIBRA ÓPTICA CABLEADA (FTTH)</strong>. La luz viaja por el núcleo del cable de vidrio: entrega velocidades insuperables, estabilidad ante tormentas y <strong className="text-emerald-300">CERO radiación electromagnética dispersada al aire</strong>.
+            La empresa Telmex argumenta que la instalación busca reforzar la señal celular para la vía pública y el tránsito en la zona. Pero <strong className="text-white">es técnica y legalmente inadmisible clavar una mega-torre de microondas en el corazón de un barrio residencial para resolver la señal de paso</strong>. Si la compañía necesita ampliar su red móvil, debe emplazar su infraestructura en <strong className="text-emerald-300">zonas industriales, predios no residenciales o márgenes de autopista despoblados</strong>, respetando una distancia mínima de amortiguación de al menos 300 a 500 metros de cualquier vivienda o escuela, tal como lo exige el Principio Precautorio (Ley 25.675).
           </p>
 
-          {/* Tabla Comparativa Contundente */}
+          {/* Tabla Comparativa de Emplazamiento */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm border-collapse">
               <thead>
                 <tr className="border-b border-stone-700 text-stone-400 uppercase tracking-wider text-[11px]">
-                  <th className="py-3 px-3">Característica</th>
-                  <th className="py-3 px-3 text-red-400 bg-red-950/40 rounded-tl-lg">Antena 5G / Microondas Aéreas</th>
-                  <th className="py-3 px-3 text-emerald-300 bg-emerald-950/60 rounded-tr-lg">Fibra Óptica Cableada (FTTH)</th>
+                  <th className="py-3 px-3">Criterio Urbanístico y Sanitario</th>
+                  <th className="py-3 px-3 text-red-400 bg-red-950/40 rounded-tl-lg">Mega-Torre en Barrio Residencial (Proyecto Telmex)</th>
+                  <th className="py-3 px-3 text-emerald-300 bg-emerald-950/60 rounded-tr-lg">Emplazamiento Regulado Fuera del Barrio (Exigencia Vecinal)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-800">
                 <tr>
-                  <td className="py-3 px-3 font-semibold text-stone-200">Radiación Electromagnética</td>
-                  <td className="py-3 px-3 text-red-300 bg-red-950/20">Constante e involuntaria 24/7 sobre viviendas y escuelas</td>
-                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">CERO radiación (los pulsos de luz viajan dentro del cable)</td>
+                  <td className="py-3 px-3 font-semibold text-stone-200">Proximidad a Casas y Familias</td>
+                  <td className="py-3 px-3 text-red-300 bg-red-950/20">A escasos metros de dormitorios, jardines familiares y colegios</td>
+                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Ubicada en zonas no habitadas o industriales (+300m a 500m de retiro)</td>
                 </tr>
                 <tr>
-                  <td className="py-3 px-3 font-semibold text-stone-200">Velocidad y Simetría</td>
-                  <td className="py-3 px-3 text-stone-300 bg-red-950/20">Variable, comparte ancho de banda con saturación en horas pico</td>
-                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Ultra-alta velocidad simétrica (100 a 1.000+ Mbps garantizados)</td>
+                  <td className="py-3 px-3 font-semibold text-stone-200">Exposición de Niños y Residentes</td>
+                  <td className="py-3 px-3 text-red-300 bg-red-950/20">Radiación continua e involuntaria 24 horas al día, los 365 días del año</td>
+                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Cero radiación directa e innecesaria sobre los dormitorios familiares</td>
                 </tr>
                 <tr>
-                  <td className="py-3 px-3 font-semibold text-stone-200">Resistencia Climatológica</td>
-                  <td className="py-3 px-3 text-stone-300 bg-red-950/20">Se degrada fuertemente con lluvias torrenciales y niebla</td>
-                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Inmune a interferencias electromagnéticas y climáticas</td>
+                  <td className="py-3 px-3 font-semibold text-stone-200">Cobertura en la Vía Pública</td>
+                  <td className="py-3 px-3 text-stone-300 bg-red-950/20">Emisión masiva orientada sobre un vecindario que no la solicitó</td>
+                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Cobertura vial y vehicular garantizada sin invadir la intimidad barrial</td>
                 </tr>
                 <tr>
-                  <td className="py-3 px-3 font-semibold text-stone-200">Impacto Paisajístico y Valor Inmobiliario</td>
-                  <td className="py-3 px-3 text-red-300 bg-red-950/20">Torre metálica de 30-50m que deteriora el paisaje y devalúa los lotes</td>
-                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Tendido limpio, soterrado o en postes existentes sin impacto visual</td>
+                  <td className="py-3 px-3 font-semibold text-stone-200">Impacto en el Entorno y Valor Inmobiliario</td>
+                  <td className="py-3 px-3 text-red-300 bg-red-950/20">Torre de 30-50m que deteriora el paisaje natural y devalúa los lotes</td>
+                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Preservación total del paisaje verde, la tranquilidad y el valor vecinal</td>
                 </tr>
                 <tr>
-                  <td className="py-3 px-3 font-semibold text-stone-200">Riesgo Sanitario y Biológico</td>
-                  <td className="py-3 px-3 text-red-300 bg-red-950/20">Clasificado 2B OMS / NTP evidencia tumoral y daño genotóxico</td>
-                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Totalmente inocua y biológicamente neutra para humanos y fauna</td>
+                  <td className="py-3 px-3 font-semibold text-stone-200">Conectividad en los Hogares</td>
+                  <td className="py-3 px-3 text-stone-300 bg-red-950/20">Totalmente redundante (los vecinos ya tienen internet por cable/fibra)</td>
+                  <td className="py-3 px-3 text-emerald-300 font-bold bg-emerald-950/30">Los hogares mantienen su conexión por cable segura y sin microondas aéreas</td>
                 </tr>
               </tbody>
             </table>
@@ -522,13 +522,13 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
 
           <div className="bg-emerald-900/40 border border-emerald-500/40 p-4 rounded-xl text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
             <span className="text-emerald-100">
-              ¿Por qué Telmex no tira fibra óptica? Porque busca amortizar antenas inalámbricas a bajo costo, sacrificando la salud de Loma Verde.
+              ¿Por qué Telmex insiste en el barrio? Para ahorrarse los costos de reubicación y alquiler en predios industriales o corredores alejados.
             </span>
             <a
               href="#adhesion"
               className="bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black px-4 py-2 rounded-lg whitespace-nowrap transition-all shadow"
             >
-              Exigir Fibra Óptica Ahora
+              Exigir Reubicación Inmediata
             </a>
           </div>
         </section>
@@ -816,7 +816,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
                   rows="2"
                   value={formData.motivo}
                   onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
-                  placeholder="Contanos tu preocupación (ej: tengo chicos chicos, vivimos a metros de la zona proyectada, exigimos fibra óptica)..."
+                  placeholder="Contanos tu preocupación (ej: tengo chicos chicos, vivimos a metros de la zona proyectada, exigimos reubicación fuera del barrio)..."
                   className="w-full bg-stone-900 border border-stone-700 rounded-xl px-3.5 py-2.5 text-white placeholder-stone-500 focus:outline-hidden focus:border-red-500 resize-none"
                 />
               </div>
@@ -830,7 +830,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
                   className="mt-1 w-4 h-4 rounded text-red-600 focus:ring-red-500 bg-stone-900 border-stone-700"
                 />
                 <label htmlFor="esVecinoCheck" className="text-stone-300 text-xs leading-normal cursor-pointer">
-                  Confirmo mi adhesión formal como vecino/a de Loma Verde / Escobar en oposición a la antena 5G de Telmex y adhiero a la solicitud de suspensión precautoria y conectividad por fibra óptica.
+                  Confirmo mi adhesión formal como vecino/a de Loma Verde / Escobar en oposición a la antena 5G de Telmex y adhiero a la solicitud de suspensión precautoria y reubicación fuera de zonas residenciales.
                 </label>
               </div>
 
@@ -983,7 +983,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
             Vecinos Unidos por la Salud y el Ambiente de Loma Verde
           </h4>
           <p className="text-stone-400 text-xs leading-relaxed max-w-lg mx-auto">
-            Iniciativa ciudadana comunitaria sin fines de lucro. Exigimos soberanía ambiental, protección de nuestras infancias y conectividad sana mediante fibra óptica cableada.
+            Iniciativa ciudadana comunitaria sin fines de lucro. Exigimos soberanía ambiental, protección de nuestras infancias y la reubicación obligatoria de torres de telecomunicaciones fuera de zonas residenciales.
           </p>
           <div className="pt-4 border-t border-stone-800 flex flex-wrap items-center justify-center gap-4 text-xs text-stone-400">
             <span>Enlace permanente: <strong className="text-stone-200">lomaverdelunar.online/noalaantena</strong></span>
