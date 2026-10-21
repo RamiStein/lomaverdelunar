@@ -156,7 +156,7 @@ Es técnicamente innecesario e inaceptable someter a la población a radiación 
 - La Organización Mundial de la Salud (OMS / IARC - Monografía 102) clasificó las radiaciones de radiofrecuencia en el Grupo 2B como posiblemente carcinogénicas para los seres humanos.
 - El estudio del Instituto Ramazzini (Italia, Belpoggi et al., Environmental Research 2018) sobre niveles de exposición equivalentes a antenas de telefonía demostró incremento estadísticamente significativo de schwannomas malignos del corazón.
 - El National Toxicology Program (NTP) de EE.UU. concluyó "clara evidencia" (clear evidence) de carcinogénesis y roturas de cadenas de ADN en exposición a radiofrecuencias celulares.
-- El BioInitiative Report (más de 3.800 estudios revisados por pares) y las investigaciones clínicas del Dr. Lennart Hardell documentan el "Síndrome por Microondas", cefaleas severas, estrés oxidativo, disrupción del sueño y daños neurológicos acumulativos.
+- Las investigaciones clínicas del Dr. Lennart Hardell (Instituto de Medicina Ambiental y Oncología de Suecia) y múltiples estudios biomédicos documentan el "Síndrome por Microondas", cefaleas severas, estrés oxidativo celular, alteraciones del sueño y daños neurológicos acumulativos.
 - La Resolución 1815 de la Asamblea Parlamentaria del Consejo de Europa insta a los Estados a aplicar el principio ALARA y a priorizar expresamente el cableado sobre la transmisión inalámbrica.
 
 4. FUNDAMENTO LEGAL NACIONAL (PRINCIPIO PRECAUTORIO):
@@ -224,12 +224,12 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
       impacto: 'Los síntomas desaparecieron o se redujeron drásticamente cuando los residentes se mudaron a zonas libres de radiación de antenas 5G, demostrando la causalidad clínica directa.'
     },
     {
-      institucion: 'BioInitiative Working Group (Metaestudio Internacional)',
-      publicacion: 'BioInitiative Report (Edición 2012 con actualizaciones anuales)',
-      titulo: 'A Rationale for Biologically-based Public Exposure Standards for Electromagnetic Fields',
-      autores: '29 científicos médicos, biólogos celulares y doctores en salud pública de 10 países',
-      hallazgo: 'Análisis de más de 3.800 investigaciones biomédicas revisadas por pares. Demostró que los efectos no térmicos ocurren a niveles cientos y miles de veces inferiores a los límites legales: permeabilización de la barrera hematoencefálica cerebral, estrés oxidativo mitocondrial masivo, daño en el ADN y alteración del sistema inmune.',
-      impacto: 'Desmonta el argumento falaz de las telefónicas de que "si la radiación no calienta los tejidos corporales, no hay peligro".'
+      institucion: 'American Academy of Pediatrics (AAP - Academia Estadounidense de Pediatría)',
+      publicacion: 'Posicionamiento Oficial y Recomendaciones Técnicas a la FCC y FDA de EE.UU.',
+      titulo: 'Pediatric Vulnerability to Radiofrequency Radiation and Need for Protective Exposure Limits',
+      autores: 'Comité de Salud Ambiental de la Academia Estadounidense de Pediatría',
+      hallazgo: 'Advierte formalmente que los límites actuales de emisión no protegen a las infancias: los niños absorben de manera desproporcionada hasta el doble de radiación en el tejido cerebral y hasta diez veces más en la médula ósea del cráneo en comparación con adultos, debido a su estructura craneal en desarrollo y mayor hidratación tisular.',
+      impacto: 'Respalda la exigencia vecinal de proteger especialmente a las escuelas, jardines y zonas residenciales de Loma Verde frente a fuentes de radiación involuntarias.'
     },
     {
       institucion: 'Consejo de Europa - Asamblea Parlamentaria',
@@ -334,9 +334,9 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
             </div>
 
             <div className="bg-stone-800/90 border border-stone-700/80 p-3.5 rounded-xl backdrop-blur-xs">
-              <div className="text-2xl sm:text-3xl font-black text-blue-400">+3.800</div>
-              <div className="text-xs text-stone-300 font-medium">Estudios Médicos</div>
-              <div className="text-[11px] text-stone-400">Efectos biológicos demostrados</div>
+              <div className="text-2xl sm:text-3xl font-black text-blue-400">Grupo 2B</div>
+              <div className="text-xs text-stone-300 font-medium">Clasificación OMS / IARC</div>
+              <div className="text-[11px] text-stone-400">Posible carcinógeno para humanos</div>
             </div>
 
             <div className="bg-stone-800/90 border border-stone-700/80 p-3.5 rounded-xl backdrop-blur-xs">
@@ -653,7 +653,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
               </div>
             </div>
             <p className="text-[11px] text-stone-500 italic text-center pt-1">
-              Fuentes: Hardell & Nilsson (2023), BioInitiative Report (2020), Martin Pall (PhD, VGCC Activation).
+              Fuentes: Hardell & Nilsson (2023), American Academy of Pediatrics (AAP), Prof. Martin Pall (PhD, Activación de Canales de Calcio VGCC).
             </p>
           </div>
         </section>
