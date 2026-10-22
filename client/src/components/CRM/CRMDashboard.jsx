@@ -24,8 +24,10 @@ import {
   AlertTriangle,
   Newspaper,
   Star,
-  Eye
+  Eye,
+  Share2
 } from 'lucide-react';
+import PanelDifusionRedes from './PanelDifusionRedes';
 
 export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) {
   const [crmTab, setCrmTab] = useState('resumen'); // 'resumen', 'antena', 'feriantes', 'voluntarios', 'troqueles', 'votos', 'finanzas', 'config'
@@ -583,6 +585,15 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
           </button>
 
           <button
+            onClick={() => setCrmTab('difusion')}
+            className="bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow transition-all active:scale-95"
+            title="Centro de Difusión y Posteo a Redes"
+          >
+            <Share2 className="w-4 h-4" />
+            <span className="hidden sm:inline">📢 Difusión & Redes</span>
+          </button>
+
+          <button
             onClick={onLogout}
             className="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-3 py-2 rounded-xl text-xs font-bold uppercase flex items-center gap-1.5 transition-colors"
             title="Cerrar sesión Admin"
@@ -597,6 +608,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
       <div className="flex overflow-x-auto gap-2 pb-4 mb-6 no-scrollbar">
         {[
           { id: 'resumen', label: '📊 Resumen & KPIs' },
+          { id: 'difusion', label: '📢 Difusión & Redes', isPrimary: true },
           { id: 'muro', label: `🎨 Muro & Red (${data.publicacionesMuro?.length || 0})` },
           { id: 'antena', label: `🛡️ No a la Antena (${data.firmasAntena?.length || 0})`, isAlert: true },
           { id: 'mapa', label: `🗺️ Mapa Vecinal (${data.puntosMapa?.length || 0})` },
@@ -612,10 +624,10 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
             onClick={() => setCrmTab(tab.id)}
             className={`px-4 py-2.5 rounded-2xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all ${
               crmTab === tab.id
-                ? tab.isAlert ? 'bg-red-700 text-white shadow-md' : 'bg-loma-green text-white shadow-md'
+                ? tab.isAlert ? 'bg-red-700 text-white shadow-md' : tab.isPrimary ? 'bg-amber-600 text-white shadow-md' : 'bg-loma-green text-white shadow-md'
                 : tab.isAlert
                 ? 'bg-red-50 text-red-700 border border-red-300 hover:bg-red-100'
-                : 'bg-white text-loma-green border border-loma-wood/20 hover:bg-loma-bg'
+                : tab.isPrimary ? 'bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100' : 'bg-white text-loma-green border border-loma-wood/20 hover:bg-loma-bg'
             }`}
           >
             {tab.label}
@@ -741,6 +753,21 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
 
           </div>
         </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* PESTAÑA DIFUSIÓN Y POSTEO A REDES */}
+      {/* ========================================================= */}
+      {crmTab === 'difusion' && (
+        <PanelDifusionRedes
+          adminKey={adminKey}
+          config={data.config}
+          noticias={data.noticias}
+          onRefreshData={() => {
+            fetchAllData();
+            if (refreshGlobalData) refreshGlobalData();
+          }}
+        />
       )}
 
       {/* ========================================================= */}
