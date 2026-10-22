@@ -27,8 +27,7 @@ import {
 import { getEnergiaDelDia } from '../../utils/energiaCalc';
 
 export default function PanelDifusionRedes({ adminKey, config, noticias = [], onRefreshData }) {
-  // Preset seleccionado
-  // 'energia', 'noticia', 'feria', 'antena', 'libre'
+  // Preset seleccionado: 'energia', 'noticia', 'feria', 'antena', 'libre'
   const [tipoPreset, setTipoPreset] = useState('energia');
   const [noticiaSeleccionadaId, setNoticiaSeleccionadaId] = useState('');
   
@@ -39,7 +38,7 @@ export default function PanelDifusionRedes({ adminKey, config, noticias = [], on
     urlDestino: 'https://lomaverdelunar.online/energia',
     imagenUrl: '/loma-verde-callecita-opt.jpg',
     tags: '#LomaVerdeLunar, #EnergiaDelDia',
-    redOrigen: 'difusion_web',
+    redOrigen: 'energia',
     fijarEnMuro: false
   });
 
@@ -52,9 +51,16 @@ export default function PanelDifusionRedes({ adminKey, config, noticias = [], on
   // Canvas ref para exportación de placas para redes
   const canvasRef = useRef(null);
 
-  // Fecha actual y cálculo de energía
+  // Fecha actual y cálculo de energía seguro
   const hoy = useMemo(() => new Date(), []);
-  const energiaHoy = useMemo(() => getEnergiaDelDia(config, hoy), [config, hoy]);
+  const energiaHoy = useMemo(() => {
+    try {
+      return getEnergiaDelDia(config || {}, hoy);
+    } catch (err) {
+      console.error('Error calculando energía del día en PanelDifusion:', err);
+      return null;
+    }
+  }, [config, hoy]);
 
   // Si hay noticias, seleccionar la primera por defecto si no hay seleccionada
   useEffect(() => {
@@ -69,80 +75,107 @@ export default function PanelDifusionRedes({ adminKey, config, noticias = [], on
   // =========================================================================
 
   const aplicarPreset = (tipo, noticiaIdParam) => {
-    setTipoPreset(tipo);
-    setMuroPublicadoExito(false);
+    try {
+      setTipoPreset(tipo);
+      setMuroPublicadoExito(false);
 
-    if (tipo === 'energia') {
-      const e = energiaHoy;
-      const titulo = `✨ Energía del Día: ${e.kin.nombre} (${e.fechaSincronica})`;
-      const contenido = `✨ *ENERGÍA DEL DÍA • LOMA VERDE LUNAR* 🌙
-📅 ${e.fechaFormateada} • Sincronario 13:20
+      if (tipo === 'energia') {
+        const e = energiaHoy || {};
+        const maya = e.maya || {};
+        const sol = e.sol || {};
+        const luna = e.luna || {};
+        const fase = luna.fase || {};
+        const oraculo = maya.oraculo || {};
 
-☀️ *Sol:* ${e.sol.signo} ${e.sol.simbolo} (${e.sol.elemento})
-🌙 *Luna:* ${e.luna.faseNombre} en ${e.luna.signo} ${e.luna.simbolo} (${e.luna.iluminacion}% luz)
+        const kinNom = maya.kinNombre || 'Tierra Entonado Rojo';
+        const kinNum = maya.kinNumero || 57;
+        const solSigno = `${sol.signo || 'Libra'} ${sol.simbolo || '♎'}`.trim();
+        const lunaFase = `${fase.name || 'Gibosa Creciente'} en ${luna.signo || 'Piscis'} ${luna.simbolo || '♓'}`.trim();
+        const luz = fase.illumination != null ? `(${fase.illumination}% luz)` : '';
 
-🔮 *KIN MAYA:* Kin ${e.kin.numero} • *${e.kin.nombre}*
-🌊 *Onda Encantada:* ${e.kin.ondaEncantada?.nombre || 'Onda del Ciclo'}
-🏰 *Castillo:* ${e.kin.castillo?.nombre || 'Castillo Cósmico'}
+        const titulo = `✨ Energía del Día: Kin ${kinNum} ${kinNom} • ${e.fechaTexto || 'Hoy'}`;
+        const contenido = `✨ *ENERGÍA DEL DÍA • LOMA VERDE LUNAR* 🌙
+📅 ${e.fechaTexto || 'Hoy'} • Sincronario 13:20
+
+☀️ *Sol:* ${solSigno} (${sol.elemento || 'Aire Cardinal'})
+🌙 *Luna:* ${lunaFase} ${luz}
+
+🔮 *KIN MAYA:* Kin ${kinNum} • *${kinNom}*
+🌊 *Onda Encantada:* ${maya.ondaEncantada || 'Onda del Ciclo'}
+🏰 *Castillo:* ${maya.castillo?.nombre || 'Castillo Cósmico'}
 
 💫 *Quinta Fuerza:*
-• Guía: ${e.kin.quintaFuerza?.guia?.nombre || 'Guía Superior'}
-• Análogo: ${e.kin.quintaFuerza?.analogo?.nombre || 'Aliado'}
-• Antípoda: ${e.kin.quintaFuerza?.antipoda?.nombre || 'Desafío'}
-• Oculto: ${e.kin.quintaFuerza?.oculto?.nombre || 'Poder Oculto'}
+• Guía: ${oraculo.guia?.nombre || 'Guía Superior'}
+• Análogo: ${oraculo.analogo?.nombre || 'Aliado'}
+• Antípoda: ${oraculo.antipoda?.nombre || 'Desafío'}
+• Oculto: ${oraculo.oculto?.nombre || 'Poder Oculto'}
 
 🌿 *Reflexión del Día:*
-"${e.fraseDelDia || e.sol.lema}"
+"${sol.lema || 'Sintonía armónica con la tierra y el cosmos.'}"
 
 ✨ Conocé el informe sincrónico y astronómico completo en:
 🔗 https://lomaverdelunar.online/energia`;
 
-      setFormPost({
-        titulo,
-        contenido,
-        urlDestino: 'https://lomaverdelunar.online/energia',
-        imagenUrl: '/fondo-loma-verde.jpg',
-        tags: '#LomaVerdeLunar, #EnergiaDelDia, #KinMaya, #Astrologia, #LomaVerde',
-        redOrigen: 'energia',
-        fijarEnMuro: false
-      });
-    }
+        setFormPost({
+          titulo,
+          contenido,
+          urlDestino: 'https://lomaverdelunar.online/energia',
+          imagenUrl: '/fondo-loma-verde.jpg',
+          tags: '#LomaVerdeLunar, #EnergiaDelDia, #KinMaya, #Astrologia, #LomaVerde',
+          redOrigen: 'energia',
+          fijarEnMuro: false
+        });
+      }
 
-    else if (tipo === 'noticia') {
-      const targetId = noticiaIdParam || noticiaSeleccionadaId;
-      const n = noticias.find(x => x.id === targetId) || noticias[0];
-      if (n) {
-        const titulo = n.titulo;
-        const contenido = `📰 *EL DIARIO LUNAR • LOMA VERDE*
+      else if (tipo === 'noticia') {
+        const targetId = noticiaIdParam || noticiaSeleccionadaId;
+        const lista = Array.isArray(noticias) ? noticias : [];
+        const n = lista.length > 0
+          ? (lista.find(x => x.id === targetId) || lista[0])
+          : null;
+
+        if (n) {
+          const titulo = n.titulo || 'Noticia de El Diario Lunar';
+          const contenido = `📰 *EL DIARIO LUNAR • LOMA VERDE*
 ${n.volanta ? `📌 *${n.volanta.toUpperCase()}*\n` : ''}
 ✨ *${n.titulo}*
 
-${n.copete || n.bajada || n.texto?.slice(0, 200) + '...'}
+${n.copete || n.bajada || (n.texto ? n.texto.slice(0, 200) + '...' : '')}
 
 📖 Leé la crónica completa y las notas de cada luna en:
 🔗 https://lomaverdelunar.online/diario?nota=${n.id}`;
 
-        setFormPost({
-          titulo,
-          contenido,
-          urlDestino: `https://lomaverdelunar.online/diario?nota=${n.id}`,
-          imagenUrl: n.img || n.imagenUrl || '/loma-verde-callecita-opt.jpg',
-          tags: Array.isArray(n.etiquetas) ? n.etiquetas.join(', ') : '#ElDiarioLunar, #LomaVerde, #Comunidad',
-          redOrigen: 'noticia',
-          fijarEnMuro: false
-        });
+          setFormPost({
+            titulo,
+            contenido,
+            urlDestino: `https://lomaverdelunar.online/diario?nota=${n.id}`,
+            imagenUrl: n.img || n.imagenUrl || '/loma-verde-callecita-opt.jpg',
+            tags: Array.isArray(n.etiquetas) ? n.etiquetas.join(', ') : '#ElDiarioLunar, #LomaVerde, #Comunidad',
+            redOrigen: 'noticia',
+            fijarEnMuro: false
+          });
+        } else {
+          setFormPost({
+            titulo: '📰 El Diario Lunar: Crónicas y Voces de Nuestra Comunidad',
+            contenido: `📰 *EL DIARIO LUNAR • LOMA VERDE*\n\nConocé las últimas crónicas, entrevistas, agroecología y notas de cada ciclo lunar en:\n🔗 https://lomaverdelunar.online/diario`,
+            urlDestino: 'https://lomaverdelunar.online/diario',
+            imagenUrl: '/loma-verde-callecita-opt.jpg',
+            tags: '#ElDiarioLunar, #LomaVerde, #Comunidad',
+            redOrigen: 'noticia',
+            fijarEnMuro: false
+          });
+        }
       }
-    }
 
-    else if (tipo === 'feria') {
-      const lunaActiva = config?.lunaActiva || 'Luna Llena en Tauro';
-      const fechaFeria = config?.fecha || 'Domingo 8 de Noviembre de 2026';
-      const lugarFeria = config?.lugar || 'Plaza La Misión, Loma Verde';
-      const horarioFeria = config?.horario || 'De 13:00 a 19:00 hs';
-      const whatsApp = config?.whatsappCoordinacion || '11 4503-056';
+      else if (tipo === 'feria') {
+        const lunaActiva = config?.lunaActiva || 'Luna Llena en Tauro';
+        const fechaFeria = config?.fecha || 'Domingo 8 de Noviembre de 2026';
+        const lugarFeria = config?.lugar || 'Plaza La Misión, Loma Verde';
+        const horarioFeria = config?.horario || 'De 13:00 a 19:00 hs';
+        const whatsApp = config?.whatsappCoordinacion || '11 4503-056';
 
-      const titulo = `🎪 Convocatoria Abierta: Feria ${lunaActiva} en ${lugarFeria}`;
-      const contenido = `🎪 *¡CONVOCATORIA ABIERTA: FERIA ${lunaActiva.toUpperCase()}!* 🌕
+        const titulo = `🎪 Convocatoria Abierta: Feria ${lunaActiva} en ${lugarFeria}`;
+        const contenido = `🎪 *¡CONVOCATORIA ABIERTA: FERIA ${lunaActiva.toUpperCase()}!* 🌕
 📍 *Lugar:* ${lugarFeria}
 🗓️ *Fecha:* ${fechaFeria} • ${horarioFeria}
 
@@ -160,20 +193,20 @@ Invitamos a feriantes, artesanos, productores agroecológicos, huerteros, terape
 💬 Dudas y consultas directas al WhatsApp de Coordinación: ${whatsApp}
 ¡Vení a compartir tu labor con todo el barrio!`;
 
-      setFormPost({
-        titulo,
-        contenido,
-        urlDestino: 'https://lomaverdelunar.online/sumate',
-        imagenUrl: '/loma-verde-callecita-opt.jpg',
-        tags: '#FeriaLunar, #LomaVerde, #Artesanos, #Agroecologia, #Comunidad',
-        redOrigen: 'feria',
-        fijarEnMuro: true
-      });
-    }
+        setFormPost({
+          titulo,
+          contenido,
+          urlDestino: 'https://lomaverdelunar.online/sumate',
+          imagenUrl: '/loma-verde-callecita-opt.jpg',
+          tags: '#FeriaLunar, #LomaVerde, #Artesanos, #Agroecologia, #Comunidad',
+          redOrigen: 'feria',
+          fijarEnMuro: true
+        });
+      }
 
-    else if (tipo === 'antena') {
-      const titulo = '🛡️ Alerta Vecinal: No a la Antena de Telmex en Loma Verde';
-      const contenido = `🚨 *ALERTA VECINAL EN LOMA VERDE: FRENEMOS LA ANTENA DE TELMEX*
+      else if (tipo === 'antena') {
+        const titulo = '🛡️ Alerta Vecinal: No a la Antena de Telmex en Loma Verde';
+        const contenido = `🚨 *ALERTA VECINAL EN LOMA VERDE: FRENEMOS LA ANTENA DE TELMEX*
 Exigimos la aplicación urgente del Principio Precautorio (Ley 25.675) y la REUBICACIÓN INMEDIATA fuera de zonas residenciales (+300m a 500m de viviendas y escuelas).
 
 ❌ No a mega-torres de radiación continua 24/7 sobre las casas y dormitorios de nuestras familias.
@@ -184,39 +217,42 @@ Exigimos la aplicación urgente del Principio Precautorio (Ley 25.675) y la REUB
 
 ¡Defendamos la salud, el aire puro y la tranquilidad de Loma Verde!`;
 
-      setFormPost({
-        titulo,
-        contenido,
-        urlDestino: 'https://lomaverdelunar.online/noalaantena',
-        imagenUrl: '/loma-verde-callecita-opt.jpg',
-        tags: '#NoAlaAntena, #LomaVerde, #PrincipioPrecautorio, #SaludAmbiental',
-        redOrigen: 'antena',
-        fijarEnMuro: false
-      });
-    }
+        setFormPost({
+          titulo,
+          contenido,
+          urlDestino: 'https://lomaverdelunar.online/noalaantena',
+          imagenUrl: '/loma-verde-callecita-opt.jpg',
+          tags: '#NoAlaAntena, #LomaVerde, #PrincipioPrecautorio, #SaludAmbiental',
+          redOrigen: 'antena',
+          fijarEnMuro: false
+        });
+      }
 
-    else if (tipo === 'libre') {
-      setFormPost({
-        titulo: '🌟 Comunicado Comunitario de Loma Verde Lunar',
-        contenido: `🌿 *COMUNICADO COMUNITARIO • LOMA VERDE LUNAR* 🌙
+      else if (tipo === 'libre') {
+        setFormPost({
+          titulo: '🌟 Comunicado Comunitario de Loma Verde Lunar',
+          contenido: `🌿 *COMUNICADO COMUNITARIO • LOMA VERDE LUNAR* 🌙
 
 Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con los vecinos y redes del proyecto...
 
 ✨ Seguinos y enterate de todas las novedades en:
 🔗 https://lomaverdelunar.online`,
-        urlDestino: 'https://lomaverdelunar.online',
-        imagenUrl: '/loma-verde-callecita-opt.jpg',
-        tags: '#LomaVerde, #Comunidad, #ArteLocal',
-        redOrigen: 'comunidad',
-        fijarEnMuro: false
-      });
+          urlDestino: 'https://lomaverdelunar.online',
+          imagenUrl: '/loma-verde-callecita-opt.jpg',
+          tags: '#LomaVerde, #Comunidad, #ArteLocal',
+          redOrigen: 'comunidad',
+          fijarEnMuro: false
+        });
+      }
+    } catch (err) {
+      console.error('Error aplicando preset en PanelDifusion:', err);
     }
   };
 
-  // Cargar preset de energía al montar el componente
+  // Cargar preset de energía al montar el componente de forma segura
   useEffect(() => {
     aplicarPreset('energia');
-  }, []);
+  }, [energiaHoy]);
 
   // =========================================================================
   // ACCIONES DE DIFUSIÓN
@@ -224,13 +260,13 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
 
   // 1. WhatsApp
   const handleCompartirWhatsApp = () => {
-    const textoCompleto = `${formPost.contenido}\n\n${formPost.tags ? formPost.tags : ''}`;
+    const textoCompleto = `${formPost.contenido || ''}\n\n${formPost.tags || ''}`;
     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoCompleto.trim())}`;
     window.open(url, '_blank');
   };
 
   const handleCopiarWhatsApp = async () => {
-    const textoCompleto = `${formPost.contenido}\n\n${formPost.tags ? formPost.tags : ''}`;
+    const textoCompleto = `${formPost.contenido || ''}\n\n${formPost.tags || ''}`;
     try {
       await navigator.clipboard.writeText(textoCompleto.trim());
       setCopiedKey('wa');
@@ -242,11 +278,10 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
 
   // 2. Instagram
   const handleCopiarInstagram = async () => {
-    // Formato con saltos limpios y hashtags al final
-    const textoLimpio = formPost.contenido
-      .replace(/\*/g, '') // Quitar asteriscos de negrita de WhatsApp
+    const textoLimpio = (formPost.contenido || '')
+      .replace(/\*/g, '')
       .trim();
-    const copyIg = `${formPost.titulo.toUpperCase()}\n\n${textoLimpio}\n\n.\n.\n.\n${formPost.tags}`;
+    const copyIg = `${(formPost.titulo || '').toUpperCase()}\n\n${textoLimpio}\n\n.\n.\n.\n${formPost.tags || ''}`;
     try {
       await navigator.clipboard.writeText(copyIg);
       setCopiedKey('ig');
@@ -258,19 +293,19 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
 
   // 3. Facebook & Telegram
   const handleCompartirFacebook = () => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(formPost.urlDestino)}&quote=${encodeURIComponent(formPost.titulo)}`;
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(formPost.urlDestino || 'https://lomaverdelunar.online')}&quote=${encodeURIComponent(formPost.titulo || '')}`;
     window.open(url, '_blank', 'width=600,height=400');
   };
 
   const handleCompartirTelegram = () => {
-    const texto = `${formPost.titulo}\n\n${formPost.contenido}`;
-    const url = `https://t.me/share/url?url=${encodeURIComponent(formPost.urlDestino)}&text=${encodeURIComponent(texto)}`;
+    const texto = `${formPost.titulo || ''}\n\n${formPost.contenido || ''}`;
+    const url = `https://t.me/share/url?url=${encodeURIComponent(formPost.urlDestino || 'https://lomaverdelunar.online')}&text=${encodeURIComponent(texto)}`;
     window.open(url, '_blank');
   };
 
   // 4. Publicar en el Muro de la Web
   const handlePublicarEnMuro = async () => {
-    if (!formPost.titulo.trim() || !formPost.contenido.trim()) {
+    if (!formPost.titulo?.trim() || !formPost.contenido?.trim()) {
       alert('Por favor completá un título y contenido para publicar.');
       return;
     }
@@ -316,7 +351,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
     canvas.width = 1080;
     canvas.height = 1080;
 
-    // Fondo degradé armónico (#20381f a #132413)
+    // Fondo degradé armónico
     const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
     grad.addColorStop(0, '#1c331b');
     grad.addColorStop(0.5, '#2b5329');
@@ -346,7 +381,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
     ctx.lineTo(740, 145);
     ctx.stroke();
 
-    // Fecha o Tipo
+    // Fecha
     ctx.fillStyle = '#a8bba0';
     ctx.font = '500 22px sans-serif';
     ctx.fillText(hoy.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase(), 540, 185);
@@ -354,7 +389,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
     // Título Principal (envuelto)
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 44px serif';
-    const words = formPost.titulo.split(' ');
+    const words = (formPost.titulo || 'Loma Verde').split(' ');
     let line = '';
     let y = 280;
     const maxLineW = 880;
@@ -384,8 +419,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
     ctx.font = '400 24px sans-serif';
     ctx.textAlign = 'left';
     
-    // Tomar las primeras 10 líneas de texto limpio
-    const lineas = formPost.contenido
+    const lineas = (formPost.contenido || '')
       .split('\n')
       .map(l => l.replace(/\*/g, '').trim())
       .filter(l => l.length > 0)
@@ -393,7 +427,6 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
 
     let textY = y + 55;
     lineas.forEach((lin) => {
-      // Truncar si es muy larga
       const linTrunc = lin.length > 68 ? lin.slice(0, 65) + '...' : lin;
       ctx.fillText(linTrunc, 125, textY);
       textY += 42;
@@ -415,11 +448,10 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
     link.click();
   };
 
-  // Emojis rápidos para insertar con un toque
   const insertarEmoji = (emoji) => {
     setFormPost(prev => ({
       ...prev,
-      contenido: prev.contenido + ' ' + emoji
+      contenido: (prev.contenido || '') + ' ' + emoji
     }));
   };
 
@@ -570,7 +602,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
       </div>
 
       {/* Si eligió noticia, selector dropdown de noticias */}
-      {tipoPreset === 'noticia' && (
+      {tipoPreset === 'noticia' && Array.isArray(noticias) && noticias.length > 0 && (
         <div className="p-4 bg-amber-50/60 border border-amber-200 rounded-2xl space-y-2">
           <label className="block text-xs font-bold text-amber-900 uppercase">
             Seleccionar Noticia de El Diario Lunar:
@@ -620,7 +652,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
             <label className="block text-[11px] font-bold text-gray-600 uppercase mb-1">Título del Post</label>
             <input
               type="text"
-              value={formPost.titulo}
+              value={formPost.titulo || ''}
               onChange={(e) => setFormPost({ ...formPost, titulo: e.target.value })}
               className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-bold"
               placeholder="Título atractivo..."
@@ -633,7 +665,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
             </label>
             <textarea
               rows={8}
-              value={formPost.contenido}
+              value={formPost.contenido || ''}
               onChange={(e) => setFormPost({ ...formPost, contenido: e.target.value })}
               className="w-full p-3 rounded-xl border border-gray-300 text-xs font-mono leading-relaxed resize-y"
               placeholder="Escribí el texto completo..."
@@ -645,7 +677,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
               <label className="block text-[11px] font-bold text-gray-600 uppercase mb-1">Enlace de Destino (Link)</label>
               <input
                 type="text"
-                value={formPost.urlDestino}
+                value={formPost.urlDestino || ''}
                 onChange={(e) => setFormPost({ ...formPost, urlDestino: e.target.value })}
                 className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-mono"
                 placeholder="https://lomaverdelunar.online/..."
@@ -656,7 +688,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
               <label className="block text-[11px] font-bold text-gray-600 uppercase mb-1">Hashtags (#)</label>
               <input
                 type="text"
-                value={formPost.tags}
+                value={formPost.tags || ''}
                 onChange={(e) => setFormPost({ ...formPost, tags: e.target.value })}
                 className="w-full p-2.5 rounded-xl border border-gray-300 text-xs"
                 placeholder="#LomaVerde, #Comunidad..."
@@ -669,7 +701,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
             <div className="flex gap-2">
               <input
                 type="text"
-                value={formPost.imagenUrl}
+                value={formPost.imagenUrl || ''}
                 onChange={(e) => setFormPost({ ...formPost, imagenUrl: e.target.value })}
                 className="w-full p-2.5 rounded-xl border border-gray-300 text-xs font-mono"
                 placeholder="/loma-verde-callecita-opt.jpg o URL externa..."
@@ -689,7 +721,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
             <label className="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
               <input
                 type="checkbox"
-                checked={formPost.fijarEnMuro}
+                checked={formPost.fijarEnMuro || false}
                 onChange={(e) => setFormPost({ ...formPost, fijarEnMuro: e.target.checked })}
                 className="w-4 h-4 rounded text-loma-green focus:ring-loma-green"
               />
@@ -787,7 +819,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
                 <div className="text-xs space-y-1.5 leading-relaxed">
                   <div className="font-bold text-stone-200">{formPost.titulo}</div>
                   <p className="text-stone-300 line-clamp-4 text-[11px] whitespace-pre-wrap">
-                    {formPost.contenido.replace(/\*/g, '')}
+                    {(formPost.contenido || '').replace(/\*/g, '')}
                   </p>
                   <div className="text-[10px] text-blue-400 font-medium pt-1">
                     {formPost.tags}
@@ -816,7 +848,7 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
                   />
                 )}
                 <p className="text-xs text-gray-700 line-clamp-3 leading-relaxed whitespace-pre-wrap">
-                  {formPost.contenido.replace(/\*/g, '')}
+                  {(formPost.contenido || '').replace(/\*/g, '')}
                 </p>
                 <div className="text-[10px] text-loma-wood font-bold">
                   {formPost.tags}
