@@ -169,9 +169,19 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
         <h3 className="font-serif text-2xl sm:text-3xl font-bold text-loma-green mb-2">
           ¡Propuesta Recibida con Éxito!
         </h3>
-        <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
+        <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
           Gracias <strong>{formData.nombrePersonal || formData.nombre}</strong> por sumarte a la feria de Loma Verde. Tu propuesta ha quedado registrada en la red.
         </p>
+
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-xs text-emerald-950 mb-6 text-left space-y-1">
+          <div className="font-bold flex items-center gap-1.5 text-emerald-800">
+            <span>⏰</span>
+            <span>Horarios confirmados del Encuentro:</span>
+          </div>
+          <p>• <strong>Armado de puestos (feriantes):</strong> 11:00 a 12:00 hs</p>
+          <p>• <strong>Apertura al público:</strong> 12:00 a 18:00 hs</p>
+          <p>• <strong>Lugar:</strong> Plaza La Misión y Nigromante, Loma Verde</p>
+        </div>
 
         <div className="space-y-3">
           <button
@@ -211,7 +221,7 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
       <div className="text-center mb-6 border-b border-loma-wood/20 pb-4">
         <span className="bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-[11px] uppercase px-3.5 py-1 rounded-full tracking-wider inline-flex items-center gap-1.5 mb-2 shadow-2xs">
           <span>{config?.simboloZodiacal || '♉'}</span>
-          <span>Inscripción Abierta: {config?.lunaActiva || 'Luna Tauro'} • {config?.fechaEventoTexto || '8 DE NOVIEMBRE'}</span>
+          <span>Inscripción Abierta: {config?.lunaActiva || 'Luna Tauro'} • {config?.fechaEventoTexto || '8 DE NOVIEMBRE'} • 12 A 18 HS</span>
         </span>
         <h3 className="font-serif text-2xl font-bold text-loma-green">
           Sumate a la Red y Feria Lunar 🌿
@@ -219,6 +229,11 @@ export default function InscripcionForm({ config, onSuccess, onGoToFlyerStudio }
         <p className="text-xs text-gray-500 mt-1">
           Completa tus datos para formar parte de la feria, la cartelera vecinal y el directorio de oficios y emprendimientos.
         </p>
+        <div className="mt-3 p-2.5 bg-emerald-50/90 border border-emerald-200/90 rounded-2xl text-[11px] text-emerald-950 flex items-center justify-center gap-2 flex-wrap font-medium">
+          <span>⏰ <strong>Horarios confirmados:</strong> Feriantes arman de <strong>11 a 12 hs</strong> • Feria: <strong>12 a 18 hs</strong></span>
+          <span>•</span>
+          <span>📍 Plaza La Misión</span>
+        </div>
       </div>
 
       {error && (

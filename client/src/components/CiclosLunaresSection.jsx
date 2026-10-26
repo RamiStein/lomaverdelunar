@@ -29,7 +29,7 @@ export default function CiclosLunaresSection({ config, onOpenInscripcion, onGoTo
     elemento: config?.elemento || 'Tierra Fija 🌿🐂',
     fechaEventoTexto: config?.fechaEventoTexto || '8 DE NOVIEMBRE',
     diaSemanaTexto: config?.diaSemanaTexto || 'DOMINGO',
-    horarioTexto: config?.horarioTexto || 'HORARIO A DEFINIR',
+    horarioTexto: config?.horarioTexto || 'DE 12 A 18 HS',
     lugarTexto: config?.lugarTexto || 'Plaza La Misión y Nigromante • Loma Verde',
     lema: config?.lema || 'Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.',
     mistica: config?.mistica || 'La Luna Llena en Tauro nos enraíza en la belleza y fertilidad de la tierra. Momento de honrar los frutos de la huerta, las manos hacedoras, la economía fraterna y el cuidado paciente de lo que amamos. Conectamos con el valor genuino de la materia viva y la reciprocidad comunitaria. ♉🌿🐂🌾',

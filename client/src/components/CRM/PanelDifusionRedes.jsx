@@ -171,13 +171,15 @@ ${n.copete || n.bajada || (n.texto ? n.texto.slice(0, 200) + '...' : '')}
         const lunaActiva = config?.lunaActiva || 'Luna Llena en Tauro';
         const fechaFeria = config?.fecha || 'Domingo 8 de Noviembre de 2026';
         const lugarFeria = config?.lugar || 'Plaza La Misión, Loma Verde';
-        const horarioFeria = config?.horario || 'De 13:00 a 19:00 hs';
+        const horarioFeria = config?.horarioTexto || 'De 12:00 a 18:00 hs';
         const whatsApp = config?.whatsappCoordinacion || '11 4503-056';
 
         const titulo = `🎪 Convocatoria Abierta: Feria ${lunaActiva} en ${lugarFeria}`;
         const contenido = `🎪 *¡CONVOCATORIA ABIERTA: FERIA ${lunaActiva.toUpperCase()}!* 🌕
 📍 *Lugar:* ${lugarFeria}
-🗓️ *Fecha:* ${fechaFeria} • ${horarioFeria}
+🗓️ *Fecha:* ${fechaFeria}
+⏰ *Horario Feria:* ${horarioFeria}
+🎪 *Armado de Feriantes:* De 11:00 a 12:00 hs
 
 Invitamos a feriantes, artesanos, productores agroecológicos, huerteros, terapeutas y artistas a sumarse a este gran encuentro comunitario.
 

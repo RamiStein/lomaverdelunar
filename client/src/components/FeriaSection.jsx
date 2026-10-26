@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Store, MessageCircle, Instagram, Globe, MapPin, PlusCircle, ExternalLink, X, Tag } from 'lucide-react';
 
-export default function FeriaSection({ directorio, onOpenInscripcion, onOpenMediaKit }) {
+export default function FeriaSection({ config, directorio, onOpenInscripcion, onOpenMediaKit }) {
   const [selectedFeriante, setSelectedFeriante] = useState(null);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('TODOS');
 
@@ -45,9 +45,15 @@ export default function FeriaSection({ directorio, onOpenInscripcion, onOpenMedi
       
       {/* Encabezado */}
       <div className="text-center mb-8">
-        <span className="bg-loma-wood/20 text-loma-wood font-extrabold text-xs uppercase px-3 py-1 rounded-full tracking-wider inline-flex items-center gap-1 mb-2">
-          <Store className="w-3.5 h-3.5" /> La Feria del Barrio
-        </span>
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+          <span className="bg-loma-wood/20 text-loma-wood font-extrabold text-xs uppercase px-3 py-1 rounded-full tracking-wider inline-flex items-center gap-1">
+            <Store className="w-3.5 h-3.5" /> La Feria del Barrio
+          </span>
+          <span className="bg-amber-100 text-amber-950 border border-amber-300 font-extrabold text-[11px] uppercase px-3 py-1 rounded-full tracking-wider inline-flex items-center gap-1.5 shadow-2xs">
+            <span>⏰</span>
+            <span>Feria: 12 a 18 hs • Armado feriantes: 11 a 12 hs</span>
+          </span>
+        </div>
         <h2 className="font-serif text-3xl sm:text-4xl text-loma-green font-bold uppercase tracking-tight">
           Emprendimientos, Feriantes y Oficios 🌿
         </h2>

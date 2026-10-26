@@ -40,10 +40,12 @@ export default function App() {
     simboloZodiacal: "♉",
     elemento: "Tierra Fija 🌿🐂",
     regente: "Venus 🌸",
-    fechaEvento: "Domingo 8 de Noviembre (Horario a definir)",
+    fechaEvento: "Domingo 8 de Noviembre • 12 a 18 hs",
     fechaEventoTexto: "8 DE NOVIEMBRE",
     diaSemanaTexto: "DOMINGO",
-    horarioTexto: "HORARIO A DEFINIR",
+    horarioTexto: "DE 12 A 18 HS",
+    horarioArmadoTexto: "Armado feriantes: 11 a 12 hs",
+    horarioPublicoTexto: "12 a 18 hs",
     lugarTexto: "Plaza La Misión y Nigromante • Loma Verde",
     motto: "Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.",
     lema: "Celebrando la abundancia de la tierra, la soberanía alimentaria, el enraizamiento y el goce consciente.",
@@ -349,6 +351,7 @@ export default function App() {
             {/* Muestra de la Feria en Inicio */}
             <div className="bg-white/80 border-y-2 border-loma-green/20 py-8 my-8">
               <FeriaSection
+                config={config}
                 directorio={directorio}
                 onOpenInscripcion={() => {
                   const formEl = document.getElementById('seccion-inscripcion');
@@ -392,6 +395,7 @@ export default function App() {
         {activeTab === 'feria' && (
           <div className="py-6">
             <FeriaSection
+              config={config}
               directorio={directorio}
               onOpenInscripcion={() => {
                 setActiveTab('inicio');

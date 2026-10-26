@@ -525,7 +525,11 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
           </div>
           <div className="bg-stone-900/80 border border-stone-700/80 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-stone-200 backdrop-blur-xs">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
-            <span>{config?.horarioTexto || 'HORARIO A DEFINIR'}</span>
+            <span>{config?.horarioTexto || 'DE 12 A 18 HS'}</span>
+          </div>
+          <div className="bg-amber-950/80 border border-amber-600/60 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-amber-200 backdrop-blur-xs">
+            <span>🎪</span>
+            <span>Armado feriantes: 11 a 12 hs</span>
           </div>
           <div className="bg-stone-900/80 border border-stone-700/80 px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-stone-200 backdrop-blur-xs">
             <MapPin className="w-3.5 h-3.5 text-amber-400" />
@@ -580,9 +584,19 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
                 ¡Propuesta Recibida con Éxito!
               </h2>
 
-              <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-md mx-auto mb-6">
+              <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-md mx-auto mb-4">
                 Gracias <strong>{formData.nombrePersonal || formData.nombre}</strong>. Tu propuesta de <strong>{formData.tipo}</strong> ha quedado inscripta para la <strong>{config?.lunaActiva || `Luna ${theme.signo}`}</strong> en Loma Verde.
               </p>
+
+              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-xs text-emerald-950 mb-6 text-left max-w-md mx-auto space-y-1">
+                <div className="font-bold flex items-center gap-1.5 text-emerald-800">
+                  <span>⏰</span>
+                  <span>Recordatorio de horarios confirmados:</span>
+                </div>
+                <p>• <strong>Armado de puestos (feriantes):</strong> 11:00 a 12:00 hs</p>
+                <p>• <strong>Apertura al público:</strong> 12:00 a 18:00 hs</p>
+                <p>• <strong>Lugar:</strong> Plaza La Misión y Nigromante, Loma Verde</p>
+              </div>
 
               <div className="space-y-3 max-w-md mx-auto">
                 <button
@@ -643,6 +657,13 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
                 <p className="text-xs text-stone-500 mt-0.5">
                   Artesanos, oficios vecinales, gastronomía, productores y artistas locales.
                 </p>
+                <div className="mt-3 p-2.5 bg-emerald-50/90 border border-emerald-300/80 rounded-2xl text-[11px] text-emerald-950 flex items-center justify-between gap-2 flex-wrap font-medium">
+                  <span className="font-bold flex items-center gap-1.5">
+                    <span>⏰</span>
+                    <span>Horarios: Feriantes arman de 11 a 12 hs • Feria de 12 a 18 hs</span>
+                  </span>
+                  <span className="font-semibold text-emerald-800">📍 Plaza La Misión</span>
+                </div>
               </div>
 
               {error && (

@@ -276,7 +276,7 @@ export default function CRMDashboard({ adminKey, onLogout, refreshGlobalData }) 
     let clean = f.contacto.replace(/[^0-9]/g, '');
     if (clean.length >= 10 && !clean.startsWith('54')) clean = '549' + clean;
     const msg = encodeURIComponent(
-      `¡Hola ${f.nombrePersonal || f.nombre}! 🌿 Te confirmamos desde la coordinación del Encuentro Lunar de Loma Verde ♒ que tu propuesta "${f.nombre}" ha sido APROBADA. Tu ubicación asignada en la plaza es: ${f.puestoAsignado || 'Sector General'}. ¡Nos vemos en la plaza!`
+      `¡Hola ${f.nombrePersonal || f.nombre}! 🌿 Te confirmamos desde la coordinación de Loma Verde Lunar que tu propuesta "${f.nombre}" ha sido APROBADA. 🎪 Puesto asignado: ${f.puestoAsignado || 'Sector General'}. ⏰ Horarios confirmados: Armado de puestos de 11:00 a 12:00 hs. La feria abre al público de 12:00 a 18:00 hs. ¡Nos vemos en Plaza La Misión!`
     );
     window.open(`https://wa.me/${clean}?text=${msg}`, '_blank');
   };

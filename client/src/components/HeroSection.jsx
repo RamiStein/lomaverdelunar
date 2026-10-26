@@ -235,10 +235,16 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
           </div>
 
           {/* HORARIO */}
-          <div className="font-serif text-lg sm:text-2xl font-bold text-loma-wood tracking-wide mt-1 mb-4 flex items-center justify-center gap-2">
+          <div className="font-serif text-lg sm:text-2xl font-bold text-loma-wood tracking-wide mt-1 mb-2 flex items-center justify-center gap-2">
             <span>✦</span>
-            <span>{config?.horarioTexto || 'HORARIO A DEFINIR'}</span>
+            <span>{config?.horarioTexto || 'DE 12 A 18 HS'}</span>
             <span>✦</span>
+          </div>
+
+          {/* HORARIOS DETALLADOS FERIANTES & PÚBLICO */}
+          <div className="inline-flex items-center gap-1.5 bg-amber-100/95 text-amber-950 border border-amber-300/80 px-3.5 py-1 rounded-full text-xs font-bold mb-4 shadow-2xs">
+            <span>🎪</span>
+            <span>Armado feriantes: 11 a 12 hs • Feria: 12 a 18 hs</span>
           </div>
 
           {/* PLACA VERDE DE UBICACIÓN */}
@@ -527,7 +533,7 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
 
             <div className="mt-4 flex justify-between items-center gap-2">
               <span className="text-xs text-gray-500">
-                {config?.diaSemanaTexto || 'Domingo'} {config?.fechaEventoTexto || '8 de Noviembre'} • {config?.horarioTexto || 'Horario a definir'}
+                {config?.diaSemanaTexto || 'Domingo'} {config?.fechaEventoTexto || '8 de Noviembre'} • {config?.horarioTexto || 'De 12 a 18 hs (Armado: 11 a 12 hs)'}
               </span>
               <a 
                 href="/fondo-loma-verde.jpg" 
