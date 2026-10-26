@@ -125,6 +125,7 @@ export default function DiarioLunarSection({ config, onBackToHome, onGoToInscrip
   const secciones = [
     { id: 'todas', label: 'Portada' },
     { id: 'comunidad', label: 'Comunidad & Vecinal' },
+    { id: 'gastronomia', label: 'Gastronomía & Sabores' },
     { id: 'tierra', label: 'Soberanía & Tierra' },
     { id: 'cultura', label: 'Cultura & Música' },
     { id: 'economia', label: 'Economía Fraterna' },
