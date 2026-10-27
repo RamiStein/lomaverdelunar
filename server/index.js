@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const db = require('./db');
 
 const app = express();
@@ -1063,7 +1064,12 @@ const handleSsrOg = async (req, res) => {
     res.send(finalHtml);
   } catch (err) {
     console.error('Error en handleSsrOg:', err);
-    res.status(500).send('Error procesando página');
+    try {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.send(getBaseHtml());
+    } catch {
+      res.status(500).send('Error procesando página');
+    }
   }
 };
 
