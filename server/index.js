@@ -953,11 +953,79 @@ app.post('/api/admin/instagram/publicar', verifyAdmin, async (req, res) => {
   }
 });
 
-// Servir archivos estáticos del cliente en producción
+// Servir archivos estáticos del cliente en producción con Open Graph dinámico (Facebook, WhatsApp, Twitter)
 if (process.env.NODE_ENV === 'production' || process.env.SERVE_CLIENT === 'true') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  app.use(express.static(path.join(__dirname, '../client/dist'), { index: false }));
+
+  app.get('*', async (req, res) => {
+    try {
+      const indexPath = path.join(__dirname, '../client/dist/index.html');
+      if (!fs.existsSync(indexPath)) {
+        return res.sendFile(indexPath);
+      }
+
+      let html = fs.readFileSync(indexPath, 'utf8');
+
+      // Valores Open Graph dinámicos por defecto
+      let ogTitle = "Encuentro Lunar 1320 • Loma Verde";
+      let ogDesc = "Plataforma comunitaria de Loma Verde: crónicas de cada Luna Llena, feria de artesanos, gastronomía consciente y economía fraterna.";
+      let ogImage = "https://lomaverdelunar.online/foodtruck-loma-verde.jpg";
+      let ogUrl = `https://lomaverdelunar.online${req.originalUrl || req.url || ''}`;
+
+      // 1. Caso: Nota de El Diario Lunar (?nota=id o /diario?nota=id)
+      const notaId = req.query.nota;
+      if (notaId) {
+        try {
+          const nota = await db.getNoticiaById(notaId);
+          if (nota) {
+            ogTitle = `${nota.titulo} • El Diario Lunar`;
+            ogDesc = nota.copete || nota.bajada || (nota.texto ? nota.texto.slice(0, 180) + '...' : ogDesc);
+            if (nota.img) {
+              ogImage = nota.img.startsWith('http') ? nota.img : `https://lomaverdelunar.online${nota.img.startsWith('/') ? '' : '/'}${nota.img}`;
+            }
+            ogUrl = `https://lomaverdelunar.online/diario?nota=${nota.id}`;
+          }
+        } catch (e) {
+          console.warn('Error resolviendo nota para OG tags:', e.message);
+        }
+      } else if (req.path === '/sumate') {
+        ogTitle = "Sumate a la Feria Lunar • Loma Verde";
+        ogDesc = "Convocatoria abierta para feriantes, artesanos, productores agroecológicos y foodtrucks.";
+        ogImage = "https://lomaverdelunar.online/foodtruck-loma-verde.jpg";
+      } else if (req.path === '/noalaantena' || req.path === '/antena') {
+        ogTitle = "Alerta Vecinal: No a la Antena 5G en Loma Verde";
+        ogDesc = "Sumá tu firma al petitorio vecinal en resguardo de la salud y el arbolado histórico.";
+        ogImage = "https://lomaverdelunar.online/loma-verde-callecita-opt.jpg";
+      }
+
+      const escape = (str) => (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const ogBlock = `
+    <title>${escape(ogTitle)}</title>
+    <meta name="description" content="${escape(ogDesc)}" />
+    <meta property="og:site_name" content="Loma Verde Lunar" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="${escape(ogTitle)}" />
+    <meta property="og:description" content="${escape(ogDesc)}" />
+    <meta property="og:image" content="${ogImage}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="${ogUrl}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${escape(ogTitle)}" />
+    <meta name="twitter:description" content="${escape(ogDesc)}" />
+    <meta name="twitter:image" content="${ogImage}" />`;
+
+      if (html.includes('<title>')) {
+        html = html.replace(/<title>.*?<\/title>/s, '').replace('</head>', `${ogBlock}\n  </head>`);
+      } else {
+        html = html.replace('</head>', `${ogBlock}\n  </head>`);
+      }
+
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.send(html);
+    } catch (err) {
+      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    }
   });
 }
 

@@ -441,9 +441,20 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
   };
 
   // 3. Facebook & Telegram
-  const handleCompartirFacebook = () => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(formPost.urlDestino || 'https://lomaverdelunar.online')}&quote=${encodeURIComponent(formPost.titulo || '')}`;
-    window.open(url, '_blank', 'width=600,height=400');
+  const handleCompartirFacebook = async () => {
+    const textoLimpio = (formPost.contenido || '').replace(/\*/g, '').trim();
+    const textoCopiar = `${(formPost.titulo || '').toUpperCase()}\n\n${textoLimpio}\n\n${formPost.tags || ''}`;
+
+    try {
+      await navigator.clipboard.writeText(textoCopiar);
+      setCopiedKey('fb');
+      setTimeout(() => setCopiedKey(null), 6000);
+    } catch {
+      // Fallback
+    }
+
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(formPost.urlDestino || 'https://lomaverdelunar.online')}`;
+    window.open(url, '_blank', 'width=650,height=600,scrollbars=yes');
   };
 
   const handleCompartirTelegram = () => {
@@ -1164,10 +1175,11 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
               <button
                 type="button"
                 onClick={handleCompartirFacebook}
-                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition-colors"
+                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                title="Copia el texto al portapapeles y abre Facebook para compartir"
               >
                 <Share2 className="w-3.5 h-3.5" />
-                <span>Facebook</span>
+                <span>{copiedKey === 'fb' ? '¡Texto Copiado! Abrir FB' : 'Facebook'}</span>
               </button>
 
               <button
@@ -1179,6 +1191,18 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
                 <span>Telegram</span>
               </button>
             </div>
+
+            {copiedKey === 'fb' && (
+              <div className="p-3 bg-blue-50 border border-blue-300 text-blue-950 rounded-xl text-xs font-medium animate-in fade-in flex items-start gap-2 shadow-xs">
+                <span className="text-base shrink-0">📋</span>
+                <div className="space-y-0.5">
+                  <div className="font-bold text-blue-900">¡Texto y título copiados al portapapeles!</div>
+                  <p className="text-[11px] text-blue-800 leading-snug">
+                    Por políticas de privacidad, Facebook no permite que páginas externas escriban directamente en el post. En la ventana de Facebook que se abrió, pegalo con <strong>Ctrl + V</strong> (o clic derecho ➔ Pegar) en el campo <em>«¿Qué estás pensando?»</em>.
+                  </p>
+                </div>
+              </div>
+            )}
 
           </div>
 
