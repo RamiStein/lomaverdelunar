@@ -256,13 +256,13 @@ function resolveZodiacTheme(signoOrLuna) {
   return ZODIAC_THEMES.Aries;
 }
 
-export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio, onGoToMediaKit, onBackToHome }) {
+export default function SumateLandingView({ config, initialTipo = '', onSuccess, onGoToFlyerStudio, onGoToMediaKit, onBackToHome }) {
   // Estado del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     nombrePersonal: '',
     contacto: '',
-    tipo: 'Oficio / Servicio',
+    tipo: initialTipo || 'Oficio / Servicio',
     descripcion: '',
     instagram: '',
     tienda: '',
@@ -276,6 +276,12 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
   const [lastCreated, setLastCreated] = useState(null);
   const [error, setError] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  useEffect(() => {
+    if (initialTipo) {
+      setFormData(prev => ({ ...prev, tipo: initialTipo }));
+    }
+  }, [initialTipo]);
 
   // Signo y tema activo
   const activeSignName = config?.signo || config?.lunaActiva || 'Tauro';
@@ -670,6 +676,13 @@ export default function SumateLandingView({ config, onSuccess, onGoToFlyerStudio
                 <div className="bg-red-50 text-red-700 p-3 rounded-xl border border-red-200 text-xs font-bold flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{error}</span>
+                </div>
+              )}
+
+              {formData.tipo === 'Gastronomía' && (
+                <div className="p-3 bg-amber-50 border border-amber-300 rounded-2xl flex items-center gap-2.5 text-xs text-amber-950 font-bold mb-4 shadow-2xs">
+                  <span className="text-xl">🚚</span>
+                  <span>Convocatoria Especial: ¡Te estás postulando con tu Foodtruck o proyecto gastronómico! Recordá detallar requerimientos eléctricos y tipo de trailer en la descripción.</span>
                 </div>
               )}
 

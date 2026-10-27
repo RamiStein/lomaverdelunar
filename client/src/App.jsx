@@ -52,6 +52,7 @@ export default function App() {
     mistica: "La Luna Llena en Tauro nos enraíza en la belleza y fertilidad de la tierra. Momento de honrar los frutos de la huerta, las manos hacedoras, la economía fraterna y el cuidado paciente de lo que amamos. Conectamos con el valor genuino de la materia viva y la reciprocidad comunitaria. ♉🌿🐂🌾"
   });
   const [noticias, setNoticias] = useState([]);
+  const [sumateInitialTipo, setSumateInitialTipo] = useState('');
   const [directorio, setDirectorio] = useState({});
   const [presupuesto, setPresupuesto] = useState(null);
   const [virtudes, setVirtudes] = useState([]);
@@ -500,6 +501,7 @@ export default function App() {
         {activeTab === 'sumate_al_encuentro' && (
           <SumateLandingView
             config={config}
+            initialTipo={sumateInitialTipo}
             onSuccess={loadGlobalData}
             onGoToFlyerStudio={handleGoToFlyerStudio}
             onGoToMediaKit={() => {
@@ -547,7 +549,8 @@ export default function App() {
                 setActiveTab('inicio');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              onGoToInscripcion={() => {
+              onGoToInscripcion={(tipo) => {
+                if (tipo) setSumateInitialTipo(tipo);
                 setActiveTab('sumate_al_encuentro');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}

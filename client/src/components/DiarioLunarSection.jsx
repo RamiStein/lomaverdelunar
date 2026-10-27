@@ -26,7 +26,9 @@ import {
   ArrowUpRight,
   BookOpen,
   Send,
-  Heart
+  Heart,
+  MapPin,
+  Utensils
 } from 'lucide-react';
 import { getEnergiaDelDia } from '../utils/energiaCalc';
 
@@ -510,6 +512,42 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     </div>
                   )}
 
+                  {/* CALL TO ACTION DESTACADO: FOODTRUCKS & GASTRONOMÍA */}
+                  {(notaPrincipal.id === 'noticia-tauro-foodtrucks' || (notaPrincipal.seccion || '').toLowerCase() === 'gastronomia' || (Array.isArray(notaPrincipal.etiquetas) && notaPrincipal.etiquetas.some(t => t.toLowerCase().includes('foodtruck')))) && (
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onGoToInscripcion) onGoToInscripcion('Gastronomía');
+                      }}
+                      className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-700 via-amber-800 to-emerald-900 text-white shadow-lg border-2 border-amber-400/60 flex flex-col sm:flex-row items-center justify-between gap-4 cursor-pointer hover:scale-[1.01] hover:shadow-xl transition-all group/cta"
+                    >
+                      <div className="flex items-center gap-3.5 text-left">
+                        <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-2xl flex-shrink-0 shadow-inner border border-white/20">
+                          🚚
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-black uppercase tracking-wider text-amber-200 flex items-center gap-1.5">
+                            <span>Convocatoria Abierta • Plazas Limitadas</span>
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                          </div>
+                          <h4 className="font-serif font-black text-base sm:text-lg text-white leading-tight">
+                            ¿Tenés un Foodtruck o propuesta gastronómica?
+                          </h4>
+                          <p className="text-xs text-amber-100 font-medium mt-0.5">
+                            Feria de Tauro • Domingo 8 Nov • Armado 11 a 12 hs • Apertura 12 a 18 hs • Plaza La Misión
+                          </p>
+                        </div>
+                      </div>
+                      <button 
+                        type="button"
+                        className="w-full sm:w-auto bg-amber-400 hover:bg-amber-300 text-stone-950 font-black text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 cursor-pointer group-hover/cta:scale-105"
+                      >
+                        <span>Inscribir mi Foodtruck</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+
                   {/* Metadatos y Acciones */}
                   <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 border-t border-stone-200">
                     <div className="flex items-center gap-3">
@@ -527,6 +565,18 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     </div>
 
                     <div className="flex items-center gap-2">
+                      {(notaPrincipal.id === 'noticia-tauro-foodtrucks' || (notaPrincipal.seccion || '').toLowerCase() === 'gastronomia') && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onGoToInscripcion) onGoToInscripcion('Gastronomía');
+                          }}
+                          className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-black px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow-xs transition-transform hover:scale-105"
+                        >
+                          <span>Inscribir Foodtruck 🚚</span>
+                        </button>
+                      )}
+
                       <button
                         onClick={(e) => { e.stopPropagation(); handleShareWhatsApp(notaPrincipal); }}
                         className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow-2xs"
@@ -905,6 +955,68 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                   </p>
                 ))}
               </div>
+
+              {/* CALL TO ACTION PARA FOODTRUCKS EN EL LECTOR */}
+              {(notaActiva.id === 'noticia-tauro-foodtrucks' || (notaActiva.seccion || '').toLowerCase() === 'gastronomia' || (Array.isArray(notaActiva.etiquetas) && notaActiva.etiquetas.some(t => t.toLowerCase().includes('foodtruck')))) && (
+                <div className="my-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-amber-950 via-stone-900 to-emerald-950 text-white border-2 border-amber-400/60 shadow-2xl space-y-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-amber-300 flex items-center justify-center text-2xl flex-shrink-0">
+                      🚚
+                    </div>
+                    <div>
+                      <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                        Convocatoria Gastronómica • Plazas Planificadas
+                      </span>
+                      <h3 className="font-serif font-black text-xl sm:text-2xl text-white mt-1">
+                        Sumá tu Foodtruck o Cocina al Encuentro Lunar 🌿
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="text-stone-300 text-xs sm:text-sm leading-relaxed">
+                    Buscamos foodtrucks y trailers de cocina de autor, fuegos al disco o a la leña, propuestas vegetarianas y sin gluten, delicias al paso, pastelería casera, café de especialidad, bebidas vivas y cerveza artesanal para compartir con el barrio en Plaza La Misión.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-stone-200">
+                    <div className="bg-stone-900/80 border border-stone-800 p-3 rounded-xl flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span><strong>Domingo 8 Nov</strong></span>
+                    </div>
+                    <div className="bg-stone-900/80 border border-stone-800 p-3 rounded-xl flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Armado 11 a 12 • Feria 12 a 18</span>
+                    </div>
+                    <div className="bg-stone-900/80 border border-stone-800 p-3 rounded-xl flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Plaza La Misión, Loma Verde</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNotaActiva(null);
+                        if (onGoToInscripcion) onGoToInscripcion('Gastronomía');
+                      }}
+                      className="w-full sm:w-auto bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-black text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <span>Inscribirme como Foodtruck / Gastronomía</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+
+                    <a
+                      href="https://wa.me/5493484503056?text=%C2%A1Hola!%20Tengo%20un%20Foodtruck%20%2F%20propuesta%20gastron%C3%B3mica%20y%20quiero%20sumarme%20a%20la%20Feria%20Lunar%20de%20Tauro%20en%20Loma%20Verde."
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full sm:w-auto bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-700 font-bold text-xs uppercase tracking-wider px-4 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 text-center"
+                    >
+                      <MessageCircle className="w-4 h-4 text-emerald-400" />
+                      <span>Consultas por WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              )}
 
               {/* Cita destacada (Pull-Quote) */}
               <div className="my-6 bg-amber-50/80 p-5 rounded-2xl border-l-4 border-amber-600 text-stone-900 font-serif italic text-base sm:text-lg">
