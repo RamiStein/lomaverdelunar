@@ -3,6 +3,11 @@
   "installCommand": "npm install && npm --prefix client install",
   "buildCommand": "npm run build",
   "outputDirectory": "client/dist",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "server/index-template.html"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -11,6 +16,31 @@
     {
       "source": "/placas",
       "destination": "/placas.html"
+    },
+    {
+      "source": "/diario",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "nota"
+        }
+      ],
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|Facebot|Twitterbot|WhatsApp|TelegramBot|Discordbot|LinkedInBot).*"
+        }
+      ],
+      "destination": "/api/index.js"
     },
     {
       "source": "/(.*)",

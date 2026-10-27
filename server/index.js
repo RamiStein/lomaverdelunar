@@ -953,80 +953,128 @@ app.post('/api/admin/instagram/publicar', verifyAdmin, async (req, res) => {
   }
 });
 
-// Servir archivos estáticos del cliente en producción con Open Graph dinámico (Facebook, WhatsApp, Twitter)
-if (process.env.NODE_ENV === 'production' || process.env.SERVE_CLIENT === 'true') {
-  app.use(express.static(path.join(__dirname, '../client/dist'), { index: false }));
+// Helper para obtener el HTML base (Vercel Serverless o Local)
+function getBaseHtml() {
+  const templatePath = path.join(__dirname, 'index-template.html');
+  if (fs.existsSync(templatePath)) {
+    return fs.readFileSync(templatePath, 'utf8');
+  }
+  const distPath = path.join(__dirname, '../client/dist/index.html');
+  if (fs.existsSync(distPath)) {
+    return fs.readFileSync(distPath, 'utf8');
+  }
+  return `<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-loma-bg text-loma-green font-sans min-h-screen">
+  <div id="root"></div>
+</body>
+</html>`;
+}
 
-  app.get('*', async (req, res) => {
-    try {
-      const indexPath = path.join(__dirname, '../client/dist/index.html');
-      if (!fs.existsSync(indexPath)) {
-        return res.sendFile(indexPath);
-      }
+// Inyector de etiquetas Open Graph y Twitter Cards limpio sin duplicados
+function injectDynamicOgTags(rawHtml, { title, description, image, url }) {
+  const escape = (str) => (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  
+  // Limpiar cualquier etiqueta previa (para evitar que WhatsApp o Facebook tomen la primera imagen estática que encuentren)
+  let cleaned = rawHtml
+    .replace(/<title>[\s\S]*?<\/title>/gi, '')
+    .replace(/<meta\s+name=["']description["'][^>]*>/gi, '')
+    .replace(/<meta\s+property=["']og:[^"']+["'][^>]*>/gi, '')
+    .replace(/<meta\s+name=["']twitter:[^"']+["'][^>]*>/gi, '');
 
-      let html = fs.readFileSync(indexPath, 'utf8');
-
-      // Valores Open Graph dinámicos por defecto
-      let ogTitle = "Encuentro Lunar 1320 • Loma Verde";
-      let ogDesc = "Plataforma comunitaria de Loma Verde: crónicas de cada Luna Llena, feria de artesanos, gastronomía consciente y economía fraterna.";
-      let ogImage = "https://lomaverdelunar.online/foodtruck-loma-verde.jpg";
-      let ogUrl = `https://lomaverdelunar.online${req.originalUrl || req.url || ''}`;
-
-      // 1. Caso: Nota de El Diario Lunar (?nota=id o /diario?nota=id)
-      const notaId = req.query.nota;
-      if (notaId) {
-        try {
-          const nota = await db.getNoticiaById(notaId);
-          if (nota) {
-            ogTitle = `${nota.titulo} • El Diario Lunar`;
-            ogDesc = nota.copete || nota.bajada || (nota.texto ? nota.texto.slice(0, 180) + '...' : ogDesc);
-            if (nota.img) {
-              ogImage = nota.img.startsWith('http') ? nota.img : `https://lomaverdelunar.online${nota.img.startsWith('/') ? '' : '/'}${nota.img}`;
-            }
-            ogUrl = `https://lomaverdelunar.online/diario?nota=${nota.id}`;
-          }
-        } catch (e) {
-          console.warn('Error resolviendo nota para OG tags:', e.message);
-        }
-      } else if (req.path === '/sumate') {
-        ogTitle = "Sumate a la Feria Lunar • Loma Verde";
-        ogDesc = "Convocatoria abierta para feriantes, artesanos, productores agroecológicos y foodtrucks.";
-        ogImage = "https://lomaverdelunar.online/foodtruck-loma-verde.jpg";
-      } else if (req.path === '/noalaantena' || req.path === '/antena') {
-        ogTitle = "Alerta Vecinal: No a la Antena 5G en Loma Verde";
-        ogDesc = "Sumá tu firma al petitorio vecinal en resguardo de la salud y el arbolado histórico.";
-        ogImage = "https://lomaverdelunar.online/loma-verde-callecita-opt.jpg";
-      }
-
-      const escape = (str) => (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      const ogBlock = `
-    <title>${escape(ogTitle)}</title>
-    <meta name="description" content="${escape(ogDesc)}" />
+  const ogBlock = `
+    <title>${escape(title)}</title>
+    <meta name="description" content="${escape(description)}" />
     <meta property="og:site_name" content="Loma Verde Lunar" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="${escape(ogTitle)}" />
-    <meta property="og:description" content="${escape(ogDesc)}" />
-    <meta property="og:image" content="${ogImage}" />
+    <meta property="og:title" content="${escape(title)}" />
+    <meta property="og:description" content="${escape(description)}" />
+    <meta property="og:image" content="${image}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:url" content="${ogUrl}" />
+    <meta property="og:url" content="${url}" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${escape(ogTitle)}" />
-    <meta name="twitter:description" content="${escape(ogDesc)}" />
-    <meta name="twitter:image" content="${ogImage}" />`;
+    <meta name="twitter:title" content="${escape(title)}" />
+    <meta name="twitter:description" content="${escape(description)}" />
+    <meta name="twitter:image" content="${image}" />`;
 
-      if (html.includes('<title>')) {
-        html = html.replace(/<title>.*?<\/title>/s, '').replace('</head>', `${ogBlock}\n  </head>`);
-      } else {
-        html = html.replace('</head>', `${ogBlock}\n  </head>`);
+  return cleaned.replace('</head>', `${ogBlock}\n  </head>`);
+}
+
+// Controlador de Renderizado SSR con Open Graph Dinámico
+const handleSsrOg = async (req, res) => {
+  try {
+    let html = getBaseHtml();
+
+    // Valores Open Graph dinámicos por defecto (Loma Verde General)
+    let ogTitle = "Encuentro Lunar 1320 • Loma Verde";
+    let ogDesc = "Plataforma comunitaria de Loma Verde: crónicas de cada Luna Llena, feria de artesanos, gastronomía consciente y economía fraterna.";
+    let ogImage = "https://lomaverdelunar.online/loma-verde-callecita-opt.jpg";
+    let ogUrl = `https://lomaverdelunar.online${req.originalUrl || req.url || ''}`;
+
+    // 1. Caso: Nota de El Diario Lunar (?nota=id o /diario?nota=id)
+    const notaId = req.query.nota;
+    if (notaId) {
+      try {
+        const nota = await db.getNoticiaById(notaId);
+        if (nota) {
+          ogTitle = `${nota.titulo} • El Diario Lunar`;
+          ogDesc = nota.copete || nota.bajada || (nota.texto ? nota.texto.slice(0, 180) + '...' : ogDesc);
+          if (nota.img || nota.imagenUrl) {
+            const rawImg = nota.img || nota.imagenUrl;
+            ogImage = rawImg.startsWith('http') ? rawImg : `https://lomaverdelunar.online${rawImg.startsWith('/') ? '' : '/'}${rawImg}`;
+          }
+          ogUrl = `https://lomaverdelunar.online/diario?nota=${nota.id}`;
+        }
+      } catch (e) {
+        console.warn('Error resolviendo nota para OG tags:', e.message);
       }
-
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.send(html);
-    } catch (err) {
-      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    } else if (req.path === '/sumate') {
+      ogTitle = "Sumate a la Feria Lunar • Loma Verde";
+      ogDesc = "Convocatoria abierta para feriantes, artesanos, productores agroecológicos y foodtrucks.";
+      ogImage = "https://lomaverdelunar.online/foodtruck-loma-verde.jpg";
+    } else if (req.path === '/noalaantena' || req.path === '/antena') {
+      ogTitle = "Alerta Vecinal: No a la Antena 5G en Loma Verde";
+      ogDesc = "Sumá tu firma al petitorio vecinal en resguardo de la salud y el arbolado histórico.";
+      ogImage = "https://lomaverdelunar.online/loma-verde-callecita-opt.jpg";
+    } else if (req.path === '/energia') {
+      ogTitle = "La Energía de Hoy • Sincronario Lunar 13:20 • Loma Verde";
+      ogDesc = "Sintonía cósmica, tránsitos astrológicos y kin maya del día para la comunidad de Loma Verde.";
+      ogImage = "https://lomaverdelunar.online/loma-verde-callecita-opt.jpg";
     }
-  });
+
+    const finalHtml = injectDynamicOgTags(html, {
+      title: ogTitle,
+      description: ogDesc,
+      image: ogImage,
+      url: ogUrl
+    });
+
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300');
+    res.send(finalHtml);
+  } catch (err) {
+    console.error('Error en handleSsrOg:', err);
+    res.status(500).send('Error procesando página');
+  }
+};
+
+// Rutas de páginas públicas con Open Graph dinámico
+app.get('/diario', handleSsrOg);
+app.get('/og-preview', handleSsrOg);
+
+// Servir archivos estáticos del cliente en producción tradicional
+if (process.env.NODE_ENV === 'production' || process.env.SERVE_CLIENT === 'true') {
+  app.use(express.static(path.join(__dirname, '../client/dist'), { index: false }));
+  app.get('*', handleSsrOg);
 }
 
 // Helper para Auto-Publicación en Instagram (Feed e Historias) via Meta Graph API
