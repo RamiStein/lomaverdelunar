@@ -541,6 +541,7 @@ export default function App() {
           <div>
             <DiarioLunarSection
               config={config}
+              initialNoticias={noticias}
               initialNotaId={initialNotaId}
               onBackToHome={() => {
                 setActiveTab('inicio');

@@ -30,8 +30,8 @@ import {
 } from 'lucide-react';
 import { getEnergiaDelDia } from '../utils/energiaCalc';
 
-export default function DiarioLunarSection({ config, onBackToHome, onGoToInscripcion, onGoToAntena, onGoToMuro, onGoToLunas, initialNotaId = null }) {
-  const [noticias, setNoticias] = useState([]);
+export default function DiarioLunarSection({ config, initialNoticias = [], onBackToHome, onGoToInscripcion, onGoToAntena, onGoToMuro, onGoToLunas, initialNotaId = null }) {
+  const [noticias, setNoticias] = useState(() => (Array.isArray(initialNoticias) && initialNoticias.length > 0 ? initialNoticias : []));
   const [loading, setLoading] = useState(true);
   const [selectedLunaId, setSelectedLunaId] = useState('todas');
   const [selectedSeccion, setSelectedSeccion] = useState('todas');
@@ -140,9 +140,17 @@ export default function DiarioLunarSection({ config, onBackToHome, onGoToInscrip
       if (selectedLunaId !== 'todas' && n.lunaId !== selectedLunaId) {
         return false;
       }
-      // Filtro por Sección
-      if (selectedSeccion !== 'todas' && (n.seccion || '').toLowerCase() !== selectedSeccion.toLowerCase()) {
-        return false;
+      // Filtro por Sección (flexible e inteligente)
+      if (selectedSeccion !== 'todas') {
+        const sec = (n.seccion || '').toLowerCase();
+        const secLabel = (n.seccionEtiqueta || '').toLowerCase();
+        const sel = selectedSeccion.toLowerCase();
+        const matchesSeccion = sec === sel || 
+          secLabel.includes(sel) ||
+          (sel === 'gastronomia' && (sec.includes('gastro') || sec.includes('cocina') || (Array.isArray(n.etiquetas) && n.etiquetas.some(t => t.toLowerCase().includes('foodtruck') || t.toLowerCase().includes('gastro')))));
+        if (!matchesSeccion) {
+          return false;
+        }
       }
       // Filtro por Búsqueda
       if (searchTerm.trim()) {

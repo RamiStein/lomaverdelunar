@@ -835,16 +835,13 @@ class Database {
       const fdb = firebase.getDb();
       const snap = await fdb.collection('noticias').get();
       list = snap.docs.map(d => d.data());
-      if (list.length <= 2 || !list.some(n => n.id === 'noticia-tauro-1')) {
-        for (const noti of SEED_DATA.noticias) {
-          if (!list.some(n => n.id === noti.id)) {
-            try {
-              await fdb.collection('noticias').doc(noti.id).set(noti);
-              list.push(noti);
-            } catch (e) {
-              // Si falla Firestore, agregamos en memoria
-              list.push(noti);
-            }
+      for (const noti of SEED_DATA.noticias) {
+        if (!list.some(n => n.id === noti.id)) {
+          try {
+            await fdb.collection('noticias').doc(noti.id).set(noti);
+            list.push(noti);
+          } catch (e) {
+            list.push(noti);
           }
         }
       }
