@@ -313,16 +313,23 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
   // =========================================================================
 
   // 1. WhatsApp
-  const handleCompartirWhatsApp = () => {
-    const textoCompleto = `${formPost.contenido || ''}\n\n${formPost.tags || ''}`;
-    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoCompleto.trim())}`;
+  const handleCompartirWhatsApp = async () => {
+    const textoCompleto = `${formPost.contenido || ''}\n\n${formPost.tags || ''}`.trim();
+    try {
+      await navigator.clipboard.writeText(textoCompleto);
+      setCopiedKey('wa');
+      setTimeout(() => setCopiedKey(null), 3000);
+    } catch {
+      // Ignorar fallback
+    }
+    const url = `https://api.whatsapp.com/send/?text=${encodeURIComponent(textoCompleto)}`;
     window.open(url, '_blank');
   };
 
   const handleCopiarWhatsApp = async () => {
-    const textoCompleto = `${formPost.contenido || ''}\n\n${formPost.tags || ''}`;
+    const textoCompleto = `${formPost.contenido || ''}\n\n${formPost.tags || ''}`.trim();
     try {
-      await navigator.clipboard.writeText(textoCompleto.trim());
+      await navigator.clipboard.writeText(textoCompleto);
       setCopiedKey('wa');
       setTimeout(() => setCopiedKey(null), 2500);
     } catch {

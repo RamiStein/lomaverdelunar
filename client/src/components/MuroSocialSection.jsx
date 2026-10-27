@@ -202,14 +202,19 @@ export default function MuroSocialSection({ config, isAdmin, adminKey, onBackToH
   };
 
   // Compartir en WhatsApp
-  const handleShareWhatsApp = (post) => {
+  const handleShareWhatsApp = async (post) => {
     const urlPost = `https://lomaverdelunar.online/muro?post=${post.id}`;
-    const texto = `✨ *${post.titulo.toUpperCase()}* ✨%0A` +
-      `📌 _${post.redEtiqueta || 'Muro Comunitario Loma Verde'}_%0A` +
-      `👤 *Por:* ${post.autor}%0A%0A` +
-      `«${post.contenido.slice(0, 240)}${post.contenido.length > 240 ? '...' : ''}»%0A%0A` +
+    const texto = `✨ *${post.titulo.toUpperCase()}* ✨\n` +
+      `📌 _${post.redEtiqueta || 'Muro Comunitario Loma Verde'}_\n` +
+      `👤 *Por:* ${post.autor}\n\n` +
+      `«${post.contenido.slice(0, 240)}${post.contenido.length > 240 ? '...' : ''}»\n\n` +
       `🌿 *Leelo completo y sumate a la conversación en:* ${urlPost}`;
-    window.open(`https://wa.me/?text=${texto}`, '_blank');
+    
+    try {
+      await navigator.clipboard.writeText(texto);
+    } catch {}
+
+    window.open(`https://api.whatsapp.com/send/?text=${encodeURIComponent(texto)}`, '_blank');
   };
 
   // Copiar link al portapapeles
@@ -376,7 +381,7 @@ export default function MuroSocialSection({ config, isAdmin, adminKey, onBackToH
           
           <button
             onClick={() => {
-              const url = `https://wa.me/?text=${encodeURIComponent('✨ Te invito a recorrer el Muro Cósmico de Loma Verde Lunar: donde converge el arte del barrio y la inspiración del mundo: https://lomaverdelunar.online/muro')}`;
+              const url = `https://api.whatsapp.com/send/?text=${encodeURIComponent('✨ Te invito a recorrer el Muro Cósmico de Loma Verde Lunar: donde converge el arte del barrio y la inspiración del mundo: https://lomaverdelunar.online/muro')}`;
               window.open(url, '_blank');
             }}
             className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-xs transition-transform active:scale-95"
@@ -387,7 +392,7 @@ export default function MuroSocialSection({ config, isAdmin, adminKey, onBackToH
 
           <button
             onClick={() => {
-              const url = `https://wa.me/5491144332211?text=${encodeURIComponent('¡Hola Loma Verde Lunar! 🌿 Me gustaría sugerir un contenido / compartir mi arte para que lo sumen al Muro Cósmico.')}`;
+              const url = `https://api.whatsapp.com/send/?phone=5491144332211&text=${encodeURIComponent('¡Hola Loma Verde Lunar! 🌿 Me gustaría sugerir un contenido / compartir mi arte para que lo sumen al Muro Cósmico.')}`;
               window.open(url, '_blank');
             }}
             className="bg-white hover:bg-amber-50 text-loma-green border border-loma-wood/40 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-2xs transition-colors"
@@ -974,7 +979,7 @@ export default function MuroSocialSection({ config, isAdmin, adminKey, onBackToH
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             onClick={() => {
-              const url = `https://wa.me/5491144332211?text=${encodeURIComponent('¡Hola! Me gustaría sumarme con mi arte o taller al próximo Encuentro Lunar de Loma Verde 🌕')}`;
+              const url = `https://api.whatsapp.com/send/?phone=5491144332211&text=${encodeURIComponent('¡Hola! Me gustaría sumarme con mi arte o taller al próximo Encuentro Lunar de Loma Verde 🌕')}`;
               window.open(url, '_blank');
             }}
             className="bg-loma-green hover:bg-loma-wood text-white font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow-sm transition-all"

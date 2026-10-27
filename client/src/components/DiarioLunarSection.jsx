@@ -40,6 +40,7 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
   const [searchTerm, setSearchTerm] = useState('');
   const [notaActiva, setNotaActiva] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [toastNotif, setToastNotif] = useState(null);
   const [currentDate] = useState(() => new Date());
 
   // Energía cósmica para el barómetro superior del diario
@@ -81,11 +82,28 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
     }
   };
 
-  // Compartir nota en WhatsApp
-  const handleShareWhatsApp = (nota) => {
+  // Compartir nota en WhatsApp con preservación de emojis y sincronización de portapapeles
+  const handleShareWhatsApp = async (nota) => {
     const url = `${window.location.origin}/diario?nota=${nota.id}`;
-    const texto = `📰 *EL DIARIO LUNAR DE LOMA VERDE*\n\n*${nota.titulo}*\n_${nota.volanta || nota.lunaNombre}_\n\n${nota.copete || nota.bajada || ''}\n\n👉 Leé la nota completa acá:\n${url}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
+    const bajada = (nota.copete || nota.bajada || '').trim();
+    const texto = `📰 *EL DIARIO LUNAR DE LOMA VERDE*\n\n*${nota.titulo}*\n_${nota.volanta || nota.lunaNombre || ''}_\n\n${bajada ? `${bajada}\n\n` : ''}👉 Leé la nota completa acá:\n${url}`;
+
+    // Copiar automáticamente al portapapeles para dar la mejor experiencia:
+    // En WhatsApp Web, pegar (Ctrl+V) genera la tarjeta con foto de portada de inmediato.
+    try {
+      await navigator.clipboard.writeText(texto);
+    } catch {
+      // Fallback
+    }
+
+    setToastNotif({
+      titulo: '¡Mensaje preparado y copiado!',
+      mensaje: 'Abrimos WhatsApp con emojis protegidos. Si en WhatsApp Web querés ver la vista previa con foto grande, simplemente presioná Pegar (Ctrl + V) en el chat.'
+    });
+    setTimeout(() => setToastNotif(null), 6500);
+
+    // Usar el endpoint canónico api.whatsapp.com/send/?text= para evitar el redirect de wa.me que corrompe emojis
+    window.open(`https://api.whatsapp.com/send/?text=${encodeURIComponent(texto)}`, '_blank');
   };
 
   // Copiar link de la nota
@@ -94,7 +112,14 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
     try {
       await navigator.clipboard.writeText(url);
       setCopiedLink(true);
-      setTimeout(() => setCopiedLink(false), 2200);
+      setToastNotif({
+        titulo: '¡Enlace copiado al portapapeles!',
+        mensaje: 'Al pegarlo (Ctrl + V) en WhatsApp o cualquier red, se cargará automáticamente la tarjeta con la foto y titular de la crónica.'
+      });
+      setTimeout(() => {
+        setCopiedLink(false);
+        setToastNotif(null);
+      }, 5000);
     } catch {
       // Fallback
     }
@@ -1006,7 +1031,7 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     </button>
 
                     <a
-                      href="https://wa.me/5493484503056?text=%C2%A1Hola!%20Tengo%20un%20Foodtruck%20%2F%20propuesta%20gastron%C3%B3mica%20y%20quiero%20sumarme%20a%20la%20Feria%20Lunar%20de%20Tauro%20en%20Loma%20Verde."
+                      href="https://api.whatsapp.com/send/?phone=5493484503056&text=%C2%A1Hola!%20Tengo%20un%20Foodtruck%20%2F%20propuesta%20gastron%C3%B3mica%20y%20quiero%20sumarme%20a%20la%20Feria%20Lunar%20de%20Tauro%20en%20Loma%20Verde."
                       target="_blank"
                       rel="noreferrer"
                       className="w-full sm:w-auto bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-700 font-bold text-xs uppercase tracking-wider px-4 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 text-center"
@@ -1051,7 +1076,8 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleShareWhatsApp(notaActiva)}
-                    className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors"
+                    className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors shadow-2xs"
+                    title="Compartir en WhatsApp con emojis intactos"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
                     <span>WhatsApp</span>
@@ -1059,6 +1085,7 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                   <button
                     onClick={() => handleCopyLink(notaActiva)}
                     className="bg-white hover:bg-stone-200 text-stone-800 font-bold px-3 py-1.5 rounded-lg border border-stone-300 flex items-center gap-1.5 transition-colors"
+                    title="Copiar enlace directo para previsualizar con foto"
                   >
                     {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copiedLink ? 'Copiado' : 'Copiar Link'}</span>
@@ -1070,6 +1097,25 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
 
           </div>
 
+        </div>
+      )}
+
+      {/* Toast Notification flotante para acciones de compartir / copiar */}
+      {toastNotif && (
+        <div className="fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md bg-stone-950/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl border border-amber-500/40 animate-in slide-in-from-bottom-5 duration-300 flex items-start gap-3">
+          <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl shrink-0 mt-0.5">
+            <Check className="w-5 h-5" />
+          </div>
+          <div className="space-y-1 text-xs">
+            <h6 className="font-bold text-amber-300 text-sm">{toastNotif.titulo}</h6>
+            <p className="text-stone-300 leading-relaxed">{toastNotif.mensaje}</p>
+          </div>
+          <button
+            onClick={() => setToastNotif(null)}
+            className="text-stone-400 hover:text-white p-1 ml-auto shrink-0 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
 

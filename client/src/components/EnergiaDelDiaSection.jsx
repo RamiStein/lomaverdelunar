@@ -153,9 +153,16 @@ export default function EnergiaDelDiaSection({ config, onGoToInscripcion, onGoTo
     }
   };
 
-  const handleWhatsAppDirecto = () => {
+  const handleWhatsAppDirecto = async () => {
     const textoWa = generarMensajeWhatsAppEnergia(energia);
-    window.open(`https://wa.me/?text=${textoWa}`, '_blank');
+    try {
+      await navigator.clipboard.writeText(textoWa);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 3000);
+    } catch {
+      // Ignorar
+    }
+    window.open(`https://api.whatsapp.com/send/?text=${encodeURIComponent(textoWa)}`, '_blank');
   };
 
   return (

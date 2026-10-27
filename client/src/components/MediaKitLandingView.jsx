@@ -94,7 +94,7 @@ export default function MediaKitLandingView({ config, onBackToHome, onGoToInscri
     }
     msg += `\n¿Podrían pasarme disponibilidad para la próxima fecha del Encuentro Lunar? ¡Muchas gracias!`;
 
-    return `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`;
+    return `https://api.whatsapp.com/send/?phone=${whatsappNumber.replace(/[^0-9]/g, '')}&text=${encodeURIComponent(msg)}`;
   };
 
   return (
@@ -443,7 +443,7 @@ export default function MediaKitLandingView({ config, onBackToHome, onGoToInscri
 
             <div className="mt-8 pt-5 border-t border-stone-800">
               <a
-                href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('¡Hola! Me interesa consultar por el Pack Semilla & Presencia para mi emprendimiento en Loma Verde Lunar.')}`}
+                href={`https://api.whatsapp.com/send/?phone=${whatsappNumber.replace(/[^0-9]/g, '')}&text=${encodeURIComponent('¡Hola! Me interesa consultar por el Pack Semilla & Presencia para mi emprendimiento en Loma Verde Lunar.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-center"
@@ -498,7 +498,7 @@ export default function MediaKitLandingView({ config, onBackToHome, onGoToInscri
 
             <div className="mt-8 pt-5 border-t border-amber-500/20">
               <a
-                href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('¡Hola! Me gustaría reservar el Pack Relato Lunar 360° para mi proyecto en Loma Verde Lunar.')}`}
+                href={`https://api.whatsapp.com/send/?phone=${whatsappNumber.replace(/[^0-9]/g, '')}&text=${encodeURIComponent('¡Hola! Me gustaría reservar el Pack Relato Lunar 360° para mi proyecto en Loma Verde Lunar.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-black text-xs uppercase tracking-wider py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-center"
@@ -550,7 +550,7 @@ export default function MediaKitLandingView({ config, onBackToHome, onGoToInscri
 
             <div className="mt-8 pt-5 border-t border-stone-800">
               <a
-                href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('¡Hola! Me interesa solicitar una propuesta personalizada del Pack Productora Full para mi proyecto en Loma Verde Lunar.')}`}
+                href={`https://api.whatsapp.com/send/?phone=${whatsappNumber.replace(/[^0-9]/g, '')}&text=${encodeURIComponent('¡Hola! Me interesa solicitar una propuesta personalizada del Pack Productora Full para mi proyecto en Loma Verde Lunar.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-center"

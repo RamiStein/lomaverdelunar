@@ -686,22 +686,22 @@ export const ENERGIA_DEFAULT = getEnergiaDelDia();
  * Genera el texto formateado para compartir por WhatsApp
  */
 export function generarMensajeWhatsAppEnergia(energia) {
-  return `✨ *LA ENERGÍA DE HOY • LOMA VERDE LUNAR 13:20* ✨%0A` +
-    `🗓️ *${energia.fechaTexto}*%0A%0A` +
-    `⚡ *HITO CÓSMICO:* ¡Plutón despierta y arranca DIRECTO en Acuario! ♒ Se destraba la energía de transformación colectiva, libertad comunitaria y poder de las redes horizontales.%0A%0A` +
-    `☀️ *SOL EN ${energia.sol.signo.toUpperCase()} ${energia.sol.simbolo}* (${energia.sol.elemento})%0A` +
-    `_«${energia.sol.lema}»_%0A` +
-    `• Enfoque: ${energia.sol.arquetipo}. Búsqueda de equilibrio, belleza y acuerdos justos en nuestras relaciones.%0A%0A` +
-    `🌙 *LUNA EN ${energia.luna.signo.toUpperCase()} ${energia.luna.simbolo}* (${energia.luna.elemento})%0A` +
-    `_«${energia.luna.lema}»_%0A` +
-    `• Fase: ${energia.luna.fase?.emoji || '🌕'} ${energia.luna.fase?.name || 'Fase activa'} (${energia.luna.fase?.illumination || 80}%).%0A%0A` +
-    `🐾 *SINCRONARIO MAYA 13:20: ${energia.maya.kinNombre.toUpperCase()}* (${energia.maya.kinCodigo})%0A` +
-    `🌀 *Onda Encantada:* ${energia.maya.ondaEncantada}%0A` +
-    `• Sello: ${energia.maya.selloNombre} → ${energia.maya.selloPoder}.%0A` +
-    `• Tono: ${energia.maya.tonoNombre} → ${energia.maya.tonoPoder}.%0A%0A` +
-    `📜 *AFIRMACIÓN DEL KIN:*%0A` +
-    `_${energia.maya.afirmacion.replace(/\n/g, '%0A_')}_%0A%0A` +
-    `🌿 *CLAVE PARA LOMA VERDE:*%0A` +
-    `${energia.sintoniaLomaVerde.reflexion}%0A%0A` +
+  return `✨ *LA ENERGÍA DE HOY • LOMA VERDE LUNAR 13:20* ✨\n` +
+    `🗓️ *${energia.fechaTexto}*\n\n` +
+    `⚡ *HITO CÓSMICO:* ¡Plutón despierta y arranca DIRECTO en Acuario! ♒ Se destraba la energía de transformación colectiva, libertad comunitaria y poder de las redes horizontales.\n\n` +
+    `☀️ *SOL EN ${energia.sol.signo.toUpperCase()} ${energia.sol.simbolo}* (${energia.sol.elemento})\n` +
+    `_«${energia.sol.lema}»_\n` +
+    `• Enfoque: ${energia.sol.arquetipo}. Búsqueda de equilibrio, belleza y acuerdos justos en nuestras relaciones.\n\n` +
+    `🌙 *LUNA EN ${energia.luna.signo.toUpperCase()} ${energia.luna.simbolo}* (${energia.luna.elemento})\n` +
+    `_«${energia.luna.lema}»_\n` +
+    `• Fase: ${energia.luna.fase?.emoji || '🌕'} ${energia.luna.fase?.name || 'Fase activa'} (${energia.luna.fase?.illumination || 80}%).\n\n` +
+    `🐾 *SINCRONARIO MAYA 13:20: ${energia.maya.kinNombre.toUpperCase()}* (${energia.maya.kinCodigo})\n` +
+    `🌀 *Onda Encantada:* ${energia.maya.ondaEncantada}\n` +
+    `• Sello: ${energia.maya.selloNombre} → ${energia.maya.selloPoder}.\n` +
+    `• Tono: ${energia.maya.tonoNombre} → ${energia.maya.tonoPoder}.\n\n` +
+    `📜 *AFIRMACIÓN DEL KIN:*\n` +
+    `_${energia.maya.afirmacion}_\n\n` +
+    `🌿 *CLAVE PARA LOMA VERDE:*\n` +
+    `${energia.sintoniaLomaVerde.reflexion}\n\n` +
     `🌐 *Leelo completo en:* https://lomaverdelunar.online/energia`;
 }

@@ -11,7 +11,7 @@ export default function DirectorioView({ directorio }) {
     let clean = phone.replace(/[^0-9]/g, '');
     if (clean.length >= 10 && !clean.startsWith('54')) clean = '549' + clean;
     const msg = encodeURIComponent(`¡Hola ${name}! Te encuentro a través de las Páginas Amarillas de Loma Verde ♒`);
-    return `https://wa.me/${clean}?text=${msg}`;
+    return `https://api.whatsapp.com/send/?phone=${clean}&text=${msg}`;
   };
 
   const formatInstagramUrl = (ig) => {

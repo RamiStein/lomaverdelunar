@@ -25,7 +25,7 @@ export default function FeriaSection({ config, directorio, onOpenInscripcion, on
     let clean = phone.replace(/[^0-9]/g, '');
     if (clean.length >= 10 && !clean.startsWith('54')) clean = '549' + clean;
     const msg = encodeURIComponent(`¡Hola ${name}! Te contacto a través de la web del Encuentro Lunar de Loma Verde ♒`);
-    return `https://wa.me/${clean}?text=${msg}`;
+    return `https://api.whatsapp.com/send/?phone=${clean}&text=${msg}`;
   };
 
   const formatInstagramUrl = (ig) => {

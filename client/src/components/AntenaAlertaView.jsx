@@ -130,7 +130,7 @@ export default function AntenaAlertaView({ config, onBackToHome }) {
       (formData.motivo ? `💬 *Observaciones:* ${formData.motivo}%0A` : '') +
       `%0A🌿 *Exigimos:* Aplicación del Principio Precautorio (Ley 25.675) y REUBICACIÓN INMEDIATA fuera de zonas residenciales (+300m de viviendas y escuelas). ¡Cero radiación invasiva en los hogares de Loma Verde!`;
 
-    window.open(`https://wa.me/${whatsappCoordinacion}?text=${mensajeWa}`, '_blank');
+    window.open(`https://api.whatsapp.com/send/?phone=${whatsappCoordinacion}&text=${encodeURIComponent(mensajeWa.replace(/%0A/g, '\n'))}`, '_blank');
   };
 
   const petitorioTexto = `PETITORIO VECINAL Y CIUDADANO
@@ -746,7 +746,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
                   Compartir en grupos de vecinos
                 </button>
                 <a
-                  href={`https://wa.me/${whatsappCoordinacion}?text=Hola!%20Acabo%20de%20firmar%20la%20adhesión%20contra%20la%20antena%20en%20Loma%20Verde.`}
+                  href={`https://api.whatsapp.com/send/?phone=${whatsappCoordinacion}&text=${encodeURIComponent('Hola! Acabo de firmar la adhesión contra la antena en Loma Verde.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 px-4 py-2 rounded-lg text-xs flex items-center gap-1.5"
@@ -914,7 +914,7 @@ Comunidad Vecinal Organizada de Loma Verde, Partido de Escobar.`;
 
           <div className="flex flex-col sm:flex-row items-center gap-3 flex-shrink-0 w-full md:w-auto">
             <a
-              href={`https://wa.me/${whatsappCoordinacion}?text=Hola!%20Quiero%20sumarme%20a%20la%20asamblea%20vecinal%20contra%20la%20antena%20de%20Telmex%20en%20Loma%20Verde.`}
+              href={`https://api.whatsapp.com/send/?phone=${whatsappCoordinacion}&text=${encodeURIComponent('Hola! Quiero sumarme a la asamblea vecinal contra la antena de Telmex en Loma Verde.')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3.5 rounded-xl flex items-center justify-center gap-2 text-sm transition-all shadow-lg"
