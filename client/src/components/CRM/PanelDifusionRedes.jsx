@@ -22,7 +22,12 @@ import {
   Edit3,
   Flame,
   CheckCheck,
-  Camera
+  Camera,
+  Settings,
+  Link as LinkIcon,
+  X,
+  RefreshCw,
+  AlertCircle
 } from 'lucide-react';
 import { getEnergiaDelDia } from '../../utils/energiaCalc';
 
@@ -48,8 +53,55 @@ export default function PanelDifusionRedes({ adminKey, config, noticias = [], on
   const [muroPublicadoExito, setMuroPublicadoExito] = useState(false);
   const [vistaPreviaTab, setVistaPreviaTab] = useState('wa'); // 'wa', 'ig', 'muro'
 
+  // Estados de Integración Directa con Instagram
+  const [igStatus, setIgStatus] = useState({
+    connected: false,
+    metodo: 'webhook',
+    userName: '@lomaverdelunar',
+    webhookUrl: '',
+    instagramAccountId: '',
+    lastPublishedAt: null
+  });
+  const [showInstagramModal, setShowInstagramModal] = useState(false);
+  const [publicandoEnInstagram, setPublicandoEnInstagram] = useState(false);
+  const [instagramResultado, setInstagramResultado] = useState(null);
+  const [guardandoIgConfig, setGuardandoIgConfig] = useState(false);
+  const [igConfigForm, setIgConfigForm] = useState({
+    metodo: 'webhook',
+    webhookUrl: '',
+    instagramAccountId: '',
+    accessToken: '',
+    userName: '@lomaverdelunar'
+  });
+
   // Canvas ref para exportación de placas para redes
   const canvasRef = useRef(null);
+
+  // Obtener estado de la conexión de Instagram
+  const fetchInstagramStatus = async () => {
+    try {
+      const res = await fetch('/api/admin/instagram/status', {
+        headers: { 'x-admin-key': adminKey || 'lomaverde' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setIgStatus(data);
+        setIgConfigForm(prev => ({
+          ...prev,
+          metodo: data.metodo || 'webhook',
+          webhookUrl: data.webhookUrl || '',
+          instagramAccountId: data.instagramAccountId || '',
+          userName: data.userName || '@lomaverdelunar'
+        }));
+      }
+    } catch (err) {
+      console.error('Error obteniendo estado de Instagram:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchInstagramStatus();
+  }, [adminKey]);
 
   // Fecha actual y cálculo de energía seguro
   const hoy = useMemo(() => new Date(), []);
@@ -278,7 +330,102 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
     }
   };
 
-  // 2. Instagram
+  // 2. Instagram Directo y Copia
+  const handlePublicarDirectoInstagram = async () => {
+    if (!igStatus.connected) {
+      setShowInstagramModal(true);
+      return;
+    }
+
+    if (!formPost.titulo?.trim() || !formPost.contenido?.trim()) {
+      alert('Por favor completá un título y contenido antes de publicar.');
+      return;
+    }
+
+    setPublicandoEnInstagram(true);
+    setInstagramResultado(null);
+
+    try {
+      const res = await fetch('/api/admin/instagram/publicar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey || 'lomaverde'
+        },
+        body: JSON.stringify({
+          titulo: formPost.titulo,
+          contenido: formPost.contenido,
+          tags: formPost.tags,
+          imagenUrl: formPost.imagenUrl,
+          urlDestino: formPost.urlDestino
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al publicar en Instagram');
+      }
+
+      setInstagramResultado({
+        success: true,
+        mensaje: data.mensaje || '¡Publicación realizada con éxito en tu cuenta de Instagram!'
+      });
+      fetchInstagramStatus();
+    } catch (err) {
+      setInstagramResultado({
+        success: false,
+        mensaje: err.message || 'Ocurrió un error al intentar publicar en Instagram.'
+      });
+    } finally {
+      setPublicandoEnInstagram(false);
+    }
+  };
+
+  const handleGuardarInstagramConfig = async (e) => {
+    e?.preventDefault();
+    setGuardandoIgConfig(true);
+    try {
+      const res = await fetch('/api/admin/instagram/config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey || 'lomaverde'
+        },
+        body: JSON.stringify(igConfigForm)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al guardar configuración');
+      alert(data.mensaje || 'Conexión con Instagram actualizada exitosamente.');
+      fetchInstagramStatus();
+      setShowInstagramModal(false);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setGuardandoIgConfig(false);
+    }
+  };
+
+  const handleDesconectarInstagram = async () => {
+    if (!confirm('¿Seguro que deseas desconectar la cuenta de Instagram del sistema?')) return;
+    try {
+      const res = await fetch('/api/admin/instagram/config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey || 'lomaverde'
+        },
+        body: JSON.stringify({ disconnect: true })
+      });
+      if (res.ok) {
+        fetchInstagramStatus();
+        setShowInstagramModal(false);
+        alert('Cuenta de Instagram desconectada.');
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const handleCopiarInstagram = async () => {
     const textoLimpio = (formPost.contenido || '')
       .replace(/\*/g, '')
@@ -893,6 +1040,63 @@ Escribí aquí tu mensaje, poesía, convocatoria o anuncio para compartir con lo
                 </>
               )}
             </button>
+
+            {/* TARJETA DE PUBLICACIÓN DIRECTA EN INSTAGRAM */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-950/70 via-pink-950/50 to-amber-950/50 border-2 border-pink-500/60 shadow-md space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-black uppercase tracking-wider text-pink-300 flex items-center gap-1.5">
+                  <Camera className="w-4 h-4 text-pink-400" />
+                  <span>Instagram • Publicación Directa</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowInstagramModal(true)}
+                  className="text-[11px] font-bold text-stone-200 hover:text-white flex items-center gap-1.5 bg-stone-900/90 hover:bg-stone-800 px-2.5 py-1 rounded-lg border border-pink-400/40 transition-colors shadow-2xs cursor-pointer"
+                >
+                  <Settings className="w-3.5 h-3.5 text-pink-300" />
+                  <span>{igStatus.connected ? `🟢 ${igStatus.userName || '@lomaverdelunar'}` : '⚙️ Conectar Cuenta'}</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={handlePublicarDirectoInstagram}
+                disabled={publicandoEnInstagram}
+                className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-amber-600 hover:from-purple-500 hover:via-pink-500 hover:to-amber-500 text-white font-black py-3 px-4 rounded-xl text-xs sm:text-sm uppercase tracking-wider shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 active:scale-98"
+              >
+                {publicandoEnInstagram ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Publicando en Instagram...</span>
+                  </>
+                ) : (
+                  <>
+                    <Camera className="w-4 h-4" />
+                    <span>{igStatus.connected ? 'Publicar Directo en Feed de Instagram 🚀' : 'Conectar Cuenta y Publicar en Instagram 🚀'}</span>
+                  </>
+                )}
+              </button>
+
+              <p className="text-[11px] text-stone-300 leading-tight">
+                {igStatus.connected 
+                  ? `Postea automáticamente foto y epígrafe en el feed de ${igStatus.userName || '@lomaverdelunar'}.` 
+                  : 'Hacé clic para conectar tu cuenta con Make.com/Zapier o Meta Graph API y postear en 1 clic.'}
+              </p>
+
+              {instagramResultado && (
+                <div className={`p-3 rounded-xl text-xs flex items-center gap-2 border ${
+                  instagramResultado.success 
+                    ? 'bg-emerald-950/90 text-emerald-200 border-emerald-500/70' 
+                    : 'bg-rose-950/90 text-rose-200 border-rose-500/70'
+                }`}>
+                  {instagramResultado.success ? <Check className="w-4 h-4 text-emerald-400 shrink-0" /> : <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />}
+                  <span className="flex-1 font-medium">{instagramResultado.mensaje}</span>
+                  <button type="button" onClick={() => setInstagramResultado(null)} className="text-stone-400 hover:text-white">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Fila 2: WhatsApp & Instagram */}
             <div className="grid grid-cols-2 gap-2">

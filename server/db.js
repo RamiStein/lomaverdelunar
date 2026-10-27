@@ -52,7 +52,16 @@ const SEED_DATA = {
       "Productos Naturales"
     ],
     idImagenFondo: "",
-    claveAdmin: "lomaverde"
+    claveAdmin: "lomaverde",
+    instagramConfig: {
+      connected: false,
+      metodo: "meta_api",
+      instagramAccountId: "",
+      accessToken: "",
+      webhookUrl: "",
+      userName: "@lomaverdelunar",
+      lastPublishedAt: null
+    }
   },
   noticias: [
     {

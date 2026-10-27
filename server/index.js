@@ -744,6 +744,215 @@ app.get('/api/admin/export-excel', verifyAdmin, async (req, res) => {
   }
 });
 
+// ==========================================
+// CRM: PUBLICACIÓN DIRECTA EN INSTAGRAM
+// ==========================================
+
+// 1. Obtener estado de la conexión de Instagram
+app.get('/api/admin/instagram/status', verifyAdmin, async (req, res) => {
+  try {
+    const config = await db.getConfig();
+    const envToken = process.env.INSTAGRAM_ACCESS_TOKEN;
+    const envAccountId = process.env.INSTAGRAM_ACCOUNT_ID;
+    const ig = config.instagramConfig || {};
+
+    const hasMeta = !!((ig.accessToken && ig.instagramAccountId) || (envToken && envAccountId));
+    const hasWebhook = !!(ig.webhookUrl);
+
+    res.json({
+      connected: !!(ig.connected && (hasMeta || hasWebhook)),
+      metodo: ig.metodo || (hasWebhook ? 'webhook' : 'meta_api'),
+      userName: ig.userName || '@lomaverdelunar',
+      hasMetaConfig: hasMeta,
+      hasWebhookConfig: hasWebhook,
+      webhookUrl: ig.webhookUrl || '',
+      instagramAccountId: ig.instagramAccountId || envAccountId || '',
+      lastPublishedAt: ig.lastPublishedAt || null
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 2. Guardar y verificar configuración de Instagram
+app.post('/api/admin/instagram/config', verifyAdmin, async (req, res) => {
+  try {
+    const { metodo, instagramAccountId, accessToken, webhookUrl, userName, disconnect } = req.body;
+    const config = await db.getConfig();
+    const currentIg = config.instagramConfig || {};
+
+    if (disconnect) {
+      const updatedIg = {
+        connected: false,
+        metodo: 'meta_api',
+        instagramAccountId: '',
+        accessToken: '',
+        webhookUrl: '',
+        userName: '@lomaverdelunar',
+        updatedAt: new Date().toISOString()
+      };
+      await db.updateConfig({ instagramConfig: updatedIg });
+      return res.json({ success: true, mensaje: 'Cuenta desconectada exitosamente.', instagramConfig: updatedIg });
+    }
+
+    let detectedUserName = (userName || currentIg.userName || '@lomaverdelunar').trim();
+    if (!detectedUserName.startsWith('@')) detectedUserName = '@' + detectedUserName;
+
+    // Si viene Meta API y hay token + accountId, verificar credenciales llamando al Graph API
+    if (metodo === 'meta_api' && instagramAccountId && (accessToken || currentIg.accessToken)) {
+      const tokenToTest = accessToken || currentIg.accessToken;
+      try {
+        const verifyRes = await fetch(`https://graph.facebook.com/v20.0/${instagramAccountId}?fields=username,name&access_token=${tokenToTest}`);
+        const verifyData = await verifyRes.json();
+        if (verifyData.error) {
+          throw new Error(`Meta API: ${verifyData.error.message || 'Credenciales inválidas'}`);
+        }
+        if (verifyData.username) {
+          detectedUserName = `@${verifyData.username}`;
+        }
+      } catch (e) {
+        throw new Error(`No se pudo verificar la cuenta con Meta: ${e.message}`);
+      }
+    }
+
+    const updatedIgConfig = {
+      ...currentIg,
+      connected: !!(metodo === 'webhook' ? (webhookUrl || currentIg.webhookUrl) : (instagramAccountId && (accessToken || currentIg.accessToken))),
+      metodo: metodo || 'meta_api',
+      instagramAccountId: (instagramAccountId || currentIg.instagramAccountId || '').trim(),
+      accessToken: accessToken ? accessToken.trim() : currentIg.accessToken,
+      webhookUrl: webhookUrl !== undefined ? webhookUrl.trim() : currentIg.webhookUrl,
+      userName: detectedUserName,
+      updatedAt: new Date().toISOString()
+    };
+
+    await db.updateConfig({ instagramConfig: updatedIgConfig });
+    res.json({ success: true, mensaje: 'Conexión con Instagram configurada con éxito.', instagramConfig: updatedIgConfig });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 3. Publicar directamente en Instagram
+app.post('/api/admin/instagram/publicar', verifyAdmin, async (req, res) => {
+  try {
+    const { titulo, contenido, tags, imagenUrl, urlDestino } = req.body;
+    const config = await db.getConfig();
+    const igConfig = config.instagramConfig || {};
+
+    const token = igConfig.accessToken || process.env.INSTAGRAM_ACCESS_TOKEN;
+    const accountId = igConfig.instagramAccountId || process.env.INSTAGRAM_ACCOUNT_ID;
+    const metodo = igConfig.metodo || (igConfig.webhookUrl ? 'webhook' : 'meta_api');
+
+    // Limpieza y formato del texto para Instagram
+    const textoLimpio = (contenido || '').replace(/\*/g, '').trim();
+    const caption = `${(titulo || '').toUpperCase()}\n\n${textoLimpio}\n\n.\n.\n.\n${tags || '#LomaVerdeLunar #LomaVerde'}`;
+
+    // Resolver URL pública de la imagen
+    let fullImageUrl = imagenUrl || '/fondo-loma-verde.jpg';
+    if (fullImageUrl.startsWith('/')) {
+      const baseUrl = process.env.PUBLIC_URL || 'https://lomaverdelunar.online';
+      fullImageUrl = `${baseUrl.replace(/\/+$/, '')}${fullImageUrl}`;
+    }
+
+    // 1. MÉTODO WEBHOOK (Make.com / Zapier / n8n)
+    if (metodo === 'webhook' && igConfig.webhookUrl) {
+      const webhookRes = await fetch(igConfig.webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          titulo: titulo || '',
+          caption,
+          imageUrl: fullImageUrl,
+          tags: tags || '',
+          urlDestino: urlDestino || 'https://lomaverdelunar.online',
+          publishedAt: new Date().toISOString(),
+          autor: 'Loma Verde Lunar'
+        })
+      });
+
+      if (!webhookRes.ok) {
+        const errorText = await webhookRes.text();
+        throw new Error(`El Webhook respondió con error ${webhookRes.status}: ${errorText.slice(0, 150)}`);
+      }
+
+      await db.updateConfig({
+        instagramConfig: { ...igConfig, lastPublishedAt: new Date().toISOString() }
+      });
+
+      return res.json({
+        success: true,
+        metodo: 'webhook',
+        mensaje: `¡Publicación enviada exitosamente a través del Webhook de Instagram (${igConfig.userName || '@lomaverdelunar'})!`
+      });
+    }
+
+    // 2. MÉTODO META GRAPH API OFICIAL
+    if (token && accountId) {
+      // Paso 1: Crear Contenedor de Media (Feed)
+      const containerRes = await fetch(`https://graph.facebook.com/v20.0/${accountId}/media`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image_url: fullImageUrl,
+          caption: caption,
+          access_token: token
+        })
+      });
+
+      const containerData = await containerRes.json();
+      if (containerData.error) {
+        throw new Error(`Meta Instagram API Error: ${containerData.error.message || JSON.stringify(containerData.error)}`);
+      }
+
+      const creationId = containerData.id;
+      if (!creationId) {
+        throw new Error('Meta no devolvió un ID de contenedor válido para la imagen.');
+      }
+
+      // Paso 2: Publicar Contenedor en el Feed
+      const publishRes = await fetch(`https://graph.facebook.com/v20.0/${accountId}/media_publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          creation_id: creationId,
+          access_token: token
+        })
+      });
+
+      const publishData = await publishRes.json();
+      if (publishData.error) {
+        throw new Error(`Error al publicar en Meta Instagram API: ${publishData.error.message || JSON.stringify(publishData.error)}`);
+      }
+
+      const postId = publishData.id;
+
+      await db.updateConfig({
+        instagramConfig: {
+          ...igConfig,
+          lastPublishedAt: new Date().toISOString(),
+          lastPostId: postId
+        }
+      });
+
+      return res.json({
+        success: true,
+        metodo: 'meta_api',
+        postId,
+        mensaje: `¡Publicación realizada con éxito directamente en Instagram (${igConfig.userName || '@lomaverdelunar'})!`
+      });
+    }
+
+    return res.status(400).json({
+      configured: false,
+      error: 'La cuenta de Instagram aún no está conectada. Abrí la configuración para ingresar tu Webhook o las credenciales de Meta Graph API.'
+    });
+  } catch (err) {
+    console.error('Error publicando en Instagram:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Servir archivos estáticos del cliente en producción
 if (process.env.NODE_ENV === 'production' || process.env.SERVE_CLIENT === 'true') {
   app.use(express.static(path.join(__dirname, '../client/dist')));
