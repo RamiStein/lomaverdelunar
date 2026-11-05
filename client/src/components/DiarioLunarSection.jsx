@@ -578,7 +578,7 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     <div 
                       onClick={(e) => {
                         e.stopPropagation();
-                        window.open("https://api.whatsapp.com/send/?phone=5493484503056&text=%C2%A1Hola!%20Quiero%20hacer%20una%20consulta%20sobre%20el%20Punto%20Verde%20de%20GIRSU%20para%20el%20domingo.", "_blank");
+                        handleShareWhatsApp(notaPrincipal);
                       }}
                       className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-900 via-stone-900 to-teal-950 text-white shadow-lg border-2 border-emerald-400/60 flex flex-col sm:flex-row items-center justify-between gap-4 cursor-pointer hover:scale-[1.01] hover:shadow-xl transition-all group/cta"
                     >
@@ -604,7 +604,7 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                         className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 cursor-pointer group-hover/cta:scale-105"
                       >
                         <MessageCircle className="w-4 h-4" />
-                        <span>Consultar Punto Verde</span>
+                        <span>Compartir en WhatsApp</span>
                       </button>
                     </div>
                   )}
@@ -1116,15 +1116,22 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                   </div>
 
                   <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                    <a
-                      href="https://api.whatsapp.com/send/?phone=5493484503056&text=%C2%A1Hola!%20Tengo%20una%20consulta%20sobre%20el%20Punto%20Verde%20de%20GIRSU%20para%20la%20Feria%20Lunar%20del%20domingo."
-                      target="_blank"
-                      rel="noreferrer"
+                    <button
+                      type="button"
+                      onClick={() => handleShareWhatsApp(notaActiva)}
                       className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-stone-950 font-black text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <MessageCircle className="w-4 h-4" />
-                      <span>Consultas del Punto Verde por WhatsApp</span>
-                    </a>
+                      <span>Difundir Punto Verde en WhatsApp</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyLink(notaActiva)}
+                      className="w-full sm:w-auto bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-700 font-bold text-xs uppercase tracking-wider px-4 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 text-center cursor-pointer"
+                    >
+                      {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                      <span>{copiedLink ? 'Enlace Copiado' : 'Copiar Enlace'}</span>
+                    </button>
                   </div>
                 </div>
               )}
