@@ -28,11 +28,12 @@ import {
   Send,
   Heart,
   MapPin,
-  Utensils
+  Utensils,
+  Recycle
 } from 'lucide-react';
 import { getEnergiaDelDia } from '../utils/energiaCalc';
 
-export default function DiarioLunarSection({ config, initialNoticias = [], onBackToHome, onGoToInscripcion, onGoToAntena, onGoToMuro, onGoToLunas, initialNotaId = null }) {
+export default function DiarioLunarSection({ config, initialNoticias = [], onBackToHome, onGoToInscripcion, onGoToAntena, onGoToMuro, onGoToLunas, onGoToReciclaje, initialNotaId = null }) {
   const [noticias, setNoticias] = useState(() => (Array.isArray(initialNoticias) && initialNoticias.length > 0 ? initialNoticias : []));
   const [loading, setLoading] = useState(true);
   const [selectedLunaId, setSelectedLunaId] = useState('todas');
@@ -599,13 +600,30 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                           </p>
                         </div>
                       </div>
-                      <button 
-                        type="button"
-                        className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 cursor-pointer group-hover/cta:scale-105"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                        <span>Compartir en WhatsApp</span>
-                      </button>
+                      <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                        <button 
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onGoToReciclaje) onGoToReciclaje();
+                          }}
+                          className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                          <Recycle className="w-4 h-4" />
+                          <span>Ver Guía ♻️</span>
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShareWhatsApp(notaPrincipal);
+                          }}
+                          className="w-full sm:w-auto bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 font-bold text-xs uppercase tracking-wider px-3.5 py-2.5 rounded-xl shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <MessageCircle className="w-4 h-4 text-emerald-400" />
+                          <span>Difundir</span>
+                        </button>
+                      </div>
                     </div>
                   )}
 
@@ -1116,6 +1134,16 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                   </div>
 
                   <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                    {onGoToReciclaje && (
+                      <button
+                        type="button"
+                        onClick={onGoToReciclaje}
+                        className="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider px-5 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                      >
+                        <Recycle className="w-4 h-4 text-emerald-300" />
+                        <span>Ver Guía de Reciclado (Qué va y qué no)</span>
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => handleShareWhatsApp(notaActiva)}

@@ -174,6 +174,34 @@ export default function HeroSection({ config, noticias, setActiveTab, openTroque
             <ArrowRight className="w-3 h-3" />
           </div>
         </div>
+
+        {/* BANNER INTERACTIVO: GUÍA DE RECICLAJE Y PUNTO VERDE GIRSU */}
+        <div 
+          onClick={() => setActiveTab('reciclaje')}
+          className="mb-6 max-w-2xl mx-auto bg-gradient-to-r from-emerald-900 via-stone-900 to-teal-950 text-white p-3.5 sm:p-4 rounded-2xl shadow-lg border-2 border-emerald-400/80 cursor-pointer hover:scale-[1.01] transition-transform text-left flex items-center justify-between gap-3 group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/30 border border-emerald-400/50 text-emerald-300 flex items-center justify-center font-black text-lg flex-shrink-0 shadow-xs">
+              ♻️
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-xs font-black uppercase tracking-wider text-emerald-300">
+                <span>Guía Vecinal • Punto Verde GIRSU</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              </div>
+              <h3 className="font-serif font-black text-sm sm:text-base text-white leading-tight">
+                ¿Qué se puede tirar y qué no? 🌿 Plástico, Cartón, Metal y Vidrio
+              </h3>
+              <p className="text-[11px] sm:text-xs text-emerald-100/90 line-clamp-1 font-normal">
+                Regla de oro "Limpio y Seco", buscador interactivo y recepción este domingo en la plaza.
+              </p>
+            </div>
+          </div>
+          <div className="hidden sm:flex items-center gap-1 bg-emerald-500 hover:bg-emerald-400 text-stone-950 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors flex-shrink-0 shadow-xs">
+            <span>Ver Guía</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </div>
+        </div>
         
         {/* LUNA DORADA RADIANTE CON LAURELES BOTÁNICOS */}
         <div className="relative inline-flex flex-col items-center mb-4 group cursor-pointer" onClick={() => setShowFlyerModal(true)}>

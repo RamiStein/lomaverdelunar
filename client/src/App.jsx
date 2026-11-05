@@ -20,6 +20,7 @@ import AntenaAlertaView from './components/AntenaAlertaView';
 import EnergiaDelDiaSection from './components/EnergiaDelDiaSection';
 import MuroSocialSection from './components/MuroSocialSection';
 import DiarioLunarSection from './components/DiarioLunarSection';
+import ReciclajeView from './components/ReciclajeView';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
@@ -102,6 +103,18 @@ export default function App() {
         pathname === '/noantena'
       ) {
         setActiveTab('antena');
+        return;
+      }
+
+      // 0.04. Ruta directa para Reciclaje y Punto Verde (ej: /reciclaje, /reciclado, /puntoverde, /girsu)
+      if (
+        pathname === '/reciclaje' ||
+        pathname === '/reciclado' ||
+        pathname === '/puntoverde' ||
+        pathname === '/punto-verde' ||
+        pathname === '/girsu'
+      ) {
+        setActiveTab('reciclaje');
         return;
       }
 
@@ -223,6 +236,10 @@ export default function App() {
       if (activeTab === 'mapa') {
         if (window.location.pathname !== '/mapalomaverdelunar') {
           window.history.replaceState(null, '', '/mapalomaverdelunar');
+        }
+      } else if (activeTab === 'reciclaje') {
+        if (window.location.pathname !== '/reciclaje') {
+          window.history.replaceState(null, '', '/reciclaje');
         }
       } else if (activeTab === 'diario') {
         if (window.location.pathname !== '/diario') {
@@ -539,6 +556,22 @@ export default function App() {
           />
         )}
 
+
+        {activeTab === 'reciclaje' && (
+          <ReciclajeView
+            config={config}
+            onBackToHome={() => {
+              setActiveTab('inicio');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onGoToDiario={(notaId) => {
+              if (notaId) setInitialNotaId(notaId);
+              setActiveTab('diario');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {activeTab === 'diario' && (
           <div>
             <DiarioLunarSection
@@ -560,6 +593,10 @@ export default function App() {
               }}
               onGoToMuro={() => {
                 setActiveTab('muro');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onGoToReciclaje={() => {
+                setActiveTab('reciclaje');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onGoToLunas={() => {

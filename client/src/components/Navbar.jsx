@@ -18,7 +18,8 @@ import {
   ShieldAlert,
   Sun,
   Palette,
-  Newspaper
+  Newspaper,
+  Recycle
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModal, openTroquelModal, config }) {
@@ -28,6 +29,7 @@ export default function Navbar({ activeTab, setActiveTab, isAdmin, openLoginModa
   const coreNavItems = [
     { id: 'inicio', label: 'Inicio', icon: Sparkles },
     { id: 'diario', label: 'Diario Lunar 📰', icon: Newspaper, highlight: true },
+    { id: 'reciclaje', label: 'Reciclaje ♻️', icon: Recycle, highlight: true },
     { id: 'muro', label: 'Muro Cósmico 🎨', icon: Palette, highlight: true },
     { id: 'energia', label: 'Energía de Hoy ✨', icon: Sun, highlight: true },
     { id: 'antena', label: 'No a la Antena 🚨', icon: ShieldAlert, alertStyle: true },

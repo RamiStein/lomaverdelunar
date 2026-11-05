@@ -1050,6 +1050,10 @@ const handleSsrOg = async (req, res) => {
       ogTitle = "La Energía de Hoy • Sincronario Lunar 13:20 • Loma Verde";
       ogDesc = "Sintonía cósmica, tránsitos astrológicos y kin maya del día para la comunidad de Loma Verde.";
       ogImage = "https://lomaverdelunar.online/loma-verde-callecita-opt.jpg";
+    } else if (req.path === '/reciclaje' || req.path === '/reciclado' || req.path === '/puntoverde' || req.path === '/girsu') {
+      ogTitle = "Guía de Reciclaje y Punto Verde • Loma Verde Lunar ♻️";
+      ogDesc = "¿Qué se puede tirar y qué no? Guía completa para plástico, cartón, metal y vidrio. Regla de oro limpio y seco y recepción con GIRSU este domingo.";
+      ogImage = "https://lomaverdelunar.online/girsu-reciclado.jpg";
     }
 
     const finalHtml = injectDynamicOgTags(html, {
@@ -1075,6 +1079,11 @@ const handleSsrOg = async (req, res) => {
 
 // Rutas de páginas públicas con Open Graph dinámico
 app.get('/diario', handleSsrOg);
+app.get('/reciclaje', handleSsrOg);
+app.get('/reciclado', handleSsrOg);
+app.get('/puntoverde', handleSsrOg);
+app.get('/punto-verde', handleSsrOg);
+app.get('/girsu', handleSsrOg);
 app.get('/og-preview', handleSsrOg);
 
 // Servir archivos estáticos del cliente en producción tradicional

@@ -22,6 +22,10 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/(reciclaje|reciclado|puntoverde|punto-verde|girsu)",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
