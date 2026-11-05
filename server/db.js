@@ -65,6 +65,37 @@ const SEED_DATA = {
   },
   noticias: [
     {
+      id: "noticia-tauro-girsu-reciclado",
+      titulo: "GIRSU en la Feria Lunar: La cooperativa activa el nuevo espacio de residuos y enseñará a reciclar este domingo",
+      volanta: "ECOLOGÍA VECINAL & SOBERANÍA • LUNA EN TAURO ♉",
+      copete: "Este domingo 8 de noviembre, la cooperativa GIRSU dirá presente en Plaza La Misión para realizar el «active» del nuevo espacio de gestión de residuos de la feria. Habrá talleres prácticos para aprender a separar en origen y los vecinos podrán acercar sus reciclables limpios y secos de 12 a 18 hs.",
+      bajada: "Este domingo 8 de noviembre, la cooperativa GIRSU dirá presente en Plaza La Misión para realizar el «active» del nuevo espacio de gestión de residuos de la feria. Habrá talleres prácticos para aprender a separar en origen y los vecinos podrán acercar sus reciclables limpios y secos de 12 a 18 hs.",
+      texto: "La materia viva no se tira: se honra, se cuida y se transforma. En plena sintonía con la energía nutricia y enraizante de la Luna Llena en Tauro —arquetipo del cuidado del cuerpo, los recursos tangibles y la regeneración de la tierra—, el próximo encuentro comunitario del domingo 8 de noviembre en Plaza La Misión marcará un paso fundamental para la sustentabilidad del barrio: la participación activa de la Cooperativa GIRSU (Gestión Integral de Residuos Sólidos Urbanos) y la inauguración oficial del nuevo Espacio de Residuos y Punto Verde de la feria.\n\n«El Active» del Espacio de Residuos: Hacia una feria con Basura Cero\n\nUno de los grandes desafíos de cualquier celebración comunitaria es la huella que deja en el espacio público. Con el compromiso de no trasladar un impacto negativo al arbolado y el suelo de Loma Verde, la coordinación de la Feria Lunar junto a los recuperadores urbanos de GIRSU llevarán a cabo durante la jornada el «active» colectivo del sector permanente de residuos diferenciados en la plaza.\n\nEste espacio no será un conjunto de tachos pasivos, sino una estación ambiental señalizada y asistida por integrantes de la cooperativa y vecinos voluntarios. Allí se orientará a los visitantes, familias y titulares de puestos gastronómicos y artesanales para que cada descarte tenga su destino correcto: orgánicos para compost, reciclables secos para industria y descarte mínimo no recuperable.\n\nTalleres abiertos: Aprender a reciclar y separar en origen\n\nDurante toda la jornada, de 12:00 a 18:00 hs, GIRSU brindará talleres pedagógicos y demostraciones al paso para grandes y chicos:\n\n• La regla de oro «Limpio y Seco»: Por qué los restos de comida arruinan toneladas de papel o cartón y cómo acondicionar envases en casa con un simple enjuague para cuidar la salud y la labor de los recuperadores.\n• Guía de plásticos y materiales: Diferenciación de botellas PET, envases soplados, tapitas plásticas y metales.\n• Botellas de Amor y Ecobotellas: Técnicas para compactar plásticos de un solo uso que luego se transforman en madera plástica para bancos comunitarios y juegos de plaza.\n• Conexión con el compostaje familiar: Cómo articular la separación seca con las composteras domiciliarias y huertas orgánicas del barrio.\n\nPunto Verde de Recepción: Traé tus materiales este domingo\n\nPara que la jornada sea una fiesta participativa y de acción concreta, la plaza funcionará como centro de recepción vecinal abierto. Se invita a todas las familias de Loma Verde a juntar sus reciclables acumulados durante la semana y acercarlos este domingo de 12:00 a 18:00 hs al stand de GIRSU:\n\n¿Qué materiales podés llevar limpios y secos?\n✓ Papel y Cartón: Cajas desarmadas, cartulinas, diarios, revistas y folletos secos.\n✓ Plásticos: Botellas aplastadas, bidones, envases de alimentos y limpieza, tapitas.\n✓ Metales: Latas de conserva, latas de aluminio de gaseosa o cerveza, aerosoles vacíos.\n✓ Vidrio: Botellas enteras y frascos de mermelada o conserva lavados (sin roturas peligrosas).\n✓ Botellas de Amor / Ecobotellas: Botellas PET rellenas a presión con bolsas y envoltorios limpios.\n\nEconomía circular con dignidad humana\n\n«Cada kilo de material que un vecino separa y entrega a la cooperativa no termina enterrado en un relleno sanitario ni tapando las zanjas del barrio: se reincorpora a la economía productiva y sostiene el trabajo digno de familias cooperativistas», remarcaron desde el área ambiental comunitaria.\n\nDatos y horarios en Plaza La Misión:\n• Domingo 8 de noviembre de 2026.\n• Recepción de reciclables y feria: 12:00 a 18:00 hs (armado de puestos de 11:00 a 12:00 hs).\n• Ubicación: Plaza La Misión y Nigromante, Loma Verde (Escobar).\n\nTraé tus reciclables, sumate a los talleres y participá del nacimiento del espacio ecológico de nuestra feria. Loma Verde cuida su tierra.",
+      contenido: "La materia viva no se tira: se honra, se cuida y se transforma. En plena sintonía con la energía nutricia y enraizante de la Luna Llena en Tauro —arquetipo del cuidado del cuerpo, los recursos tangibles y la regeneración de la tierra—, el próximo encuentro comunitario del domingo 8 de noviembre en Plaza La Misión marcará un paso fundamental para la sustentabilidad del barrio: la participación activa de la Cooperativa GIRSU (Gestión Integral de Residuos Sólidos Urbanos) y la inauguración oficial del nuevo Espacio de Residuos y Punto Verde de la feria.\n\n«El Active» del Espacio de Residuos: Hacia una feria con Basura Cero\n\nUno de los grandes desafíos de cualquier celebración comunitaria es la huella que deja en el espacio público. Con el compromiso de no trasladar un impacto negativo al arbolado y el suelo de Loma Verde, la coordinación de la Feria Lunar junto a los recuperadores urbanos de GIRSU llevarán a cabo durante la jornada el «active» colectivo del sector permanente de residuos diferenciados en la plaza.\n\nEste espacio no será un conjunto de tachos pasivos, sino una estación ambiental señalizada y asistida por integrantes de la cooperativa y vecinos voluntarios. Allí se orientará a los visitantes, familias y titulares de puestos gastronómicos y artesanales para que cada descarte tenga su destino correcto: orgánicos para compost, reciclables secos para industria y descarte mínimo no recuperable.\n\nTalleres abiertos: Aprender a reciclar y separar en origen\n\nDurante toda la jornada, de 12:00 a 18:00 hs, GIRSU brindará talleres pedagógicos y demostraciones al paso para grandes y chicos:\n\n• La regla de oro «Limpio y Seco»: Por qué los restos de comida arruinan toneladas de papel o cartón y cómo acondicionar envases en casa con un simple enjuague para cuidar la salud y la labor de los recuperadores.\n• Guía de plásticos y materiales: Diferenciación de botellas PET, envases soplados, tapitas plásticas y metales.\n• Botellas de Amor y Ecobotellas: Técnicas para compactar plásticos de un solo uso que luego se transforman en madera plástica para bancos comunitarios y juegos de plaza.\n• Conexión con el compostaje familiar: Cómo articular la separación seca con las composteras domiciliarias y huertas orgánicas del barrio.\n\nPunto Verde de Recepción: Traé tus materiales este domingo\n\nPara que la jornada sea una fiesta participativa y de acción concreta, la plaza funcionará como centro de recepción vecinal abierto. Se invita a todas las familias de Loma Verde a juntar sus reciclables acumulados durante la semana y acercarlos este domingo de 12:00 a 18:00 hs al stand de GIRSU:\n\n¿Qué materiales podés llevar limpios y secos?\n✓ Papel y Cartón: Cajas desarmadas, cartulinas, diarios, revistas y folletos secos.\n✓ Plásticos: Botellas aplastadas, bidones, envases de alimentos y limpieza, tapitas.\n✓ Metales: Latas de conserva, latas de aluminio de gaseosa o cerveza, aerosoles vacíos.\n✓ Vidrio: Botellas enteras y frascos de mermelada o conserva lavados (sin roturas peligrosas).\n✓ Botellas de Amor / Ecobotellas: Botellas PET rellenas a presión con bolsas y envoltorios limpios.\n\nEconomía circular con dignidad humana\n\n«Cada kilo de material que un vecino separa y entrega a la cooperativa no termina enterrado en un relleno sanitario ni tapando las zanjas del barrio: se reincorpora a la economía productiva y sostiene el trabajo digno de familias cooperativistas», remarcaron desde el área ambiental comunitaria.\n\nDatos y horarios en Plaza La Misión:\n• Domingo 8 de noviembre de 2026.\n• Recepción de reciclables y feria: 12:00 a 18:00 hs (armado de puestos de 11:00 a 12:00 hs).\n• Ubicación: Plaza La Misión y Nigromante, Loma Verde (Escobar).\n\nTraé tus reciclables, sumate a los talleres y participá del nacimiento del espacio ecológico de nuestra feria. Loma Verde cuida su tierra.",
+      img: "/girsu-reciclado.jpg",
+      imagenUrl: "/girsu-reciclado.jpg",
+      epigrafe: "Punto verde de recepción y separación comunitaria atendido por la cooperativa GIRSU en la feria de Loma Verde.",
+      lunaId: "luna-tauro-2026",
+      lunaNombre: "Luna Llena en Tauro ♉",
+      seccion: "tierra",
+      seccionEtiqueta: "Soberanía & Tierra",
+      autor: "Área Ambiental & Cooperativa GIRSU",
+      fecha: "2026-11-04",
+      fechaTexto: "4 de Noviembre de 2026",
+      destacada: true,
+      tiempoLectura: "4 min",
+      vistas: 110,
+      etiquetas: [
+        "#GIRSU",
+        "#ReciclajeLomaVerde",
+        "#PuntoVerde",
+        "#EconomiaCircular",
+        "#LunaEnTauro",
+        "#BasuraCero",
+        "#PlazaLaMision"
+      ]
+    },
+    {
           "id": "noticia-tauro-foodtrucks",
           "titulo": "Convocatoria abierta para Foodtrucks en la Feria de Tauro: Loma Verde busca celebrar el buen comer y dar a conocer a sus cocineros locales",
           "volanta": "CONVOCATORIA GASTRONÓMICA • LUNA EN TAURO ♉",
@@ -889,9 +920,17 @@ class Database {
     if (firebase.isFirebaseEnabled()) {
       const fdb = firebase.getDb();
       const doc = await fdb.collection('noticias').doc(id).get();
-      return doc.exists ? doc.data() : null;
+      if (doc.exists) return doc.data();
+      const seedMatch = (SEED_DATA.noticias || []).find(n => n.id === id);
+      if (seedMatch) {
+        try {
+          await fdb.collection('noticias').doc(id).set(seedMatch);
+        } catch (e) {}
+        return seedMatch;
+      }
+      return null;
     }
-    return (this.data.noticias || []).find(n => n.id === id) || null;
+    return (this.data.noticias || []).find(n => n.id === id) || (SEED_DATA.noticias || []).find(n => n.id === id) || null;
   }
 
   async addNoticia(noticia) {

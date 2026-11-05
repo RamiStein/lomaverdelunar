@@ -573,6 +573,42 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     </div>
                   )}
 
+                  {/* CALL TO ACTION DESTACADO: GIRSU & RECICLAJE */}
+                  {(notaPrincipal.id === 'noticia-tauro-girsu-reciclado' || (Array.isArray(notaPrincipal.etiquetas) && notaPrincipal.etiquetas.includes('#GIRSU'))) && (
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open("https://api.whatsapp.com/send/?phone=5493484503056&text=%C2%A1Hola!%20Quiero%20hacer%20una%20consulta%20sobre%20el%20Punto%20Verde%20de%20GIRSU%20para%20el%20domingo.", "_blank");
+                      }}
+                      className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-900 via-stone-900 to-teal-950 text-white shadow-lg border-2 border-emerald-400/60 flex flex-col sm:flex-row items-center justify-between gap-4 cursor-pointer hover:scale-[1.01] hover:shadow-xl transition-all group/cta"
+                    >
+                      <div className="flex items-center gap-3.5 text-left">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 backdrop-blur-xs flex items-center justify-center text-2xl flex-shrink-0 shadow-inner border border-emerald-400/30 text-emerald-300">
+                          ♻️
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-black uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+                            <span>Punto Verde Abierto • Traé tus Reciclables</span>
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                          </div>
+                          <h4 className="font-serif font-black text-base sm:text-lg text-white leading-tight">
+                            Este domingo traé cartón, plástico, latas, vidrio y ecobotellas
+                          </h4>
+                          <p className="text-xs text-emerald-100/90 font-medium mt-0.5">
+                            Domingo 8 Nov • 12 a 18 hs • Plaza La Misión • Cooperativa GIRSU & Active del Espacio de Residuos
+                          </p>
+                        </div>
+                      </div>
+                      <button 
+                        type="button"
+                        className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-2 shrink-0 cursor-pointer group-hover/cta:scale-105"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>Consultar Punto Verde</span>
+                      </button>
+                    </div>
+                  )}
+
                   {/* Metadatos y Acciones */}
                   <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 border-t border-stone-200">
                     <div className="flex items-center gap-3">
@@ -1038,6 +1074,56 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     >
                       <MessageCircle className="w-4 h-4 text-emerald-400" />
                       <span>Consultas por WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {/* CALL TO ACTION PARA GIRSU & RECICLAJE EN EL LECTOR */}
+              {(notaActiva.id === 'noticia-tauro-girsu-reciclado' || (Array.isArray(notaActiva.etiquetas) && notaActiva.etiquetas.includes('#GIRSU'))) && (
+                <div className="my-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-950 via-stone-900 to-teal-950 text-white border-2 border-emerald-400/60 shadow-2xl space-y-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center text-2xl flex-shrink-0">
+                      ♻️
+                    </div>
+                    <div>
+                      <span className="bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                        Punto Verde Abierto • Cooperativa GIRSU
+                      </span>
+                      <h3 className="font-serif font-black text-xl sm:text-2xl text-white mt-1">
+                        Active del Espacio de Residuos & Recepción de Reciclables 🌿
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="text-stone-300 text-xs sm:text-sm leading-relaxed">
+                    Este domingo podés traer todos tus materiales reciclables (limpios y secos): cartón, papel, plásticos, latas, frascos/botellas de vidrio y ecobotellas. La Cooperativa GIRSU estará recepcionando los materiales y brindando talleres prácticos para aprender a separar en origen.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-stone-200">
+                    <div className="bg-stone-900/80 border border-stone-800 p-3 rounded-xl flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span><strong>Domingo 8 Nov</strong></span>
+                    </div>
+                    <div className="bg-stone-900/80 border border-stone-800 p-3 rounded-xl flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Recepción: 12 a 18 hs</span>
+                    </div>
+                    <div className="bg-stone-900/80 border border-stone-800 p-3 rounded-xl flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Plaza La Misión, Loma Verde</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                    <a
+                      href="https://api.whatsapp.com/send/?phone=5493484503056&text=%C2%A1Hola!%20Tengo%20una%20consulta%20sobre%20el%20Punto%20Verde%20de%20GIRSU%20para%20la%20Feria%20Lunar%20del%20domingo."
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-stone-950 font-black text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Consultas del Punto Verde por WhatsApp</span>
                     </a>
                   </div>
                 </div>
