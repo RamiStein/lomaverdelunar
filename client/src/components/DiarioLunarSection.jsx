@@ -627,6 +627,48 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     </div>
                   )}
 
+                  {/* CALL TO ACTION DESTACADO: COOPERATIVA DE LUZ & PILAR ELÉCTRICO */}
+                  {(notaPrincipal.id === 'noticia-agradecimiento-cooperativa-luz-pilar' || (Array.isArray(notaPrincipal.etiquetas) && notaPrincipal.etiquetas.includes('#CooperativaDeLuz'))) && (
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShareWhatsApp(notaPrincipal);
+                      }}
+                      className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-950 via-stone-900 to-yellow-950 text-white shadow-lg border-2 border-amber-400/70 flex flex-col sm:flex-row items-center justify-between gap-4 cursor-pointer hover:scale-[1.01] hover:shadow-xl transition-all group/cta"
+                    >
+                      <div className="flex items-center gap-3.5 text-left">
+                        <div className="w-12 h-12 rounded-2xl bg-amber-500/20 backdrop-blur-xs flex items-center justify-center text-2xl flex-shrink-0 shadow-inner border border-amber-400/40 text-amber-300">
+                          ⚡
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                            <span>Energía Segura para la Plaza • Cooperativismo Vecinal</span>
+                            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+                          </div>
+                          <h4 className="font-serif font-black text-base sm:text-lg text-white leading-tight">
+                            ¡Gracias a la Cooperativa de Electricidad por el nuevo pilar en Plaza La Misión!
+                          </h4>
+                          <p className="text-xs text-amber-100/90 font-medium mt-0.5">
+                            Garantizando potencia, seguridad y tranquilidad a feriantes, sonidistas y cocinas.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                        <button 
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShareWhatsApp(notaPrincipal);
+                          }}
+                          className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-stone-950 font-black text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl shadow-md transition-all whitespace-nowrap flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          <span>Difundir Gratitud</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Metadatos y Acciones */}
                   <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-500 border-t border-stone-200">
                     <div className="flex items-center gap-3">
@@ -1151,6 +1193,44 @@ export default function DiarioLunarSection({ config, initialNoticias = [], onBac
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Difundir Punto Verde en WhatsApp</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyLink(notaActiva)}
+                      className="w-full sm:w-auto bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-700 font-bold text-xs uppercase tracking-wider px-4 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 text-center cursor-pointer"
+                    >
+                      {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                      <span>{copiedLink ? 'Enlace Copiado' : 'Copiar Enlace'}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* TARJETA DESTACADA: AGRADECIMIENTO COOPERATIVA DE LUZ */}
+              {(notaActiva.id === 'noticia-agradecimiento-cooperativa-luz-pilar' || (Array.isArray(notaActiva.etiquetas) && notaActiva.etiquetas.includes('#CooperativaDeLuz'))) && (
+                <div className="my-6 p-5 rounded-2xl bg-gradient-to-r from-amber-950/80 via-stone-900 to-yellow-950/80 border-2 border-amber-400/60 text-white space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">⚡</span>
+                    <div>
+                      <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 block">
+                        Cooperativismo Activo en Loma Verde
+                      </span>
+                      <h4 className="font-serif font-bold text-base text-white">
+                        Cooperativa de Electricidad y Servicios Escobar Norte
+                      </h4>
+                    </div>
+                  </div>
+                  <p className="text-xs text-stone-300 leading-relaxed">
+                    Un reconocimiento especial al personal de cuadrillas de calle, ingenieros, técnicos y al consejo directivo por su pronta gestión técnica y solidaria al instalar el pilar con todas las normas de seguridad eléctrica.
+                  </p>
+                  <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => handleShareWhatsApp(notaActiva)}
+                      className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-stone-950 font-black text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Compartir Agradecimiento en WhatsApp</span>
                     </button>
                     <button
                       type="button"
